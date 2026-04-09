@@ -110,12 +110,8 @@ info "Step 4/6 — terraform-docs"
 
 terraform-docs markdown table \
   --output-file "${DOCS_GENERATED_DIR}/terraform-readme.md" \
-  --output-mode inject \
+  --output-mode replace \
   "${TERRAFORM_DIR}"
-
-# Also keep the canonical copy in the MkDocs nav location
-cp "${DOCS_GENERATED_DIR}/terraform-readme.md" \
-   "${REPO_ROOT}/docs/generated/terraform-readme.md"
 
 success "terraform-docs written to docs/generated/terraform-readme.md"
 

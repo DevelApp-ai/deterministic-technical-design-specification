@@ -107,9 +107,9 @@ jobs:
       - name: Terraform Plan (JSON output)
         working-directory: example/terraform
         run: |
+          mkdir -p ../docs/generated
           terraform plan -input=false -no-color -out=plan.bin
           terraform show -json plan.bin > ../docs/generated/plan.json
-          mkdir -p ../docs/generated
 
       - name: OPA — FinOps policy gate
         run: |
@@ -190,8 +190,8 @@ jobs:
         run: |
           mkdir -p example/docs/generated
           terraform-docs markdown table \
-            --output-file docs/generated/terraform-readme.md \
-            --output-mode inject \
+            --output-file example/docs/generated/terraform-readme.md \
+            --output-mode replace \
             example/terraform/
 
       - name: Run Ansible playbook (localhost facts)

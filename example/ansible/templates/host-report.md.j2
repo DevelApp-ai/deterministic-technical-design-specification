@@ -33,7 +33,7 @@
 
 ## Network Interfaces
 
-{% for iface, config in ansible_interfaces | sort %}
+{% for iface in ansible_interfaces | sort %}
 {% set iface_data = hostvars[inventory_hostname]['ansible_' + iface | replace('-', '_')] | default({}) %}
 {% if iface_data and iface_data.get('ipv4') %}
 ### `{{ iface }}`
