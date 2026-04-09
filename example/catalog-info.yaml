@@ -1,0 +1,57 @@
+# catalog-info.yaml
+#
+# Backstage Entity Descriptor for the Deterministic Documentation Example.
+# This file is read by a Backstage instance to register the component in the
+# service catalog and to enable TechDocs rendering of the MkDocs site.
+#
+# Register this component in Backstage by adding the following URL to your
+# Backstage catalog configuration:
+#
+#   catalog:
+#     locations:
+#       - type: url
+#         target: https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/example/catalog-info.yaml
+#
+# See: https://backstage.io/docs/features/software-catalog/descriptor-format
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: deterministic-docs-example
+  title: Deterministic Technical Design Specification
+  description: >
+    A working example of the deterministic documentation pipeline described
+    in "Documenting Deterministic Infrastructure Code". Infrastructure as Code,
+    Policy as Code, and Documentation as Code — all in one repository.
+  annotations:
+    # TechDocs integration — Backstage will read mkdocs.yml from this path
+    # and generate a TechDocs site directly from the source repository.
+    backstage.io/techdocs-ref: dir:.
+
+    # GitHub integration — links the component to the source repository
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+
+    # Link to the CI/CD pipeline
+    backstage.io/ci-workflow: .github/workflows/docs-pipeline.yml
+
+  tags:
+    - terraform
+    - opa
+    - documentation
+    - infrastructure-as-code
+    - policy-as-code
+    - mkdocs
+
+  links:
+    - url: https://github.com/DevelApp-ai/deterministic-technical-design-specification
+      title: GitHub Repository
+      icon: github
+    - url: https://DevelApp-ai.github.io/deterministic-technical-design-specification
+      title: Published Documentation (GitHub Pages)
+      icon: docs
+
+spec:
+  type: documentation
+  lifecycle: experimental
+  owner: platform-team
+  system: deterministic-docs

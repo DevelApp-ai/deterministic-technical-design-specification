@@ -17,6 +17,8 @@
 | **Documentation as Code** | terraform-docs, Ansible Jinja2 templates, MkDocs Material |
 | **MoSCoW Requirements** | Machine-readable Markdown in `docs/requirements/` |
 | **ADRs** | Structured Markdown in `docs/adrs/` with front-matter metadata |
+| **Traceability** | Full chain: MoSCoW → ADR → OPA policy with Mermaid diagrams |
+| **Backstage** | `catalog-info.yaml` + `Dockerfile.backstage` for developer portal |
 | **CI/CD Pipeline** | GitHub Actions — OPA gate → terraform-docs → Ansible → MkDocs |
 
 ---
@@ -58,6 +60,8 @@ docker run --rm -p 8000:8000 -v "$(pwd)":/workspace dtds-example \
 ```
 example/
 ├── Dockerfile                   # Toolchain image (Terraform, OPA, MkDocs, Ansible)
+├── Dockerfile.backstage         # Standalone Backstage developer portal image
+├── catalog-info.yaml            # Backstage entity descriptor (TechDocs-ref)
 ├── mkdocs.yml                   # MkDocs site configuration
 ├── terraform/                   # Example IaC module
 │   ├── main.tf
@@ -69,12 +73,16 @@ example/
 │   └── templates/
 │       └── host-report.md.j2   # Jinja2 → deterministic Markdown
 ├── policies/terraform/          # OPA/Rego compliance policies
-│   ├── deny_missing_tags.rego
+│   ├── deny_missing_tags.rego  # FINOPS-001 (related_adr, related_requirements)
 │   ├── deny_missing_tags_test.rego
-│   └── deny_unencrypted_storage.rego
+│   └── deny_unencrypted_storage.rego  # SEC-001
+├── backstage/
+│   └── app-config.yaml         # Backstage application configuration
 ├── docs/
-│   ├── adrs/                    # Architectural Decision Records
+│   ├── adrs/                    # ADRs (related_requirements in front-matter)
 │   ├── requirements/            # MoSCoW requirements
+│   ├── traceability/            # Mermaid diagrams: MoSCoW → ADR → Policy
+│   ├── backstage/               # Backstage integration guide
 │   ├── infrastructure/          # Terraform documentation pages
 │   ├── configuration/           # Ansible documentation pages
 │   ├── compliance/              # OPA compliance summary

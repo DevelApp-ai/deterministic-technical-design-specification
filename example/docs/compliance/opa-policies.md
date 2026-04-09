@@ -15,6 +15,8 @@
 | **Severity** | HIGH |
 | **File** | `policies/terraform/deny_missing_tags.rego` |
 | **Package** | `terraform.finops` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-002](../requirements/moscow.md#must-have), [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [S-002](../requirements/moscow.md#should-have) |
 
 **Description:**  
 All Terraform resources must carry the four mandatory cost-allocation tags
@@ -34,6 +36,8 @@ Add a `tags` block to the offending resource that includes all four required key
 | **Severity** | CRITICAL |
 | **File** | `policies/terraform/deny_unencrypted_storage.rego` |
 | **Package** | `terraform.security` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have) |
 
 **Description:**  
 All storage resources must have encryption enabled to protect data at rest
@@ -42,6 +46,21 @@ and satisfy compliance frameworks such as CIS, SOC 2, and PCI-DSS.
 **Remediation:**  
 Set `encrypted = true` (AWS EBS / RDS) or `enable_https_traffic_only = true`
 (Azure Storage) on the offending resource.
+
+---
+
+## Traceability
+
+See the [Traceability Matrix](../traceability/index.md) for the full chain from
+MoSCoW requirements → ADRs → OPA policies → infrastructure code.
+
+```mermaid
+graph LR
+    M002["M-002: FinOps Tags Required"] --> ADR002["ADR-0002: OPA for Policy"]
+    M003["M-003: OPA Blocks Pipeline"] --> ADR002
+    ADR002 --> FIN001["FINOPS-001: deny_missing_tags"]
+    ADR002 --> SEC001["SEC-001: deny_unencrypted_storage"]
+```
 
 ---
 

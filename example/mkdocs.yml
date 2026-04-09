@@ -69,5 +69,9 @@ nav:
       - ADR-0001 Terraform for IaC: adrs/0001-use-terraform-for-iac.md
       - ADR-0002 OPA for Policy: adrs/0002-use-opa-for-policy.md
       - ADR-0003 MkDocs for Publishing: adrs/0003-use-mkdocs-for-publishing.md
+  - Traceability:
+      - Requirements → ADRs → Policies: traceability/index.md
+  - Backstage:
+      - Integration Guide: backstage/index.md
   - Generated:
       - Terraform README: generated/terraform-readme.md

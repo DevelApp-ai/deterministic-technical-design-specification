@@ -15,6 +15,10 @@ __rego__metadoc__ := {
 	"description": "All storage resources must have encryption enabled to protect data at rest and satisfy compliance frameworks such as CIS, SOC 2, and PCI-DSS.",
 	"severity": "CRITICAL",
 	"remediation": "Set `encrypted = true` (AWS EBS / RDS) or `enable_https_traffic_only = true` (Azure Storage) on the offending resource.",
+	# Traceability — links this policy back to the decisions and requirements
+	# that mandated its existence.
+	"related_adr": ["ADR-0002"],
+	"related_requirements": ["M-003", "S-001"],
 }
 
 # Deny AWS EBS volumes that have encryption explicitly disabled.

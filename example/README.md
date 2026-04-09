@@ -24,7 +24,9 @@ Nothing is written manually after the fact.
 | Living configuration docs | Ansible + Jinja2 | `ansible/templates/host-report.md.j2` |
 | MoSCoW requirements | Machine-readable Markdown | `docs/requirements/moscow.md` |
 | Architectural Decision Records | Structured Markdown with front-matter | `docs/adrs/` |
+| Traceability | OPA policy → ADR → MoSCoW requirement with Mermaid diagrams | `docs/traceability/index.md` |
 | Documentation publishing | MkDocs + Material theme | `mkdocs.yml` |
+| Developer portal | Backstage TechDocs integration | `catalog-info.yaml`, `Dockerfile.backstage` |
 | CI/CD pipeline | GitHub Actions | `.github/workflows/docs-pipeline.yml` |
 
 ---
@@ -54,6 +56,23 @@ docker run --rm -p 8000:8000 \
 ```
 
 Then open [http://localhost:8000](http://localhost:8000).
+
+### Option B — Backstage Developer Portal
+
+Build and run the standalone Backstage image to get a full developer portal
+with TechDocs integration:
+
+```bash
+# Build (takes ~8-12 minutes — downloads Node.js dependencies)
+docker build -f example/Dockerfile.backstage -t dtds-backstage example/
+
+# Run the portal
+docker run --rm -p 7007:7007 dtds-backstage
+```
+
+Then open [http://localhost:7007](http://localhost:7007).  The portal shows:
+- **Catalog** → `deterministic-docs-example` component
+- **Docs** tab → TechDocs site with all ADRs, requirements, traceability and compliance pages
 
 ### Option B — Native (requires tools on PATH)
 
@@ -104,11 +123,15 @@ messages are surfaced as job output.
 ```
 example/
 ├── Dockerfile                           # Multi-stage toolchain image
+├── Dockerfile.backstage                 # Standalone Backstage developer portal
 ├── README.md                            # This file
+├── catalog-info.yaml                    # Backstage entity descriptor
 ├── mkdocs.yml                           # MkDocs site configuration
 ├── .github/
 │   └── workflows/
 │       └── docs-pipeline.yml            # GitHub Actions pipeline
+├── backstage/
+│   └── app-config.yaml                  # Backstage application configuration
 ├── terraform/
 │   ├── main.tf                          # Infrastructure resources (local provider)
 │   ├── variables.tf                     # Input variables (parsed by terraform-docs)
@@ -121,23 +144,27 @@ example/
 │       └── host-report.md.j2            # Jinja2 → deterministic Markdown
 ├── policies/
 │   └── terraform/
-│       ├── deny_missing_tags.rego       # FINOPS-001: mandatory cost tags
+│       ├── deny_missing_tags.rego       # FINOPS-001 (with related_adr, related_requirements)
 │       ├── deny_missing_tags_test.rego  # Unit tests for FINOPS-001
-│       └── deny_unencrypted_storage.rego# SEC-001: encryption required
+│       └── deny_unencrypted_storage.rego# SEC-001 (with related_adr, related_requirements)
 ├── docs/
 │   ├── index.md                         # Site home page
-│   ├── adrs/                            # Architectural Decision Records
+│   ├── adrs/                            # ADRs (related_requirements in front-matter)
 │   │   ├── 0001-use-terraform-for-iac.md
 │   │   ├── 0002-use-opa-for-policy.md
 │   │   └── 0003-use-mkdocs-for-publishing.md
 │   ├── requirements/
 │   │   └── moscow.md                    # MoSCoW requirements
+│   ├── traceability/
+│   │   └── index.md                     # Mermaid diagrams: MoSCoW → ADR → Policy
+│   ├── backstage/
+│   │   └── index.md                     # Backstage integration guide
 │   ├── infrastructure/
 │   │   └── terraform.md                 # Terraform module docs page
 │   ├── configuration/
 │   │   └── ansible.md                   # Ansible host report page
 │   ├── compliance/
-│   │   └── opa-policies.md              # OPA policy summary
+│   │   └── opa-policies.md              # OPA policy summary with traceability links
 │   └── generated/                       # Auto-generated artefacts (git-ignored)
 │       └── terraform-readme.md          # terraform-docs output (seeded copy)
 └── scripts/

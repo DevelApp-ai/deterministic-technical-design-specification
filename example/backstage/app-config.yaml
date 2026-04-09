@@ -1,0 +1,84 @@
+# backstage/app-config.yaml
+#
+# Backstage application configuration for the Deterministic Documentation
+# Example showcase.
+#
+# Usage — with the Dockerfile.backstage image:
+#   docker run --rm -p 7007:7007 dtds-backstage
+#
+# Usage — with an existing Backstage instance, copy relevant sections into
+# your app-config.yaml and add the catalog location above.
+#
+# Reference: https://backstage.io/docs/conf/writing
+
+app:
+  title: Deterministic TDS — Backstage Portal
+  baseUrl: http://localhost:3000
+
+organization:
+  name: Platform Team
+
+backend:
+  baseUrl: http://localhost:7007
+  listen:
+    port: 7007
+  cors:
+    origin: http://localhost:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    # Use an in-memory SQLite database for the showcase so no external DB is needed
+    client: better-sqlite3
+    connection: ':memory:'
+
+# ---------------------------------------------------------------------------
+# Integrations
+# ---------------------------------------------------------------------------
+integrations:
+  github:
+    - host: github.com
+      # Set the GITHUB_TOKEN environment variable when running the container
+      # to enable private repository access and higher API rate limits.
+      token: ${GITHUB_TOKEN}
+
+# ---------------------------------------------------------------------------
+# TechDocs
+# ---------------------------------------------------------------------------
+techdocs:
+  # 'local' builder runs MkDocs inside the container — no external storage needed.
+  builder: local
+  generator:
+    runIn: local   # Use locally installed mkdocs (not Docker-in-Docker)
+  publisher:
+    type: local    # Store generated HTML on the local filesystem inside the container
+
+# ---------------------------------------------------------------------------
+# Catalog
+# ---------------------------------------------------------------------------
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+
+  rules:
+    - allow: [Component, System, API, Resource, Location]
+
+  locations:
+    # Register the deterministic-docs component from the example directory
+    - type: file
+      target: ../../catalog-info.yaml   # Relative to this file (backstage/)
+
+    # To load from GitHub instead (requires GITHUB_TOKEN):
+    # - type: url
+    #   target: https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/example/catalog-info.yaml
+
+# ---------------------------------------------------------------------------
+# Auth (disabled for local showcase)
+# ---------------------------------------------------------------------------
+auth:
+  providers: {}
+
+# ---------------------------------------------------------------------------
+# Proxy (empty for showcase)
+# ---------------------------------------------------------------------------
+proxy: {}

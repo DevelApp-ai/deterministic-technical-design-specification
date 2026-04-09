@@ -6,6 +6,7 @@ date: 2024-02-03
 author: security-team
 tags: [policy, opa, rego, compliance, security]
 supersedes: []
+related_requirements: [M-002, M-003, S-001, S-002]
 ---
 
 # ADR-0002 — Use Open Policy Agent (OPA) for Policy Enforcement

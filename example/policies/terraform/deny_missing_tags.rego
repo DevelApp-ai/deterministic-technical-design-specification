@@ -22,6 +22,10 @@ __rego__metadoc__ := {
 	"description": "All Terraform resources must carry the four mandatory cost-allocation tags (environment, app_name, owner, cost_center) so that cloud expenditure can be attributed to the correct team and project.",
 	"severity": "HIGH",
 	"remediation": "Add a `tags` block to the offending resource that includes all four required keys.",
+	# Traceability — links this policy back to the decisions and requirements
+	# that mandated its existence.
+	"related_adr": ["ADR-0002"],
+	"related_requirements": ["M-002", "M-003", "S-001", "S-002"],
 }
 
 # Collect every violation across all planned resources.
