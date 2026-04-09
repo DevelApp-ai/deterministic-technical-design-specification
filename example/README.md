@@ -74,7 +74,7 @@ Then open [http://localhost:7007](http://localhost:7007).  The portal shows:
 - **Catalog** → `deterministic-docs-example` component
 - **Docs** tab → TechDocs site with all ADRs, requirements, traceability and compliance pages
 
-### Option B — Native (requires tools on PATH)
+### Option C — Native (requires tools on PATH)
 
 Install the required tools:
 
