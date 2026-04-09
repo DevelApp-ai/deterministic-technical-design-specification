@@ -1,0 +1,10 @@
+---
+# ansible/inventory.yml
+# Static inventory for local demonstration.  Replace `localhost` with real
+# hostnames or use a dynamic inventory plugin for production environments.
+
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_python_interpreter: "{{ ansible_playbook_python }}"

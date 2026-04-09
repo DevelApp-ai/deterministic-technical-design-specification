@@ -1,0 +1,236 @@
+---
+# .github/workflows/docs-pipeline.yml
+#
+# Deterministic Documentation Pipeline
+# =====================================
+# Orchestrates the full pipeline on every push to `main` and on every
+# pull request that touches files under `example/`.
+#
+# Jobs:
+#   1. opa-tests     — unit-test all OPA/Rego policies
+#   2. terraform     — validate Terraform + run OPA compliance gate
+#   3. docs-build    — run terraform-docs + Ansible + build MkDocs site
+#   4. docs-publish  — deploy MkDocs site to GitHub Pages (main only)
+
+name: Deterministic Documentation Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "example/**"
+      - ".github/workflows/docs-pipeline.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "example/**"
+      - ".github/workflows/docs-pipeline.yml"
+  workflow_dispatch:
+
+# Allow the GITHUB_TOKEN to write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; cancel in-progress runs on new pushes
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  TERRAFORM_VERSION: "1.9.8"
+  TERRAFORM_DOCS_VERSION: "0.19.0"
+  OPA_VERSION: "0.69.0"
+  PYTHON_VERSION: "3.12"
+
+# ---------------------------------------------------------------------------
+# Job 1 — OPA policy unit tests
+# ---------------------------------------------------------------------------
+jobs:
+  opa-tests:
+    name: OPA Policy Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OPA
+        run: |
+          curl -fsSL \
+            "https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64_static" \
+            -o /usr/local/bin/opa
+          chmod +x /usr/local/bin/opa
+          opa version
+
+      - name: Run OPA policy unit tests
+        run: |
+          opa test example/policies/terraform/ -v
+
+# ---------------------------------------------------------------------------
+# Job 2 — Terraform validate + OPA compliance gate
+# ---------------------------------------------------------------------------
+  terraform:
+    name: Terraform Validate & OPA Gate
+    runs-on: ubuntu-latest
+    needs: opa-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Install OPA
+        run: |
+          curl -fsSL \
+            "https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64_static" \
+            -o /usr/local/bin/opa
+          chmod +x /usr/local/bin/opa
+
+      - name: Terraform Init
+        working-directory: example/terraform
+        run: terraform init -input=false -no-color
+
+      - name: Terraform Validate
+        working-directory: example/terraform
+        run: terraform validate -no-color
+
+      - name: Create example tfvars
+        working-directory: example/terraform
+        run: cp terraform.tfvars.example terraform.tfvars
+
+      - name: Terraform Plan (JSON output)
+        working-directory: example/terraform
+        run: |
+          terraform plan -input=false -no-color -out=plan.bin
+          terraform show -json plan.bin > ../docs/generated/plan.json
+          mkdir -p ../docs/generated
+
+      - name: OPA — FinOps policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.finops.deny)' 2>/dev/null || echo "0")
+          echo "FinOps violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.finops.deny'
+            exit 1
+          fi
+
+      - name: OPA — Security policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.security.deny)' 2>/dev/null || echo "0")
+          echo "Security violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.security.deny'
+            exit 1
+          fi
+
+      - name: Upload plan JSON artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-json
+          path: example/docs/generated/plan.json
+          retention-days: 7
+
+# ---------------------------------------------------------------------------
+# Job 3 — Documentation build
+# ---------------------------------------------------------------------------
+  docs-build:
+    name: Build Documentation Site
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install terraform-docs
+        run: |
+          curl -fsSL \
+            "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz" \
+            -o /tmp/terraform-docs.tar.gz
+          tar -xzf /tmp/terraform-docs.tar.gz -C /usr/local/bin/ terraform-docs
+          chmod +x /usr/local/bin/terraform-docs
+          terraform-docs version
+
+      - name: Install Python tooling
+        run: |
+          pip install --no-cache-dir \
+            "ansible==10.7.0" \
+            "mkdocs==1.6.1" \
+            "mkdocs-material==9.5.49" \
+            "pymdown-extensions==10.13"
+
+      - name: Run terraform-docs
+        run: |
+          mkdir -p example/docs/generated
+          terraform-docs markdown table \
+            --output-file docs/generated/terraform-readme.md \
+            --output-mode inject \
+            example/terraform/
+
+      - name: Run Ansible playbook (localhost facts)
+        run: |
+          ansible-playbook \
+            -i example/ansible/inventory.yml \
+            example/ansible/playbook.yml \
+            --connection=local 2>&1 | grep -v '^\[WARNING\]' || true
+
+      - name: Build MkDocs site
+        run: mkdocs build --config-file example/mkdocs.yml --strict
+
+      - name: Upload site artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs-site
+          path: example/site/
+          retention-days: 7
+
+      - name: Upload Pages artefact (main branch only)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: example/site/
+
+# ---------------------------------------------------------------------------
+# Job 4 — Publish to GitHub Pages (main branch only)
+# ---------------------------------------------------------------------------
+  docs-publish:
+    name: Publish to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

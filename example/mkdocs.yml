@@ -1,0 +1,73 @@
+site_name: Deterministic Technical Design Specification — Example
+site_description: >-
+  A working example of the deterministic documentation pipeline described in
+  "Documenting Deterministic Infrastructure Code". Infrastructure as Code,
+  Policy as Code, and Documentation as Code — all in one repository.
+site_author: platform-team
+repo_url: https://github.com/DevelApp-ai/deterministic-technical-design-specification
+repo_name: DevelApp-ai/deterministic-technical-design-specification
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - tags
+
+nav:
+  - Home: index.md
+  - Requirements:
+      - MoSCoW Prioritisation: requirements/moscow.md
+  - Infrastructure:
+      - Terraform Module: infrastructure/terraform.md
+  - Configuration:
+      - Ansible Host Report: configuration/ansible.md
+  - Compliance:
+      - OPA Policy Summary: compliance/opa-policies.md
+  - Architecture Decisions:
+      - ADR-0001 Terraform for IaC: adrs/0001-use-terraform-for-iac.md
+      - ADR-0002 OPA for Policy: adrs/0002-use-opa-for-policy.md
+      - ADR-0003 MkDocs for Publishing: adrs/0003-use-mkdocs-for-publishing.md
+  - Generated:
+      - Terraform README: generated/terraform-readme.md

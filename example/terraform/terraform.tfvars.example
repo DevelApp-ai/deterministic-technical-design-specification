@@ -1,0 +1,11 @@
+# example/terraform/terraform.tfvars.example
+# Copy this file to terraform.tfvars and fill in your values before running
+# `terraform apply`.  These values are intentionally non-sensitive defaults
+# suitable for a local demo run.
+
+environment    = "dev"
+app_name       = "demo-webapp"
+owner          = "platform-team"
+cost_center    = "CC-1234"
+enable_backups = true
+replica_count  = 2
