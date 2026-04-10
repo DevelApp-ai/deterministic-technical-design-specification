@@ -63,15 +63,18 @@ nav:
       - Terraform Module: infrastructure/terraform.md
   - Configuration:
       - Ansible Host Report: configuration/ansible.md
+      - DSC Resources: dsc/index.md
   - Compliance:
       - OPA Policy Summary: compliance/opa-policies.md
   - Architecture Decisions:
       - ADR-0001 Terraform for IaC: adrs/0001-use-terraform-for-iac.md
       - ADR-0002 OPA for Policy: adrs/0002-use-opa-for-policy.md
       - ADR-0003 MkDocs for Publishing: adrs/0003-use-mkdocs-for-publishing.md
+      - ADR-0004 DSC for Windows Config: adrs/0004-use-dsc-for-windows-config.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
   - Backstage:
       - Integration Guide: backstage/index.md
   - Generated:
       - Terraform README: generated/terraform-readme.md
+      - DSC Resources Overview: generated/dsc-resources.md

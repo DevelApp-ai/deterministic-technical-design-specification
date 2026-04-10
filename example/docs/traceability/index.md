@@ -5,7 +5,7 @@ This page provides a **complete, bidirectional traceability map** between:
 - 📋 **MoSCoW Requirements** — the business intent captured in `docs/requirements/moscow.md`
 - 📖 **Architectural Decision Records** — the *why* captured in `docs/adrs/`
 - 🔒 **OPA Policies** — the automated enforcement in `policies/terraform/`
-- ⚙️ **Infrastructure Code** — the actual implementation in `terraform/`
+- ⚙️ **Infrastructure Code** — the actual implementation in `terraform/`, `dsc/`
 
 Every artefact in the repository carries machine-readable metadata (`related_requirements`,
 `related_adr`, `__rego__metadoc__`) so that this matrix can be generated
@@ -32,6 +32,8 @@ graph TB
         S002["<b>S-002</b><br/>OPA Unit Tests"]
         S004["<b>S-004</b><br/>Searchable ADR Index"]
         S005["<b>S-005</b><br/>GitHub Pages"]
+        S008["<b>S-008</b><br/>DSC Resources"]
+        S009["<b>S-009</b><br/>Pester Tests"]
     end
 
     subgraph ADRs["📖 Architectural Decision Records"]
@@ -39,6 +41,7 @@ graph TB
         ADR001["<b>ADR-0001</b><br/>Terraform for IaC<br/><i>related: M-001, M-004, M-006</i>"]
         ADR002["<b>ADR-0002</b><br/>OPA for Policy<br/><i>related: M-002, M-003, S-001, S-002</i>"]
         ADR003["<b>ADR-0003</b><br/>MkDocs for Publishing<br/><i>related: M-004, M-005, S-004, S-005</i>"]
+        ADR004["<b>ADR-0004</b><br/>DSC for Windows Config<br/><i>related: M-005, S-008, S-009</i>"]
     end
 
     subgraph Policies["🔒 OPA Policies"]
@@ -53,6 +56,9 @@ graph TB
         SCRIPT["scripts/generate-docs.sh"]
         DOCKER["Dockerfile"]
         MKDOCS["mkdocs.yml"]
+        DSC["dsc/resources/DTDS_FileContent<br/><i>class-based DSC resource</i>"]
+        PSTEST["dsc/tests/DTDS_FileContent.Tests.ps1<br/><i>Pester 5 unit tests</i>"]
+        DSCBLD["dsc/build.ps1<br/><i>DscResource.DocGenerator</i>"]
     end
 
     M001 --> ADR001
@@ -69,6 +75,10 @@ graph TB
     S004 --> ADR003
     S005 --> ADR003
 
+    M005 --> ADR004
+    S008 --> ADR004
+    S009 --> ADR004
+
     ADR001 --> TF
     ADR001 --> SCRIPT
     ADR001 --> DOCKER
@@ -78,8 +88,13 @@ graph TB
 
     ADR003 --> MKDOCS
 
+    ADR004 --> DSC
+    ADR004 --> PSTEST
+    ADR004 --> DSCBLD
+
     FIN001 -.->|"enforces M-002"| TF
     SEC001 -.->|"enforces M-003"| TF
+    PSTEST -.->|"tests S-009"| DSC
 ```
 
 ---
@@ -100,6 +115,7 @@ graph TB
 | [ADR-0001](../adrs/0001-use-terraform-for-iac.md) — Terraform for IaC | [M-001](../requirements/moscow.md#must-have), [M-004](../requirements/moscow.md#must-have), [M-006](../requirements/moscow.md#must-have) | `terraform/`, `Dockerfile` |
 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) — OPA for Policy | [M-002](../requirements/moscow.md#must-have), [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [S-002](../requirements/moscow.md#should-have) | `policies/terraform/`, `.github/workflows/` |
 | [ADR-0003](../adrs/0003-use-mkdocs-for-publishing.md) — MkDocs for Publishing | [M-004](../requirements/moscow.md#must-have), [M-005](../requirements/moscow.md#must-have), [S-004](../requirements/moscow.md#should-have), [S-005](../requirements/moscow.md#should-have) | `mkdocs.yml`, `docs/`, `scripts/` |
+| [ADR-0004](../adrs/0004-use-dsc-for-windows-config.md) — DSC for Windows Config | [M-005](../requirements/moscow.md#must-have), [S-008](../requirements/moscow.md#should-have), [S-009](../requirements/moscow.md#should-have) | `dsc/resources/`, `dsc/tests/`, `dsc/build.ps1` |
 
 ---
 
@@ -114,11 +130,13 @@ sequenceDiagram
     participant CI as GitHub Actions
     participant OPA as OPA Gate
     participant TF  as Terraform
+    participant DSC as DSC Tests
     participant DOCS as Docs Build
     participant GH  as GitHub Pages
 
     PR->>CI: Push / PR event
     CI->>CI: opa test policies/ [S-002]
+    CI->>DSC: Invoke-Pester dsc/tests/ [S-009]
     CI->>TF: terraform validate [M-001]
     CI->>TF: terraform plan -json [M-001]
     TF-->>OPA: plan.json
@@ -130,6 +148,7 @@ sequenceDiagram
         OPA-->>CI: ✅ Continue
     end
     CI->>DOCS: terraform-docs [M-004]
+    CI->>DOCS: pwsh dsc/build.ps1 [S-008]
     CI->>DOCS: Ansible fact-gather [S-003]
     CI->>DOCS: mkdocs build [S-004]
     DOCS->>GH: deploy to GitHub Pages [S-005]
@@ -142,8 +161,8 @@ sequenceDiagram
 ```mermaid
 pie title MoSCoW Requirement Coverage by Category
     "Must Have (implemented)" : 6
-    "Should Have (implemented)" : 5
-    "Could Have (deferred)" : 5
+    "Should Have (implemented)" : 9
+    "Could Have (deferred)" : 3
     "Won't Have (out of scope)" : 3
 ```
 
@@ -173,10 +192,10 @@ __rego__metadoc__ := {
 
 ```yaml
 ---
-id: ADR-0002
-title: Use Open Policy Agent (OPA) for Policy Enforcement
+id: ADR-0004
+title: Use PowerShell DSC for Windows Configuration Management
 ...
-related_requirements: [M-002, M-003, S-001, S-002]
+related_requirements: [M-005, S-008, S-009]
 ---
 ```
 

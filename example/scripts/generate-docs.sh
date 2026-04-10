@@ -9,8 +9,9 @@
 #   2. terraform plan (JSON output) — used by OPA
 #   3. OPA policy evaluation — gate: non-zero violations abort the pipeline
 #   4. terraform-docs — update docs/generated/terraform-readme.md
-#   5. Ansible playbook — gather host facts, render Jinja2 host report
-#   6. mkdocs build — assemble the full static site into site/
+#   5. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
+#   6. Ansible playbook — gather host facts, render Jinja2 host report
+#   7. mkdocs build — assemble the full static site into site/
 #
 # Usage (from repo root):
 #   bash example/scripts/generate-docs.sh
@@ -24,6 +25,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TERRAFORM_DIR="${REPO_ROOT}/terraform"
 POLICY_DIR="${REPO_ROOT}/policies/terraform"
 DOCS_GENERATED_DIR="${REPO_ROOT}/docs/generated"
+DSC_DIR="${REPO_ROOT}/dsc"
 MKDOCS_CFG="${REPO_ROOT}/mkdocs.yml"
 
 # Colour helpers
@@ -41,7 +43,7 @@ error()   { echo -e "${RED}[ERROR]${NC} $*" >&2; }
 # ---------------------------------------------------------------------------
 # Step 1 — Terraform init & validate
 # ---------------------------------------------------------------------------
-info "Step 1/6 — Terraform init & validate"
+info "Step 1/7 — Terraform init & validate"
 
 pushd "${TERRAFORM_DIR}" > /dev/null
 
@@ -58,7 +60,7 @@ success "Terraform validation passed."
 # ---------------------------------------------------------------------------
 # Step 2 — terraform plan → JSON
 # ---------------------------------------------------------------------------
-info "Step 2/6 — terraform plan (JSON output for OPA)"
+info "Step 2/7 — terraform plan (JSON output for OPA)"
 
 mkdir -p "${DOCS_GENERATED_DIR}"
 terraform plan \
@@ -75,7 +77,7 @@ popd > /dev/null
 # ---------------------------------------------------------------------------
 # Step 3 — OPA policy evaluation (gate)
 # ---------------------------------------------------------------------------
-info "Step 3/6 — OPA policy evaluation"
+info "Step 3/7 — OPA policy evaluation"
 
 OPA_VIOLATIONS=0
 for package in "terraform.finops" "terraform.security"; do
@@ -106,7 +108,7 @@ fi
 # ---------------------------------------------------------------------------
 # Step 4 — terraform-docs
 # ---------------------------------------------------------------------------
-info "Step 4/6 — terraform-docs"
+info "Step 4/7 — terraform-docs"
 
 terraform-docs markdown table \
   --output-file "${DOCS_GENERATED_DIR}/terraform-readme.md" \
@@ -116,9 +118,25 @@ terraform-docs markdown table \
 success "terraform-docs written to docs/generated/terraform-readme.md"
 
 # ---------------------------------------------------------------------------
-# Step 5 — Ansible fact-gather
+# Step 5 — DSC resource documentation
 # ---------------------------------------------------------------------------
-info "Step 5/6 — Ansible host fact-gathering"
+info "Step 5/7 — DSC resource documentation (DscResource.DocGenerator)"
+
+if command -v pwsh &> /dev/null; then
+  pwsh -NonInteractive -File "${DSC_DIR}/build.ps1" \
+    -OutputPath "${DOCS_GENERATED_DIR}/dsc-resources"
+  success "DSC documentation written to docs/generated/dsc-resources/"
+else
+  warn "pwsh not found — skipping DSC documentation generation."
+  warn "Install PowerShell Core to enable this step: https://aka.ms/install-powershell"
+  # Ensure the output directory exists so MkDocs can still build
+  mkdir -p "${DOCS_GENERATED_DIR}/dsc-resources"
+fi
+
+# ---------------------------------------------------------------------------
+# Step 6 — Ansible fact-gather
+# ---------------------------------------------------------------------------
+info "Step 6/7 — Ansible host fact-gathering"
 
 ansible-playbook \
   -i "${REPO_ROOT}/ansible/inventory.yml" \
@@ -129,9 +147,9 @@ ansible-playbook \
 success "Ansible host report written to docs/generated/"
 
 # ---------------------------------------------------------------------------
-# Step 6 — MkDocs build
+# Step 7 — MkDocs build
 # ---------------------------------------------------------------------------
-info "Step 6/6 — MkDocs build"
+info "Step 7/7 — MkDocs build"
 
 mkdocs build --config-file "${MKDOCS_CFG}" --strict
 

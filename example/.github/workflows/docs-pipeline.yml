@@ -8,9 +8,10 @@
 #
 # Jobs:
 #   1. opa-tests     — unit-test all OPA/Rego policies
-#   2. terraform     — validate Terraform + run OPA compliance gate
-#   3. docs-build    — run terraform-docs + Ansible + build MkDocs site
-#   4. docs-publish  — deploy MkDocs site to GitHub Pages (main only)
+#   2. dsc-tests     — Pester unit tests for all DSC resources
+#   3. terraform     — validate Terraform + run OPA compliance gate
+#   4. docs-build    — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
+#   5. docs-publish  — deploy MkDocs site to GitHub Pages (main only)
 
 name: Deterministic Documentation Pipeline
 
@@ -69,7 +70,50 @@ jobs:
           opa test example/policies/terraform/ -v
 
 # ---------------------------------------------------------------------------
-# Job 2 — Terraform validate + OPA compliance gate
+# Job 2 — DSC resource Pester unit tests
+# ---------------------------------------------------------------------------
+  dsc-tests:
+    name: DSC Resource Pester Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # GitHub Actions Ubuntu runners include PowerShell Core (pwsh) pre-installed.
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Pester -RequiredVersion 5.6.1 -Force -SkipPublisherCheck
+          (Get-Module Pester -ListAvailable)[0].Version | ForEach-Object { "Pester version: $_" }
+
+      - name: Run Pester tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path          = 'example/dsc/tests/'
+          $config.Output.Verbosity  = 'Detailed'
+          $config.TestResult.Enabled       = $true
+          $config.TestResult.OutputPath    = 'test-results.xml'
+          $config.TestResult.OutputFormat  = 'JUnitXml'
+          $result = Invoke-Pester -Configuration $config
+          if ($result.FailedCount -gt 0) {
+            Write-Error "Pester: $($result.FailedCount) test(s) failed."
+            exit 1
+          }
+          Write-Host "Pester: $($result.PassedCount) test(s) passed."
+
+      - name: Upload Pester test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pester-test-results
+          path: test-results.xml
+          retention-days: 7
+
+# ---------------------------------------------------------------------------
+# Job 3 — Terraform validate + OPA compliance gate
 # ---------------------------------------------------------------------------
   terraform:
     name: Terraform Validate & OPA Gate
@@ -153,12 +197,12 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 3 — Documentation build
+# Job 4 — Documentation build
 # ---------------------------------------------------------------------------
   docs-build:
     name: Build Documentation Site
     runs-on: ubuntu-latest
-    needs: terraform
+    needs: [terraform, dsc-tests]
 
     steps:
       - name: Checkout repository
@@ -186,6 +230,13 @@ jobs:
             "mkdocs-material==9.5.49" \
             "pymdown-extensions==10.13"
 
+      - name: Install DSC documentation tools (PowerShell modules)
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PlatyPS                 -RequiredVersion 2.0.6  -Force
+          Install-Module -Name DscResource.DocGenerator -RequiredVersion 0.12.2 -Force
+
       - name: Run terraform-docs
         run: |
           mkdir -p example/docs/generated
@@ -193,6 +244,12 @@ jobs:
             --output-file example/docs/generated/terraform-readme.md \
             --output-mode replace \
             example/terraform/
+
+      - name: Generate DSC resource documentation
+        shell: pwsh
+        run: |
+          pwsh -File example/dsc/build.ps1 `
+            -OutputPath example/docs/generated/dsc-resources
 
       - name: Run Ansible playbook (localhost facts)
         run: |
@@ -218,7 +275,7 @@ jobs:
           path: example/site/
 
 # ---------------------------------------------------------------------------
-# Job 4 — Publish to GitHub Pages (main branch only)
+# Job 5 — Publish to GitHub Pages (main branch only)
 # ---------------------------------------------------------------------------
   docs-publish:
     name: Publish to GitHub Pages

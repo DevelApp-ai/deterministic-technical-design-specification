@@ -14,12 +14,13 @@
 |-----------|---------------|
 | **Infrastructure as Code** | Terraform (`local` provider — no cloud credentials needed) |
 | **Policy as Code** | OPA + Rego policies with `__rego__metadoc__` self-documentation |
-| **Documentation as Code** | terraform-docs, Ansible Jinja2 templates, MkDocs Material |
+| **Documentation as Code** | terraform-docs, Ansible Jinja2 templates, DscResource.DocGenerator, MkDocs Material |
 | **MoSCoW Requirements** | Machine-readable Markdown in `docs/requirements/` |
 | **ADRs** | Structured Markdown in `docs/adrs/` with front-matter metadata |
 | **Traceability** | Full chain: MoSCoW → ADR → OPA policy with Mermaid diagrams |
+| **PowerShell DSC** | Class-based DSC resources + Pester tests + DscResource.DocGenerator |
 | **Backstage** | `catalog-info.yaml` + `Dockerfile.backstage` for developer portal |
-| **CI/CD Pipeline** | GitHub Actions — OPA gate → terraform-docs → Ansible → MkDocs |
+| **CI/CD Pipeline** | GitHub Actions — OPA gate → Pester → terraform-docs → Ansible → MkDocs |
 
 ---
 

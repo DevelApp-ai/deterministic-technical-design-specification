@@ -22,6 +22,7 @@ Nothing is written manually after the fact.
 | Policy Unit Tests | `opa test` | `policies/terraform/*_test.rego` |
 | Auto-generated IaC docs | terraform-docs | `docs/generated/terraform-readme.md` |
 | Living configuration docs | Ansible + Jinja2 | `ansible/templates/host-report.md.j2` |
+| PowerShell DSC | Class-based DSC resource + Pester tests + DscResource.DocGenerator | `dsc/` |
 | MoSCoW requirements | Machine-readable Markdown | `docs/requirements/moscow.md` |
 | Architectural Decision Records | Structured Markdown with front-matter | `docs/adrs/` |
 | Traceability | OPA policy → ADR → MoSCoW requirement with Mermaid diagrams | `docs/traceability/index.md` |
