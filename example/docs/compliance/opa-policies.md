@@ -54,6 +54,8 @@ Set `encrypted = true` (AWS EBS / RDS) or `enable_https_traffic_only = true`
 See the [Traceability Matrix](../traceability/index.md) for the full chain from
 MoSCoW requirements → ADRs → OPA policies → infrastructure code.
 
+See the [NIS2 Compliance page](nis2.md) for the Article 21 evidence map.
+
 ```mermaid
 graph LR
     M002["M-002: FinOps Tags Required"] --> ADR002["ADR-0002: OPA for Policy"]
@@ -63,6 +65,9 @@ graph LR
     ADR002 --> SEC002["SEC-002: deny_public_access"]
     ADR002 --> SEC003["SEC-003: deny_public_iam"]
     ADR002 --> SEC004["SEC-004: deny_unrestricted_network"]
+    ADR002 --> SEC005["SEC-005: deny_missing_https_redirect"]
+    ADR002 --> SEC006["SEC-006: deny_deprecated_tls"]
+    ADR010["ADR-0010: NIS2 Compliance"] --> NIS2C["NIS2-CRYPTO-001: deny_nis2_crypto"]
 ```
 
 ---
@@ -142,7 +147,107 @@ CIDRs to private ranges (10.x.x.x, 172.16-31.x.x, 192.168.x.x).
 ## Full Security Controls Matrix
 
 See the [Security Controls](../security/index.md) page for the complete
-mapping of OPA policies to CIS, NIST 800-53, and SOC 2 controls.
+mapping of OPA policies to CIS, NIST 800-53, SOC 2, and NIS2 controls.
+
+See the [NIS2 Compliance](nis2.md) page for the Article 21 audit evidence summary.
+
+---
+
+## SEC-005 — HTTPS Enforcement
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SEC-005` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_missing_https_redirect.rego` |
+| **Package** | `terraform.https` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-002](../requirements/moscow.md#should-have-cybersecurity) |
+| **NIS2** | Art.21(2)(h) — Cryptography, Art.21(2)(j) — Secured communications |
+| **CIS** | AWS 8.2 |
+| **NIST 800-53** | SC-8, SC-23 |
+| **SOC 2** | CC6.7 |
+
+**Description:**  
+Public HTTP (port 80) listeners must redirect to HTTPS. Plain-text HTTP is
+prohibited on internet-facing load balancers and application gateways.
+
+**Remediation:**  
+Add a redirect action from HTTP (port 80) to HTTPS (port 443) on the load
+balancer listener. Set `protocol = "HTTPS"` in the redirect configuration.
+
+---
+
+## SEC-006 — Prohibit Deprecated TLS Versions
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SEC-006` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_deprecated_tls.rego` |
+| **Package** | `terraform.tls` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [NIS2-002](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555) |
+| **NIS2** | Art.21(2)(h) — Cryptography and encryption |
+| **CIS** | AWS 2.9, Azure 9.3 |
+| **NIST 800-53** | SC-8, SC-23, IA-7 |
+| **SOC 2** | CC6.7, CC6.8 |
+
+**Description:**  
+TLS 1.0 and TLS 1.1 are cryptographically broken (BEAST, POODLE, DROWN).
+Only TLS 1.2 or higher is permitted on internet-facing and internal endpoints.
+
+**Remediation:**  
+Update the SSL/TLS policy to `ELBSecurityPolicy-TLS13-1-2-2021-06` or newer
+on AWS ALB.  Set `minimum_protocol_version = TLSv1.2_2021` on CloudFront.
+
+---
+
+## NIS2-CRYPTO-001 — NIS2 Cryptography and Key Management
+
+| Field | Value |
+|-------|-------|
+| **ID** | `NIS2-CRYPTO-001` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_nis2_crypto.rego` |
+| **Package** | `terraform.nis2` |
+| **Related ADR** | [ADR-0010 — NIS2 Compliance](../adrs/0010-nis2-compliance.md) |
+| **Related Requirements** | [NIS2-002](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555), [M-003](../requirements/moscow.md#must-have) |
+| **NIS2** | Art.21(2)(h) — Cryptography and encryption |
+| **NIST 800-53** | SC-12, SC-28, SC-13 |
+| **SOC 2** | CC6.1, CC6.7 |
+| **GDPR** | Art.32 |
+
+**Description:**  
+Enforces three key-management and encryption obligations mandated by NIS2
+Article 21(2)(h):
+
+1. AWS KMS keys must have **automatic key rotation** enabled.
+2. AWS RDS database instances must have **storage encryption** enabled.
+3. AWS SSM Parameter Store entries with **secret-like names** (`password`,
+   `secret`, `token`, `credential`, `apikey`, `private_key`) must use
+   `SecureString` type — not plaintext `String`.
+
+**Remediation:**
+
+```hcl
+# 1) Enable KMS key rotation
+resource "aws_kms_key" "app" {
+  enable_key_rotation = true
+}
+
+# 2) Enable RDS encryption
+resource "aws_db_instance" "main" {
+  storage_encrypted = true
+  kms_key_id        = aws_kms_key.app.arn
+}
+
+# 3) Use SecureString for secrets
+resource "aws_ssm_parameter" "db_password" {
+  type  = "SecureString"
+  value = var.db_password
+}
+```
 
 ---
 
@@ -165,8 +270,14 @@ opa eval \
   --data policies/terraform/ \
   --input plan.json \
   --format pretty \
-  'data.terraform.finops.deny | data.terraform.security.deny'
+  'data.terraform.finops.deny |
+   data.terraform.security.deny |
+   data.terraform.iam.deny |
+   data.terraform.network.deny |
+   data.terraform.https.deny |
+   data.terraform.tls.deny |
+   data.terraform.nis2.deny'
 
-# Run unit tests
-opa test policies/terraform/ -v
+# Run all unit tests (76 tests)
+opa test policies/ -v
 ```

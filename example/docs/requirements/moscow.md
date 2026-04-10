@@ -1,8 +1,8 @@
 ---
 title: MoSCoW Requirements
 project: deterministic-docs-example
-version: 1.0.0
-last_updated: 2024-03-01
+version: 1.1.0
+last_updated: 2026-04-10
 ---
 
 # MoSCoW Requirements — Deterministic Documentation Example
@@ -142,6 +142,24 @@ Context Protocol (MCP).
 | AI-001 | The Backstage catalog must be queryable by AI agents via a standardised MCP interface without custom per-model integration code | `backstage/mcp-clients/`, `.vscode/mcp.json`, ADR-0009 |
 | AI-002 | The Backstage catalog must include at least one System, one API, one Group, one User, two Components, and two Resources so AI agents have a rich, traversable entity hierarchy to explore | `catalog-info.yaml` (7 entities) |
 | AI-003 | VS Code / GitHub Copilot MCP configuration must be committed to the repository so any developer cloning the repo gets AI catalog access immediately | `.vscode/mcp.json` |
+
+---
+
+## Should Have — NIS2 Compliance (EU 2022/2555)
+
+Requirements derived from the NIS2 Directive Article 21 cybersecurity
+risk-management obligations.  These apply to essential and important entities
+in scope from **17 October 2024**.
+See [ADR-0010](../adrs/0010-nis2-compliance.md) for the compliance strategy decision.
+
+| ID | Requirement | NIS2 Article | Satisfied By |
+|----|-------------|--------------|-------------|
+| NIS2-001 | Evidence of security risk analysis and information system security policies must be version-controlled and traceable to implementation artefacts | Art.21(2)(a) | `docs/requirements/moscow.md`, `docs/adrs/`, `docs/compliance/nis2.md` |
+| NIS2-002 | Cryptography policy must prohibit weak algorithms and require key rotation; enforcement must be automated in the CI/CD pipeline | Art.21(2)(h) | `policies/terraform/deny_unencrypted_storage.rego` (SEC-001), `policies/terraform/deny_deprecated_tls.rego` (SEC-006), `policies/terraform/deny_nis2_crypto.rego` (NIS2-CRYPTO-001) |
+| NIS2-003 | Business continuity, backup and disaster-recovery capability must be documented and its configuration managed as code | Art.21(2)(c) | `terraform/storage.tf` (backup bucket + replication), `terraform/monitoring.tf` (backup alarms), `docs/runbook/index.md` |
+| NIS2-004 | Access control must enforce least-privilege; no wildcard IAM principals or actions on sensitive services | Art.21(2)(i) | `policies/terraform/deny_public_iam.rego` (SEC-003), `terraform/iam.tf` |
+| NIS2-005 | Incident handling procedures must be documented, including detection, response, and recovery steps | Art.21(2)(b) | `docs/runbook/index.md` |
+| NIS2-006 | The effectiveness of all security risk-management measures must be measurable and regularly assessed; automated test coverage must be maintained | Art.21(2)(f) | `policies/terraform/*_test.rego` (63 OPA unit tests), `scripts/check-doc-coverage.sh`, `.github/workflows/docs-pipeline.yml` |
 
 ---
 

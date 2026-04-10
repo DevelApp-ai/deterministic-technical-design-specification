@@ -31,6 +31,7 @@ __rego__metadoc__ := {
 	"related_adr":          ["ADR-0002"],
 	"related_requirements": ["M-003", "S-001", "CYB-002"],
 	"compliance": {
+		"nis2":        ["Art.21(2)(h)", "Art.21(2)(j)"],
 		"cis_aws":     ["8.2"],
 		"nist_800_53": ["SC-8", "SC-23"],
 		"soc2_cc":     ["CC6.7"],

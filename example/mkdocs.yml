@@ -70,6 +70,7 @@ nav:
       - DSC Resources: dsc/index.md
   - Compliance:
       - OPA Policy Summary: compliance/opa-policies.md
+      - NIS2 Article 21 Evidence: compliance/nis2.md
       - Security Controls Matrix: security/index.md
   - FinOps:
       - Cost-Allocation Guide: finops/index.md
@@ -83,6 +84,7 @@ nav:
       - ADR-0007 Semantic Versioning: adrs/0007-semantic-versioning-and-changelog.md
       - ADR-0008 Kubernetes & Helm: adrs/0008-kubernetes-manifests-and-helm-chart.md
       - ADR-0009 Backstage MCP Server: adrs/0009-backstage-mcp-server.md
+      - ADR-0010 NIS2 Compliance: adrs/0010-nis2-compliance.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
   - Backstage:
