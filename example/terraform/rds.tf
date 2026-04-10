@@ -19,6 +19,7 @@ locals {
   db_subnet_group_name = "${var.app_name}-${var.environment}-db-subnet"
   db_sg_name           = "${var.app_name}-${var.environment}-db-sg"
   db_param_group_name  = "${var.app_name}-${var.environment}-pg15"
+  db_kms_alias         = "alias/${var.app_name}-${var.environment}-cmk"
 
   # DORA Art.10 / CIS PostgreSQL: connection and statement logging
   db_parameters = [
@@ -256,7 +257,7 @@ resource "local_file" "rds_summary_md" {
 |----------|-------|
 | Engine | PostgreSQL 15.5 |
 | Identifier | `${local.db_identifier}` |
-| Encrypted | ✅ Yes — KMS CMK (`${local.kms_key_alias}`) |
+| Encrypted | ✅ Yes — KMS CMK (`${local.db_kms_alias}`) |
 | Multi-AZ | ${var.environment == "prod" ? "✅ Yes (prod)" : "❌ No (non-prod)"} |
 | Publicly Accessible | ❌ No (SEC-002) |
 | Backup Retention | ${local.db_backup_retention_days} days (DORA Art.12) |

@@ -14,6 +14,11 @@
     mode: "0640"
   tags: [patching, audit]
 
+- name: Store pre-patch kernel version for reboot detection
+  ansible.builtin.set_fact:
+    pre_patch_kernel: "{{ ansible_kernel }}"
+  tags: [patching]
+
 - name: Ensure report directory exists
   ansible.builtin.file:
     path: "{{ patching_report_dir }}"
@@ -36,13 +41,14 @@
     manager: auto
   tags: [patching, post-patch]
 
-- name: Detect kernel update (reboot may be required)
+- name: Re-gather facts to detect updated kernel version
+  ansible.builtin.setup:
+    filter: ansible_kernel
+  tags: [patching, post-patch]
+
+- name: Detect kernel update (reboot required when kernel changed)
   ansible.builtin.set_fact:
-    kernel_updated: >-
-      {{
-        ansible_facts.packages.get('kernel', []) | map(attribute='version') | list
-        != ansible_facts.packages.get('kernel', []) | map(attribute='version') | list
-      }}
+    kernel_updated: "{{ ansible_kernel != pre_patch_kernel }}"
   tags: [patching]
 
 - name: Check if reboot is required (RHEL — /var/run/reboot-required equiv)
@@ -60,8 +66,7 @@
     - patching_reboot_policy == "when_required"
     - >
       (ansible_facts['os_family'] == "Debian" and reboot_required_file.stat.exists)
-      or (ansible_facts['os_family'] == "RedHat" and
-          (ansible_facts.packages.get('kernel', []) | length > 1))
+      or (ansible_facts['os_family'] == "RedHat" and kernel_updated | bool)
   tags: [patching]
 
 - name: Force reboot when policy is always
