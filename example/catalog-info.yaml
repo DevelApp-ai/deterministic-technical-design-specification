@@ -43,7 +43,7 @@ spec:
     email: platform-team@example.com
   children: []
   members:
-    - default/user:platform-lead
+    - user:default/platform-lead
 
 ---
 # ---------------------------------------------------------------------------
