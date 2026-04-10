@@ -1,0 +1,19 @@
+---
+# roles/monitoring/handlers/main.yml
+
+- name: Restart CloudWatch agent
+  ansible.builtin.service:
+    name: "{{ monitoring_agent_service }}"
+    state: restarted
+  listen: restart_cloudwatch_agent
+
+- name: Reload CloudWatch agent config
+  ansible.builtin.command:
+    cmd: >
+      /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
+      -a fetch-config
+      -m ec2
+      -c file:{{ monitoring_config_dest }}
+      -s
+  listen: reload_cloudwatch_config
+  changed_when: true

@@ -1,0 +1,22 @@
+---
+# roles/patching/meta/main.yml
+galaxy_info:
+  author: platform-team
+  description: >
+    Automated patch management role — installs security updates and optionally
+    reboots hosts.  Satisfies DORA Art.10 §10.2.f (patch currency) and
+    CIS Control 7 (Continuous Vulnerability Management).
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: EL
+      versions: [8, 9]
+    - name: Ubuntu
+      versions: [22.04, 24.04]
+  galaxy_tags:
+    - patching
+    - security
+    - dora
+    - cis
+
+dependencies: []

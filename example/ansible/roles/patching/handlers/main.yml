@@ -1,0 +1,20 @@
+---
+# roles/patching/handlers/main.yml
+
+- name: Reboot host
+  ansible.builtin.reboot:
+    reboot_timeout: "{{ patching_reboot_timeout }}"
+    msg: "Rebooting after kernel/system package update (DORA Art.10 patch cycle)"
+  listen: reboot_required
+
+- name: Restart auditd
+  ansible.builtin.service:
+    name: auditd
+    state: restarted
+  listen: restart_auditd
+
+- name: Restart rsyslog
+  ansible.builtin.service:
+    name: rsyslog
+    state: restarted
+  listen: restart_rsyslog

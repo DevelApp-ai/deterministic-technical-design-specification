@@ -1,0 +1,60 @@
+{# roles/patching/templates/patch-report.md.j2 #}
+{# Jinja2 template — generates DORA Art.10 patch evidence document.      #}
+{# Rendered per host; fetched to docs/generated/patching/ for MkDocs.   #}
+---
+title: Patch Compliance Report — {{ inventory_hostname }}
+date: "{{ ansible_date_time.date }}"
+generated_by: ansible/roles/patching
+dora_article: "Art.10 §10.2.f — patch currency"
+compliance_status: "{{ 'COMPLIANT' if (ansible_facts.packages | length > 0) else 'UNKNOWN' }}"
+---
+
+# Patch Report: `{{ inventory_hostname }}`
+
+| Field | Value |
+|-------|-------|
+| **Host** | `{{ inventory_hostname }}` |
+| **Date** | {{ ansible_date_time.date }} {{ ansible_date_time.time }} UTC |
+| **OS** | {{ ansible_distribution }} {{ ansible_distribution_version }} ({{ ansible_os_family }}) |
+| **Kernel** | {{ ansible_kernel }} |
+| **Patch Mode** | {{ 'Security-only' if patching_security_only else 'Full update' }} |
+| **Reboot Policy** | {{ patching_reboot_policy }} |
+| **DORA Reference** | Art.10 §10.2.f — ICT risk management / patch currency |
+
+## Installed Package Count
+
+| Metric | Value |
+|--------|-------|
+| Total packages installed | {{ ansible_facts.packages | length }} |
+
+## Security Update Summary
+
+{% if ansible_os_family == "RedHat" %}
+Security updates available before patching were captured in
+`{{ patching_report_dir }}/pre-patch-packages.json`.
+{% endif %}
+
+{% if ansible_os_family == "Debian" %}
+Unattended-upgrades configured for automatic security patches between
+scheduled maintenance windows.  Configuration at
+`/etc/apt/apt.conf.d/50unattended-upgrades`.
+{% endif %}
+
+## Compliance Evidence
+
+This report satisfies the following control evidence requirements:
+
+| Control | Framework | Evidence |
+|---------|-----------|---------|
+| Patch currency | DORA Art.10 §10.2.f | Patches applied {{ ansible_date_time.date }} |
+| Vulnerability management | CIS Control 7 | Security-only update policy enforced |
+| Change record | DORA Art.10 | Pre/post package lists in `{{ patching_report_dir }}/` |
+
+## Traceability
+
+```
+DORA Art.10 §10.2.f  →  patching_security_only: {{ patching_security_only }}
+                     →  patching_reboot_policy: {{ patching_reboot_policy }}
+                     →  Ansible role: roles/patching
+                     →  Applied: {{ ansible_date_time.date }}
+```

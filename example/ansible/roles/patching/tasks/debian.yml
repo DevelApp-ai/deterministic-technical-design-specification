@@ -1,0 +1,50 @@
+---
+# roles/patching/tasks/debian.yml
+# Patch Debian / Ubuntu hosts using apt.
+# Applies security-only updates by default (patching_security_only: true).
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  tags: [patching, debian]
+
+- name: Apply security-only updates (DORA Art.10 patch currency)
+  ansible.builtin.apt:
+    upgrade: dist
+    default_release: "{{ ansible_distribution_release }}-security"
+    force_apt_get: true
+  when: patching_security_only | bool
+  notify:
+    - restart_auditd
+    - restart_rsyslog
+  tags: [patching, debian]
+
+- name: Apply all available updates
+  ansible.builtin.apt:
+    upgrade: dist
+    force_apt_get: true
+  when: not (patching_security_only | bool)
+  notify:
+    - restart_auditd
+    - restart_rsyslog
+  tags: [patching, debian]
+
+- name: Install unattended-upgrades (automatic security patches between runs)
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+  tags: [patching, debian]
+
+- name: Configure unattended-upgrades for security-only
+  ansible.builtin.template:
+    src: unattended-upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    mode: "0644"
+  tags: [patching, debian]
+
+- name: Remove unused dependencies
+  ansible.builtin.apt:
+    autoremove: true
+    purge: true
+  tags: [patching, debian, cleanup]
