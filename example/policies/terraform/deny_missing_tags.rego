@@ -28,6 +28,7 @@ __rego__metadoc__ := {
 	"related_requirements": ["M-002", "M-003", "S-001", "S-002"],
 	"compliance": {
 		"nis2":        ["Art.21(2)(i)"],
+		"dora":        ["Art.8"],
 	},
 }
 

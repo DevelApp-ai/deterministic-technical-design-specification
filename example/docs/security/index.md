@@ -12,16 +12,17 @@ mandated them?"*
 
 ## Policy → Framework Mapping
 
-| Policy ID | Severity | Package | NIS2 | CIS AWS/Azure | NIST 800-53 | SOC 2 CC | Related ADR | Related Requirements |
-|-----------|----------|---------|------|---------------|-------------|----------|-------------|---------------------|
-| [FINOPS-001](#finops-001) | HIGH | `terraform.finops` | Art.21(2)(i) | — | CM-8, CM-9 | CC1.2 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-002, M-003, S-001, S-002 |
-| [SEC-001](#sec-001) | CRITICAL | `terraform.security` | Art.21(2)(h) | CIS AWS 2.2.1, 2.4 | SC-28, CP-9 | CC6.1 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001 |
-| [SEC-002](#sec-002) | CRITICAL | `terraform.security` | Art.21(2)(e), (j) | CIS AWS 2.1.2, 5.2 | AC-3, SC-7 | CC6.1, CC6.6 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
-| [SEC-003](#sec-003) | HIGH | `terraform.iam` | Art.21(2)(i) | CIS AWS 1.16, 1.22 | AC-2, AC-6, IA-2 | CC6.3 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-003 |
-| [SEC-004](#sec-004) | HIGH | `terraform.network` | Art.21(2)(e) | CIS AWS 5.3, 5.4 | SC-7, CA-3 | CC6.6, CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-004 |
-| [SEC-005](#sec-005) | HIGH | `terraform.https` | Art.21(2)(h), (j) | CIS AWS 8.2 | SC-8, SC-23 | CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
-| [SEC-006](#sec-006) | HIGH | `terraform.tls` | Art.21(2)(h) | CIS AWS 2.9, Azure 9.3 | SC-8, SC-23, IA-7 | CC6.7, CC6.8 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
-| [NIS2-CRYPTO-001](#nis2-crypto-001) | HIGH | `terraform.nis2` | Art.21(2)(h) | — | SC-12, SC-28 | CC6.1, CC6.7 | [ADR-0010](../adrs/0010-nis2-compliance.md) | NIS2-002, M-003 |
+| Policy ID | Severity | Package | NIS2 | DORA | CIS AWS/Azure | NIST 800-53 | SOC 2 CC | Related ADR | Related Requirements |
+|-----------|----------|---------|------|------|---------------|-------------|----------|-------------|---------------------|
+| [FINOPS-001](#finops-001) | HIGH | `terraform.finops` | Art.21(2)(i) | Art.8 | — | CM-8, CM-9 | CC1.2 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-002, M-003 |
+| [SEC-001](#sec-001) | CRITICAL | `terraform.security` | Art.21(2)(h) | Art.9 | CIS AWS 2.2.1, 2.4 | SC-28, CP-9 | CC6.1 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001 |
+| [SEC-002](#sec-002) | CRITICAL | `terraform.security` | Art.21(2)(e), (j) | Art.9 | CIS AWS 2.1.2, 5.2 | AC-3, SC-7 | CC6.1, CC6.6 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
+| [SEC-003](#sec-003) | HIGH | `terraform.iam` | Art.21(2)(i) | Art.9 | CIS AWS 1.16, 1.22 | AC-2, AC-6, IA-2 | CC6.3 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-003 |
+| [SEC-004](#sec-004) | HIGH | `terraform.network` | Art.21(2)(e) | Art.9 | CIS AWS 5.3, 5.4 | SC-7, CA-3 | CC6.6, CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-004 |
+| [SEC-005](#sec-005) | HIGH | `terraform.https` | Art.21(2)(h), (j) | Art.9 | CIS AWS 8.2 | SC-8, SC-23 | CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
+| [SEC-006](#sec-006) | HIGH | `terraform.tls` | Art.21(2)(h) | Art.9 | CIS AWS 2.9, Azure 9.3 | SC-8, SC-23, IA-7 | CC6.7, CC6.8 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
+| [NIS2-CRYPTO-001](#nis2-crypto-001) | HIGH | `terraform.nis2` | Art.21(2)(h) | Art.9 | — | SC-12, SC-28 | CC6.1, CC6.7 | [ADR-0010](../adrs/0010-nis2-compliance.md) | NIS2-002, M-003 |
+| [DORA-ICT-001](#dora-ict-001) | HIGH | `terraform.dora` | — | Art.9, Art.10, Art.12 | — | AU-2, AU-9, CP-9 | CC7.2, A1.2 | [ADR-0011](../adrs/0011-dora-compliance.md) | DORA-002, DORA-003 |
 
 ---
 
@@ -276,6 +277,33 @@ allowed on internet-facing and internal endpoints.
 
 ---
 
+### DORA-ICT-001
+
+**Package:** `terraform.dora`  
+**Severity:** HIGH  
+**File:** `policies/terraform/deny_dora_ict_risk.rego`
+
+**What it enforces:** Three ICT risk-management controls mandated by DORA
+Chapter II — ICT Risk Management (Art. 5–16):
+
+1. CloudTrail `enable_log_file_validation = true` — log integrity
+2. CloudWatch log group `retention_in_days > 0` — log lifecycle governance
+3. S3 bucket versioning `status = "Enabled"` — point-in-time backup recovery
+
+| Framework | Control | Description |
+|-----------|---------|-------------|
+| DORA | Art.9 | Protection and Prevention — ICT security policies |
+| DORA | Art.10 | Detection — anomaly detection and logging |
+| DORA | Art.12 | Backup Policies and Procedures |
+| NIST 800-53 | AU-2 | Audit Events |
+| NIST 800-53 | AU-9 | Protection of Audit Information |
+| NIST 800-53 | CP-9 | Information System Backup |
+| NIST 800-53 | SI-12 | Information Management and Retention |
+| SOC 2 | CC7.2 | System monitoring for anomalous activity |
+| SOC 2 | A1.2 | Availability commitments — backup processing |
+
+---
+
 ## Gap Analysis
 
 The table below lists compliance controls that are **not yet automated** by
@@ -284,16 +312,21 @@ an OPA policy, providing a roadmap for the security team.
 | Framework | Control | Description | Status |
 |-----------|---------|-------------|--------|
 | CIS AWS | 2.3.1 | RDS encryption at rest | ⚠️ Partially covered by NIS2-CRYPTO-001 |
-| CIS AWS | 3.1 | CloudTrail enabled | ⚠️ Not automated — requires AWS account context |
-| NIST 800-53 | AU-2 | Audit Events | ⚠️ Not automated — logging policy needed |
+| CIS AWS | 3.1 | CloudTrail enabled | ⚠️ Add `deny_cloudtrail_disabled.rego` for trail existence check |
+| NIST 800-53 | AU-2 | Audit Events | ✅ Covered by DORA-ICT-001 (log validation + retention) |
 | NIST 800-53 | IR-4 | Incident Handling | ✅ Covered by runbook |
 | SOC 2 | CC7.1 | System monitoring | ✅ Covered by `terraform/monitoring.tf` alarms |
 | PCI-DSS | Req 6.3 | Vulnerability scanning | ⚠️ Not automated — SAST/SCA pipeline needed |
 | NIS2 | Art.21(2)(c) | Formal RTO/RPO targets | ⚠️ Infrastructure exists; documentation needed |
 | NIS2 | Art.21(2)(d) | Supply chain / SBOM | ⚠️ Not automated — add Syft/Grype to CI |
 | NIS2 | Art.21(2)(j) | MFA for human access | ⚠️ Requires IdP integration (Azure AD / Okta) |
+| DORA | Art.10 | Log retention ≥ 365 days | ⚠️ DORA-ICT-001 enforces non-zero; 365-day minimum still manual |
+| DORA | Art.19–20 | Incident classification thresholds | ⚠️ Add DORA incident matrix to runbook |
+| DORA | Art.25 | TLPT testing programme | ⚠️ Requires accredited external provider |
+| DORA | Art.28–30 | ICT third-party risk register | ⚠️ Add `docs/third-party/ict-register.md` |
 
 See the [NIS2 compliance page](../compliance/nis2.md) for the full NIS2 gap analysis and audit checklist.
+See the [DORA compliance page](../compliance/dora.md) for the full DORA gap analysis and audit checklist.
 
 ---
 
@@ -308,8 +341,12 @@ opa eval \
   'data.terraform.finops.deny |
    data.terraform.security.deny |
    data.terraform.iam.deny |
-   data.terraform.network.deny'
+   data.terraform.network.deny |
+   data.terraform.https.deny |
+   data.terraform.tls.deny |
+   data.terraform.nis2.deny |
+   data.terraform.dora.deny'
 
-# Run all policy unit tests
-opa test example/policies/terraform/ -v
+# Run all policy unit tests (90 tests)
+opa test example/policies/terraform/ example/policies/kubernetes/ -v
 ```

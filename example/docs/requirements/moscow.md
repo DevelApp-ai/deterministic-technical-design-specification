@@ -145,6 +145,25 @@ Context Protocol (MCP).
 
 ---
 
+## Should Have — DORA Compliance (EU 2022/2554)
+
+Requirements derived from the Digital Operational Resilience Act (DORA),
+applicable to financial entities and their critical ICT third-party service
+providers from **17 January 2025**.
+DORA is *lex specialis* over NIS2 for financial entities.
+See [ADR-0011](../adrs/0011-dora-compliance.md) for the compliance strategy decision.
+
+| ID | Requirement | DORA Article | Satisfied By |
+|----|-------------|-------------|-------------|
+| DORA-001 | An ICT risk management framework must exist and be version-controlled; every significant ICT risk-management decision must be recorded as an ADR traceable to requirements | Art.5–6 | `docs/adrs/`, `docs/requirements/moscow.md`, `docs/compliance/dora.md` |
+| DORA-002 | CloudTrail audit trails must have log-file integrity validation enabled; OPA must block deployments without this setting | Art.9, Art.10 | `policies/terraform/deny_dora_ict_risk.rego` (DORA-ICT-001) |
+| DORA-003 | CloudWatch log groups must define an explicit non-zero retention period; S3 backup buckets must have versioning enabled | Art.10, Art.12 | `policies/terraform/deny_dora_ict_risk.rego` (DORA-ICT-001) |
+| DORA-004 | ICT incident handling procedures must be documented, classified, and include DORA-compliant notification timelines (initial 4h, intermediate 72h, final 1 month) | Art.17–20 | `docs/runbook/index.md` |
+| DORA-005 | A digital operational resilience testing programme must exist; automated policy tests must maintain 100% rule coverage | Art.24–25 | `policies/terraform/*_test.rego` + `policies/kubernetes/*_test.rego` (90 OPA unit tests), `dsc/tests/*.Tests.ps1` |
+| DORA-006 | ICT third-party risk must be acknowledged; cloud provider relationships must be scoped in the requirements document | Art.28–30 | [W-001](../requirements/moscow.md#wont-have) — local provider demo; contractual provisions for real deployments |
+
+---
+
 ## Should Have — NIS2 Compliance (EU 2022/2555)
 
 Requirements derived from the NIS2 Directive Article 21 cybersecurity

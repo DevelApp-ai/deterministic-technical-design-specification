@@ -45,6 +45,7 @@ __rego__metadoc__ := {
 	"related_requirements": ["NIS2-002", "M-003", "S-001"],
 	"compliance": {
 		"nis2":        ["Art.21(2)(h)"],
+		"dora":        ["Art.9"],
 		"nist_800_53": ["SC-12", "SC-28", "SC-13"],
 		"soc2_cc":     ["CC6.1", "CC6.7"],
 		"gdpr":        ["Art.32"],

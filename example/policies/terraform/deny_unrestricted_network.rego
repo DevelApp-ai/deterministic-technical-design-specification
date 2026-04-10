@@ -37,6 +37,7 @@ __rego__metadoc__ := {
 	"related_requirements": ["M-003", "S-001", "CYB-004"],
 	"compliance": {
 		"nis2":        ["Art.21(2)(e)"],
+		"dora":        ["Art.9"],
 		"cis_aws":     ["5.3", "5.4"],
 		"nist_800_53": ["SC-7", "CA-3"],
 		"soc2_cc":     ["CC6.6", "CC6.7"],

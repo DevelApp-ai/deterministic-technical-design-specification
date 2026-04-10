@@ -68,6 +68,7 @@ graph LR
     ADR002 --> SEC005["SEC-005: deny_missing_https_redirect"]
     ADR002 --> SEC006["SEC-006: deny_deprecated_tls"]
     ADR010["ADR-0010: NIS2 Compliance"] --> NIS2C["NIS2-CRYPTO-001: deny_nis2_crypto"]
+    ADR011["ADR-0011: DORA Compliance"] --> DORA1["DORA-ICT-001: deny_dora_ict_risk"]
 ```
 
 ---
@@ -251,6 +252,58 @@ resource "aws_ssm_parameter" "db_password" {
 
 ---
 
+## DORA-ICT-001 — DORA ICT Risk Management
+
+| Field | Value |
+|-------|-------|
+| **ID** | `DORA-ICT-001` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_dora_ict_risk.rego` |
+| **Package** | `terraform.dora` |
+| **Related ADR** | [ADR-0011 — DORA Compliance](../adrs/0011-dora-compliance.md) |
+| **Related Requirements** | [DORA-002](../requirements/moscow.md#should-have--dora-compliance-eu-20222554), [DORA-003](../requirements/moscow.md#should-have--dora-compliance-eu-20222554), [M-003](../requirements/moscow.md#must-have) |
+| **DORA** | Art.9 — Protection, Art.10 — Detection, Art.12 — Backup |
+| **NIST 800-53** | AU-2, AU-9, CP-9, SI-12 |
+| **SOC 2** | CC7.2, A1.2 |
+
+**Description:**  
+Enforces three ICT risk-management and resilience controls mandated by DORA
+Chapter II (Art. 5–16):
+
+1. **CloudTrail log-file validation** — `aws_cloudtrail` resources must have
+   `enable_log_file_validation = true`.  Log integrity validation detects
+   tampering with the audit trail.
+2. **CloudWatch log group retention** — `aws_cloudwatch_log_group` resources
+   must set a positive `retention_in_days` value.  Zero / absent means
+   indefinite retention without lifecycle governance.
+3. **S3 bucket versioning enabled** — `aws_s3_bucket_versioning` resources must
+   have `versioning_configuration { status = "Enabled" }`.  Versioning is the
+   minimum prerequisite for point-in-time backup recovery.
+
+**Remediation:**
+
+```hcl
+# 1) Enable CloudTrail log-file validation
+resource "aws_cloudtrail" "main" {
+  enable_log_file_validation = true
+}
+
+# 2) Set explicit log group retention (min 365 days for DORA Art.10)
+resource "aws_cloudwatch_log_group" "app" {
+  retention_in_days = 365
+}
+
+# 3) Enable S3 bucket versioning
+resource "aws_s3_bucket_versioning" "backup" {
+  bucket = aws_s3_bucket.backup.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+```
+
+---
+
 ## CI/CD Gate Behaviour
 
 ```mermaid
@@ -276,8 +329,9 @@ opa eval \
    data.terraform.network.deny |
    data.terraform.https.deny |
    data.terraform.tls.deny |
-   data.terraform.nis2.deny'
+   data.terraform.nis2.deny |
+   data.terraform.dora.deny'
 
-# Run all unit tests (76 tests)
-opa test policies/ -v
+# Run all unit tests (90 tests)
+opa test policies/terraform/ policies/kubernetes/ -v
 ```
