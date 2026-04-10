@@ -60,7 +60,89 @@ graph LR
     M003["M-003: OPA Blocks Pipeline"] --> ADR002
     ADR002 --> FIN001["FINOPS-001: deny_missing_tags"]
     ADR002 --> SEC001["SEC-001: deny_unencrypted_storage"]
+    ADR002 --> SEC002["SEC-002: deny_public_access"]
+    ADR002 --> SEC003["SEC-003: deny_public_iam"]
+    ADR002 --> SEC004["SEC-004: deny_unrestricted_network"]
 ```
+
+---
+
+## SEC-002 — Deny Publicly Exposed Resources
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SEC-002` |
+| **Severity** | CRITICAL |
+| **File** | `policies/terraform/deny_public_access.rego` |
+| **Package** | `terraform.security` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-002](../requirements/moscow.md#should-have) |
+| **CIS** | AWS 2.1.2, 5.2 · Azure 3.7 |
+| **NIST 800-53** | AC-3, SC-7 |
+| **SOC 2** | CC6.1, CC6.6 |
+
+**Description:**  
+Resources must not be publicly exposed via S3 public ACLs, open security group
+ports (22, 3389, 5432, 1433, 27017), or Azure Storage public blob access.
+
+**Remediation:**  
+Set S3 ACL to `private`, restrict security group CIDR ranges to known prefixes,
+and set `allow_blob_public_access = false`.
+
+---
+
+## SEC-003 — Deny Overly Permissive IAM
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SEC-003` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_public_iam.rego` |
+| **Package** | `terraform.iam` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-003](../requirements/moscow.md#should-have) |
+| **CIS** | AWS 1.16, 1.22 |
+| **NIST 800-53** | AC-2, AC-6, IA-2 |
+| **SOC 2** | CC6.3 |
+
+**Description:**  
+IAM policies must not grant wildcard principals (`*`) in trust policies or
+wildcard actions (`*`, `iam:*`, `kms:*`) in permission policies.
+
+**Remediation:**  
+Replace `"Principal": "*"` with specific service/account ARNs.
+Replace `"Action": "*"` with a least-privilege action list.
+
+---
+
+## SEC-004 — Deny Unrestricted Network Egress
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SEC-004` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_unrestricted_network.rego` |
+| **Package** | `terraform.network` |
+| **Related ADR** | [ADR-0002 — OPA for Policy](../adrs/0002-use-opa-for-policy.md) |
+| **Related Requirements** | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-004](../requirements/moscow.md#should-have) |
+| **CIS** | AWS 5.3, 5.4 · Azure 6.2 |
+| **NIST 800-53** | SC-7, CA-3 |
+| **SOC 2** | CC6.6, CC6.7 |
+
+**Description:**  
+Network security rules must not permit all outbound traffic (unrestricted
+egress). Subnets must use RFC-1918 private CIDR ranges.
+
+**Remediation:**  
+Replace `allow all outbound` rules with explicit allow-lists. Change subnet
+CIDRs to private ranges (10.x.x.x, 172.16-31.x.x, 192.168.x.x).
+
+---
+
+## Full Security Controls Matrix
+
+See the [Security Controls](../security/index.md) page for the complete
+mapping of OPA policies to CIS, NIST 800-53, and SOC 2 controls.
 
 ---
 

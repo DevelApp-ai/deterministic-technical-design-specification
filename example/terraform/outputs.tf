@@ -15,3 +15,33 @@ output "tags" {
   description = "Map of cost-allocation tags applied to every resource in this module."
   value       = local.common_tags
 }
+
+output "network_topology_path" {
+  description = "Filesystem path to the generated network topology JSON manifest."
+  value       = local_file.network_topology.filename
+}
+
+output "network_security_rules_path" {
+  description = "Filesystem path to the generated network security group rules JSON manifest."
+  value       = local_file.network_security_rules.filename
+}
+
+output "dns_records_path" {
+  description = "Filesystem path to the generated DNS records JSON manifest."
+  value       = local_file.dns_records.filename
+}
+
+output "vpc_cidr" {
+  description = "CIDR block of the virtual network."
+  value       = var.vpc_cidr
+}
+
+output "private_subnets" {
+  description = "Map of private subnet names to their CIDR blocks and metadata."
+  value       = local.private_subnet_map
+}
+
+output "public_subnets" {
+  description = "Map of public subnet names to their CIDR blocks and metadata."
+  value       = local.public_subnet_map
+}

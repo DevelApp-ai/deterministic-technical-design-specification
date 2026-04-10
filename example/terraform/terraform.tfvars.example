@@ -9,3 +9,12 @@ owner          = "platform-team"
 cost_center    = "CC-1234"
 enable_backups = true
 replica_count  = 2
+
+# Network
+vpc_cidr             = "10.0.0.0/16"
+private_subnet_cidrs = ["10.0.1.0/24", "10.0.2.0/24"]
+public_subnet_cidrs  = ["10.0.10.0/24", "10.0.11.0/24"]
+availability_zones   = ["az-1", "az-2"]
+enable_nat_gateway   = true
+enable_dns_support   = true
+dns_zone             = "internal.example.com"

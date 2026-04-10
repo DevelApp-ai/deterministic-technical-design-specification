@@ -50,6 +50,39 @@ if omitted from the current iteration.
 
 ---
 
+## Should Have — Cybersecurity
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| CYB-001 | Architecture overview page with C4-style diagrams (C4Context, C4Container, C4Component) and technology radar | `docs/architecture/index.md` |
+| CYB-002 | OPA policy must block publicly exposed resources (S3 public ACL, security group open to 0.0.0.0/0 on sensitive ports, Azure public blob) | `policies/terraform/deny_public_access.rego` |
+| CYB-003 | OPA policy must block overly permissive IAM (wildcard principals, wildcard actions on sensitive services) | `policies/terraform/deny_public_iam.rego` |
+| CYB-004 | OPA policy must block unrestricted network egress and non-RFC-1918 subnet CIDRs | `policies/terraform/deny_unrestricted_network.rego` |
+| CYB-005 | Security controls matrix must map every OPA policy to CIS benchmark, NIST 800-53, and SOC 2 CC controls | `docs/security/index.md` |
+
+---
+
+## Should Have — Architects
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| A-001 | Architecture overview with C4 Context + Container + Component Mermaid diagrams | `docs/architecture/index.md` |
+| A-002 | Technology radar table documenting every tool's adoption ring | `docs/architecture/index.md` |
+| A-003 | Quality attribute scenarios (ISO 25010) linked to implementation artefacts | `docs/architecture/index.md` |
+| A-004 | Architecture decision recorded for diagram toolchain choice | `docs/adrs/0005-architecture-documentation.md` |
+
+---
+
+## Should Have — DevOps Operational
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| OPS-001 | Operational runbook with incident response flowchart and escalation matrix | `docs/runbook/index.md` |
+| OPS-002 | Network topology documented as code with subnet allocation, NSG rules, and DNS records | `terraform/network.tf`, `docs/network/index.md` |
+| OPS-003 | Network topology auto-generated as Markdown during `terraform plan` | `terraform/network.tf` → `docs/generated/network-topology.md` |
+
+---
+
 ## Could Have
 
 Desirable enhancements that are deferred to a future iteration.
