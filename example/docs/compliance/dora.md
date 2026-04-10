@@ -30,7 +30,7 @@ without manual attestation.
 |---------|--------|----------|--------|-------------|
 | II | ICT Risk Management | 5–16 | ✅ + 📋 | DORA-ICT-001 policy, ADR-0011, OPA gate |
 | III | ICT Incident Management & Reporting | 17–23 | 📋 | Runbook, monitoring alarms, Ansible compliance check |
-| IV | Digital Operational Resilience Testing | 24–27 | ⚠️ Partial | OPA unit tests (76/90), doc coverage gate |
+| IV | Digital Operational Resilience Testing | 24–27 | ⚠️ Partial | OPA unit tests (90/90), Pester DSC tests, doc coverage gate |
 | V | ICT Third-Party Risk Management | 28–44 | ⚠️ Partial | Local provider scoping (W-001) |
 | VI | Information Sharing Arrangements | 45 | ❌ Gap | Voluntary; outside repo scope |
 

@@ -14,13 +14,13 @@ mandated them?"*
 
 | Policy ID | Severity | Package | NIS2 | DORA | CIS AWS/Azure | NIST 800-53 | SOC 2 CC | Related ADR | Related Requirements |
 |-----------|----------|---------|------|------|---------------|-------------|----------|-------------|---------------------|
-| [FINOPS-001](#finops-001) | HIGH | `terraform.finops` | Art.21(2)(i) | Art.8 | — | CM-8, CM-9 | CC1.2 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-002, M-003 |
+| [FINOPS-001](#finops-001) | HIGH | `terraform.finops` | Art.21(2)(i) | Art.8 | — | CM-8, CM-9 | CC1.2 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-002, M-003, S-001, S-002 |
 | [SEC-001](#sec-001) | CRITICAL | `terraform.security` | Art.21(2)(h) | Art.9 | CIS AWS 2.2.1, 2.4 | SC-28, CP-9 | CC6.1 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001 |
-| [SEC-002](#sec-002) | CRITICAL | `terraform.security` | Art.21(2)(e), (j) | Art.9 | CIS AWS 2.1.2, 5.2 | AC-3, SC-7 | CC6.1, CC6.6 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
-| [SEC-003](#sec-003) | HIGH | `terraform.iam` | Art.21(2)(i) | Art.9 | CIS AWS 1.16, 1.22 | AC-2, AC-6, IA-2 | CC6.3 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-003 |
-| [SEC-004](#sec-004) | HIGH | `terraform.network` | Art.21(2)(e) | Art.9 | CIS AWS 5.3, 5.4 | SC-7, CA-3 | CC6.6, CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-004 |
-| [SEC-005](#sec-005) | HIGH | `terraform.https` | Art.21(2)(h), (j) | Art.9 | CIS AWS 8.2 | SC-8, SC-23 | CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
-| [SEC-006](#sec-006) | HIGH | `terraform.tls` | Art.21(2)(h) | Art.9 | CIS AWS 2.9, Azure 9.3 | SC-8, SC-23, IA-7 | CC6.7, CC6.8 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, CYB-002 |
+| [SEC-002](#sec-002) | CRITICAL | `terraform.security` | Art.21(2)(e), (j) | Art.9 | CIS AWS 2.1.2, 5.2 | AC-3, SC-7 | CC6.1, CC6.6 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
+| [SEC-003](#sec-003) | HIGH | `terraform.iam` | Art.21(2)(i) | Art.9 | CIS AWS 1.16, 1.22 | AC-2, AC-6, IA-2 | CC6.3 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-003 |
+| [SEC-004](#sec-004) | HIGH | `terraform.network` | Art.21(2)(e) | Art.9 | CIS AWS 5.3, 5.4 | SC-7, CA-3 | CC6.6, CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-004 |
+| [SEC-005](#sec-005) | HIGH | `terraform.https` | Art.21(2)(h), (j) | Art.9 | CIS AWS 8.2 | SC-8, SC-23 | CC6.7 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
+| [SEC-006](#sec-006) | HIGH | `terraform.tls` | Art.21(2)(h) | Art.9 | CIS AWS 2.9, Azure 9.3 | SC-8, SC-23, IA-7 | CC6.7, CC6.8 | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | M-003, S-001, CYB-002 |
 | [NIS2-CRYPTO-001](#nis2-crypto-001) | HIGH | `terraform.nis2` | Art.21(2)(h) | Art.9 | — | SC-12, SC-28 | CC6.1, CC6.7 | [ADR-0010](../adrs/0010-nis2-compliance.md) | NIS2-002, M-003 |
 | [DORA-ICT-001](#dora-ict-001) | HIGH | `terraform.dora` | — | Art.9, Art.10, Art.12 | — | AU-2, AU-9, CP-9 | CC7.2, A1.2 | [ADR-0011](../adrs/0011-dora-compliance.md) | DORA-002, DORA-003 |
 
