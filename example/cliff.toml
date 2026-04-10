@@ -24,7 +24,10 @@ content = """
 {% for group, commits in commits | group_by(attribute="group") %}
 ### {{ group | striptags | trim | upper_first }}
 {% for commit in commits %}
-- {% if commit.breaking %}[**BREAKING**] {% endif %}{{ commit.message | upper_first }} ([`{{ commit.id | truncate(length=7, end="") }}`](https://github.com/DevelApp-ai/deterministic-technical-design-specification/commit/{{ commit.id }}))\
+- {%- if commit.breaking %}[**BREAKING**] {% endif -%}
+  {{ commit.message | upper_first }} \
+  ([`{{ commit.id | truncate(length=7, end="") }}`]\
+  (https://github.com/DevelApp-ai/deterministic-technical-design-specification/commit/{{ commit.id }}))\
 {% endfor %}
 {% endfor %}\n
 """

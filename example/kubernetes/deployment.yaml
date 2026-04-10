@@ -2,9 +2,13 @@
 #
 # Example Deployment for the DTDS docs site (nginx serving the MkDocs output).
 # Demonstrates several policies enforced by OPA K8S-001 through K8S-003:
-#   - No privileged containers (K8S-001)
+#   - No privileged containers / no privilege escalation (K8S-001)
 #   - CPU/memory limits required (K8S-002)
-#   - Read-only root filesystem (K8S-003)
+#   - Required FinOps labels (K8S-003)
+#
+# Note: read-only root filesystem is a defence-in-depth security control
+# applied directly in the security context; it is not enforced by a separate
+# OPA policy in this example.
 #
 # Machine-readable metadata:
 #   related_requirements: [K-001, K-002, K-003]
