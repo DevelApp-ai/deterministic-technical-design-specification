@@ -1,10 +1,9 @@
 # catalog-info.yaml
 #
-# Backstage Entity Descriptor for the Deterministic Documentation Example.
-# This file is read by a Backstage instance to register the component in the
-# service catalog and to enable TechDocs rendering of the MkDocs site.
+# Backstage Entity Descriptors for the Deterministic Documentation Example.
+# This is a multi-document YAML file — each `---` separator introduces a new entity.
 #
-# Register this component in Backstage by adding the following URL to your
+# Register this entire catalog in Backstage by adding the following URL to your
 # Backstage catalog configuration:
 #
 #   catalog:
@@ -12,28 +11,114 @@
 #       - type: url
 #         target: https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/example/catalog-info.yaml
 #
+# Entity hierarchy:
+#   System: deterministic-docs
+#     Component: deterministic-docs-example (documentation pipeline)
+#     Component: dtds-backstage-portal     (Backstage instance)
+#     API:       dtds-backstage-api         (Backstage REST / MCP API)
+#     Resource:  dtds-github-pages          (GitHub Pages deployment)
+#     Resource:  dtds-docker-toolchain      (Docker toolchain image)
+#
 # See: https://backstage.io/docs/features/software-catalog/descriptor-format
 
+# ---------------------------------------------------------------------------
+# Group — platform-team
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  title: Platform Engineering Team
+  description: >
+    Responsible for the deterministic documentation platform, CI/CD pipelines,
+    infrastructure-as-code standards, and the internal developer portal.
+  tags:
+    - platform
+    - infrastructure
+    - documentation
+spec:
+  type: team
+  profile:
+    displayName: Platform Team
+    email: platform-team@example.com
+  children: []
+  members:
+    - default/user:platform-lead
+
+---
+# ---------------------------------------------------------------------------
+# User — platform-lead (representative user for the catalog)
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: platform-lead
+  title: Platform Lead
+  description: Lead engineer for the deterministic documentation platform.
+  tags:
+    - platform
+spec:
+  profile:
+    displayName: Platform Lead
+    email: platform-lead@example.com
+  memberOf:
+    - platform-team
+
+---
+# ---------------------------------------------------------------------------
+# System — deterministic-docs
+# Groups all components, APIs, and resources of the documentation platform.
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: deterministic-docs
+  title: Deterministic Documentation System
+  description: >
+    An end-to-end reference implementation of documentation-as-code.
+    Covers infrastructure (Terraform), policy (OPA), configuration (DSC/Ansible),
+    documentation (MkDocs), and developer portal (Backstage) in a single repository.
+  annotations:
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+  tags:
+    - documentation-as-code
+    - infrastructure-as-code
+    - policy-as-code
+    - backstage
+    - ai-ready
+  links:
+    - url: https://github.com/DevelApp-ai/deterministic-technical-design-specification
+      title: GitHub Repository
+      icon: github
+    - url: https://DevelApp-ai.github.io/deterministic-technical-design-specification
+      title: Published Documentation
+      icon: docs
+spec:
+  owner: group:default/platform-team
+  domain: platform
+
+---
+# ---------------------------------------------------------------------------
+# Component — deterministic-docs-example (the documentation pipeline)
+# ---------------------------------------------------------------------------
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: deterministic-docs-example
   title: Deterministic Technical Design Specification
   description: >
-    A working example of the deterministic documentation pipeline described
-    in "Documenting Deterministic Infrastructure Code". Infrastructure as Code,
-    Policy as Code, and Documentation as Code — all in one repository.
+    A working example of the deterministic documentation pipeline.
+    Infrastructure as Code (Terraform), Policy as Code (OPA), Configuration
+    as Code (DSC/Ansible), and Documentation as Code (MkDocs) — all in one
+    repository with full traceability from MoSCoW requirements to ADRs to
+    OPA policies to Terraform resources.
   annotations:
-    # TechDocs integration — Backstage will read mkdocs.yml from this path
-    # and generate a TechDocs site directly from the source repository.
+    # TechDocs integration — reads mkdocs.yml from this path
     backstage.io/techdocs-ref: dir:.
-
-    # GitHub integration — links the component to the source repository
+    # GitHub integration
     github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
-
-    # Link to the CI/CD pipeline
+    # CI/CD pipeline link
     backstage.io/ci-workflow: .github/workflows/docs-pipeline.yml
-
   tags:
     - terraform
     - opa
@@ -41,7 +126,9 @@ metadata:
     - infrastructure-as-code
     - policy-as-code
     - mkdocs
-
+    - kubernetes
+    - helm
+    - ai-ready
   links:
     - url: https://github.com/DevelApp-ai/deterministic-technical-design-specification
       title: GitHub Repository
@@ -49,9 +136,207 @@ metadata:
     - url: https://DevelApp-ai.github.io/deterministic-technical-design-specification
       title: Published Documentation (GitHub Pages)
       icon: docs
-
+    - url: https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/example/docs/traceability/index.md
+      title: Traceability Matrix (MoSCoW → ADR → OPA)
+      icon: dashboard
 spec:
   type: documentation
-  lifecycle: experimental
-  owner: platform-team
+  lifecycle: production
+  owner: group:default/platform-team
   system: deterministic-docs
+  providesApis:
+    - dtds-backstage-api
+  consumesApis: []
+  dependsOn:
+    - resource:default/dtds-github-pages
+    - resource:default/dtds-docker-toolchain
+
+---
+# ---------------------------------------------------------------------------
+# Component — dtds-backstage-portal (the standalone Backstage instance)
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dtds-backstage-portal
+  title: DTDS Backstage Developer Portal
+  description: >
+    Standalone Backstage instance (Dockerfile.backstage) pre-configured with:
+    TechDocs rendering, the deterministic-docs-example catalog entity, and the
+    Backstage MCP server for AI agent access to catalog data.
+    Run with: docker run --rm -p 7007:7007 dtds-backstage
+  annotations:
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+    backstage.io/source-location: dir:./Dockerfile.backstage
+  tags:
+    - backstage
+    - developer-portal
+    - techdocs
+    - mcp
+    - ai-ready
+  links:
+    - url: http://localhost:7007
+      title: Local Backstage Portal (when running)
+      icon: dashboard
+    - url: http://localhost:7007/api/catalog/entities
+      title: Backstage Catalog API
+      icon: docs
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/platform-team
+  system: deterministic-docs
+  providesApis:
+    - dtds-backstage-api
+
+---
+# ---------------------------------------------------------------------------
+# API — dtds-backstage-api
+# The Backstage REST API (and MCP server) exposed by the portal.
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: dtds-backstage-api
+  title: DTDS Backstage REST & MCP API
+  description: >
+    The Backstage REST API and Model Context Protocol (MCP) endpoint exposed
+    by the DTDS Backstage portal. AI agents can use this API via the MCP server
+    to query the software catalog, fetch TechDocs metadata, search entities,
+    and retrieve OPA policy / ADR traceability information.
+  annotations:
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+  tags:
+    - rest
+    - mcp
+    - ai-ready
+    - backstage-catalog
+  links:
+    - url: http://localhost:7007/api/catalog/entities
+      title: Catalog Entities Endpoint
+      icon: docs
+    - url: http://localhost:7007/api/search/query
+      title: Search Endpoint
+      icon: search
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:default/platform-team
+  system: deterministic-docs
+  definition: |
+    openapi: "3.0.0"
+    info:
+      title: Backstage Catalog API (DTDS)
+      version: "1.0.0"
+      description: |
+        Backstage REST API endpoints most useful for AI agents querying the
+        deterministic documentation catalog.
+    servers:
+      - url: http://localhost:7007
+        description: Local Backstage instance
+    paths:
+      /api/catalog/entities:
+        get:
+          summary: List all catalog entities
+          description: Returns all entities registered in the Backstage catalog.
+          parameters:
+            - name: filter
+              in: query
+              schema:
+                type: string
+              description: "Filter expression, e.g. kind=Component,spec.type=documentation"
+            - name: fields
+              in: query
+              schema:
+                type: string
+              description: Comma-separated list of fields to include in the response
+          responses:
+            "200":
+              description: List of catalog entities
+      /api/catalog/entities/by-name/{kind}/{namespace}/{name}:
+        get:
+          summary: Get entity by name
+          parameters:
+            - name: kind
+              in: path
+              required: true
+              schema:
+                type: string
+            - name: namespace
+              in: path
+              required: true
+              schema:
+                type: string
+            - name: name
+              in: path
+              required: true
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Single catalog entity
+      /api/search/query:
+        get:
+          summary: Full-text search across catalog and TechDocs
+          parameters:
+            - name: term
+              in: query
+              schema:
+                type: string
+          responses:
+            "200":
+              description: Search results
+
+---
+# ---------------------------------------------------------------------------
+# Resource — dtds-github-pages (published documentation site)
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: dtds-github-pages
+  title: DTDS GitHub Pages Site
+  description: >
+    The published MkDocs documentation site deployed to GitHub Pages on every
+    push to the main branch by the CI/CD pipeline (docs-publish job).
+  annotations:
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+  tags:
+    - github-pages
+    - mkdocs
+    - documentation
+  links:
+    - url: https://DevelApp-ai.github.io/deterministic-technical-design-specification
+      title: Published Documentation Site
+      icon: docs
+spec:
+  type: website
+  owner: group:default/platform-team
+  system: deterministic-docs
+
+---
+# ---------------------------------------------------------------------------
+# Resource — dtds-docker-toolchain (the deterministic build image)
+# ---------------------------------------------------------------------------
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: dtds-docker-toolchain
+  title: DTDS Docker Toolchain Image
+  description: >
+    The deterministic Docker toolchain image (Dockerfile) that pins every tool
+    version — Terraform, OPA, terraform-docs, MkDocs, PowerShell, Pester, Ansible.
+    All CI jobs and local runs use this image to guarantee reproducibility.
+  annotations:
+    github.com/project-slug: DevelApp-ai/deterministic-technical-design-specification
+    backstage.io/source-location: dir:./Dockerfile
+  tags:
+    - docker
+    - toolchain
+    - deterministic
+    - ci-cd
+spec:
+  type: container-image
+  owner: group:default/platform-team
+  system: deterministic-docs
+

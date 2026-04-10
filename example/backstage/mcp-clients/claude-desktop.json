@@ -1,0 +1,25 @@
+{
+  "_comment": "Claude Desktop MCP server configuration for the DTDS Backstage portal.",
+  "_usage": [
+    "macOS: merge into ~/Library/Application Support/Claude/claude_desktop_config.json",
+    "Windows: merge into %APPDATA%\\Claude\\claude_desktop_config.json",
+    "Then restart Claude Desktop."
+  ],
+  "_prerequisites": [
+    "1. Start the DTDS Backstage portal: docker run --rm -p 7007:7007 -e BACKSTAGE_MCP_TOKEN=dtds-mcp-demo-token-change-in-production dtds-backstage",
+    "2. Verify: curl http://localhost:7007/api/catalog/entities | head -c 200"
+  ],
+  "mcpServers": {
+    "dtds-backstage": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-mcp-backstage-example-evanshortiss"
+      ],
+      "env": {
+        "BACKSTAGE_BASE_URL": "http://localhost:7007",
+        "BACKSTAGE_API_TOKEN": "dtds-mcp-demo-token-change-in-production"
+      }
+    }
+  }
+}

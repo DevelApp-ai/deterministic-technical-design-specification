@@ -132,6 +132,19 @@ if omitted from the current iteration.
 
 ---
 
+## Should Have — AI & MCP Integration
+
+Requirements related to exposing the platform to AI agents via the Model
+Context Protocol (MCP).
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| AI-001 | The Backstage catalog must be queryable by AI agents via a standardised MCP interface without custom per-model integration code | `backstage/mcp-clients/`, `.vscode/mcp.json`, ADR-0009 |
+| AI-002 | The Backstage catalog must include at least one System, one API, one Group, one User, two Components, and two Resources so AI agents have a rich, traversable entity hierarchy to explore | `catalog-info.yaml` (7 entities) |
+| AI-003 | VS Code / GitHub Copilot MCP configuration must be committed to the repository so any developer cloning the repo gets AI catalog access immediately | `.vscode/mcp.json` |
+
+---
+
 ## Could Have
 
 Desirable enhancements that are deferred to a future iteration.

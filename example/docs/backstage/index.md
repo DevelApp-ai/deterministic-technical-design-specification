@@ -6,7 +6,8 @@ engineering tooling into a single, searchable interface.
 
 This example ships with a complete Backstage integration so the deterministic
 documentation pipeline output is discoverable inside your organisation's
-developer portal.
+developer portal — and queryable by AI agents via the **Model Context Protocol
+(MCP)**.
 
 ---
 
@@ -14,9 +15,41 @@ developer portal.
 
 | File | Purpose |
 |------|---------|
-| `catalog-info.yaml` | Backstage entity descriptor — registers the component and points to TechDocs |
-| `backstage/app-config.yaml` | Backstage application configuration (GitHub integration, TechDocs, catalog) |
+| `catalog-info.yaml` | Multi-document entity registry (System, Group, User, Component × 2, API, Resource × 2) |
+| `backstage/app-config.yaml` | Backstage application configuration (GitHub integration, TechDocs, catalog, MCP token auth) |
 | `Dockerfile.backstage` | Standalone Backstage Docker image with TechDocs support |
+| `.vscode/mcp.json` | VS Code / GitHub Copilot MCP server configuration (committed, works out of the box) |
+| `backstage/mcp-clients/` | Per-client MCP config snippets (Claude Desktop, Cursor) |
+
+!!! tip "AI-Ready Catalog"
+    The Backstage catalog is now queryable by AI agents via MCP.
+    See **[Backstage MCP Server](mcp.md)** for full setup instructions and example AI conversations.
+
+---
+
+## Catalog Entity Hierarchy
+
+The `catalog-info.yaml` registers **seven entities** covering the full system:
+
+```mermaid
+graph LR
+    SYS["🏗️ System: deterministic-docs"]
+    GRP["👥 Group: platform-team"]
+    COMP1["📦 Component: deterministic-docs-example"]
+    COMP2["📦 Component: dtds-backstage-portal"]
+    API["🔌 API: dtds-backstage-api"]
+    RES1["💾 Resource: dtds-github-pages"]
+    RES2["💾 Resource: dtds-docker-toolchain"]
+
+    GRP -->|owns| SYS
+    SYS --> COMP1
+    SYS --> COMP2
+    SYS --> API
+    SYS --> RES1
+    SYS --> RES2
+    COMP1 -->|providesApis| API
+    COMP2 -->|providesApis| API
+```
 
 ---
 
@@ -55,8 +88,9 @@ Build and run the standalone Backstage image:
 # Build (takes ~8-12 minutes — downloads Node.js dependencies)
 docker build -f example/Dockerfile.backstage -t dtds-backstage example/
 
-# Run the portal
+# Run the portal (MCP token enables AI agent access)
 docker run --rm -p 7007:7007 \
+  -e BACKSTAGE_MCP_TOKEN=dtds-mcp-demo-token-change-in-production \
   -e GITHUB_TOKEN=<your-github-token> \
   dtds-backstage
 ```
@@ -65,8 +99,13 @@ Then open [http://localhost:7007](http://localhost:7007).
 
 You will see:
 
-- **Catalog** → `deterministic-docs-example` component registered
+- **Catalog** → 7 entities: the System, Group, User, 2 Components, 1 API, and 2 Resources
 - **Docs** tab → TechDocs site with all documentation pages, ADRs, compliance summary, and traceability matrix
+
+!!! tip "AI Agent Access"
+    With the `BACKSTAGE_MCP_TOKEN` set, AI agents (Copilot, Claude, Cursor) can
+    immediately query the catalog via MCP.  See [Backstage MCP Server](mcp.md)
+    for client setup instructions.
 
 !!! tip "GitHub token is optional"
     Without `GITHUB_TOKEN` the catalog still loads from the local filesystem
@@ -342,32 +381,45 @@ leaving the portal.
 
 ---
 
-### Data flow — from source to UI
+### Data flow — from source to UI and MCP
 
-The diagram below shows exactly how content travels from this repository into
-each panel of the Backstage UI shown above.
+The diagram below shows how content travels from this repository into each panel
+of the Backstage UI and to AI agents via MCP.
 
 ```mermaid
 flowchart TD
     subgraph repo["📁 Git Repository"]
-        CI[catalog-info.yaml\ntitle · description · tags · links]
+        CI[catalog-info.yaml\nSystem·Group·User·Component·API·Resource]
         MK[mkdocs.yml\nnav structure]
         MD[docs/**/*.md\npage content + Mermaid]
         OPA[policies/**/*.rego\n__rego__metadoc__]
         TF[terraform/**/*.tf\noutputs + locals]
+        K8S[kubernetes/ + helm/\nmanifests]
+        APPCFG[backstage/app-config.yaml\nMCP token auth]
     end
 
     subgraph backstage["🎵 Backstage"]
         CAT[Catalog Card\nScreen 1]
         OVR[Component Overview\nScreen 2]
         TDOC[TechDocs Viewer\nScreens 3–5]
+        BAPI[REST API\n/api/catalog/entities]
+    end
+
+    subgraph mcp["🤖 AI Agent (MCP)"]
+        MCPS[MCP Server\nnpx backstage-example]
+        AGENT[AI Agent\nCopilot · Claude · Cursor]
     end
 
     CI -->|name, title, description,\ntype, owner, lifecycle| CAT
     CI -->|tags, links, annotations| OVR
     CI -->|techdocs-ref: dir:.| TDOC
+    CI -->|7 entities registered| BAPI
     MK -->|nav: sections| TDOC
     MD -->|page HTML + Mermaid SVG| TDOC
     OPA -->|metadata fields| MD
     TF -->|generated topology MD| MD
+    K8S -->|K8s chapter| MD
+    APPCFG -->|static token auth| BAPI
+    BAPI -->|catalog query| MCPS
+    MCPS -->|structured context| AGENT
 ```

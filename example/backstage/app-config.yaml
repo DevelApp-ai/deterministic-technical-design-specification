@@ -4,7 +4,9 @@
 # Example showcase.
 #
 # Usage — with the Dockerfile.backstage image:
-#   docker run --rm -p 7007:7007 dtds-backstage
+#   docker run --rm -p 7007:7007 \
+#     -e BACKSTAGE_MCP_TOKEN=<your-secret-token> \
+#     dtds-backstage
 #
 # Usage — with an existing Backstage instance, copy relevant sections into
 # your app-config.yaml and add the catalog location above.
@@ -30,6 +32,18 @@ backend:
     # Use an in-memory SQLite database for the showcase so no external DB is needed
     client: better-sqlite3
     connection: ':memory:'
+  # ---------------------------------------------------------------------------
+  # Static token authentication for the MCP server
+  # ---------------------------------------------------------------------------
+  # The MCP server (evanshortiss/mcp-backstage-example) authenticates using
+  # a static bearer token.  Set BACKSTAGE_MCP_TOKEN to a secret value when
+  # running in any non-demo environment.
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          token: ${BACKSTAGE_MCP_TOKEN:-dtds-mcp-demo-token-change-in-production}
+          subject: mcp-server
 
 # ---------------------------------------------------------------------------
 # Integrations
@@ -61,10 +75,10 @@ catalog:
     pullRequestBranchName: backstage-integration
 
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Group, User]
 
   locations:
-    # Register the deterministic-docs component from the example directory
+    # Register all entities from the deterministic-docs example directory
     - type: file
       target: ../../catalog-info.yaml   # Relative to this file (backstage/)
 
@@ -73,12 +87,16 @@ catalog:
     #   target: https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/example/catalog-info.yaml
 
 # ---------------------------------------------------------------------------
-# Auth (disabled for local showcase)
+# Auth (guest access for local showcase — never use in production)
 # ---------------------------------------------------------------------------
 auth:
-  providers: {}
+  environment: development
+  providers:
+    guest:
+      dangerouslyAllowOutsideDevelopment: true
 
 # ---------------------------------------------------------------------------
 # Proxy (empty for showcase)
 # ---------------------------------------------------------------------------
 proxy: {}
+

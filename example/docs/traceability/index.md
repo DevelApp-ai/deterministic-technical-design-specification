@@ -50,6 +50,9 @@ graph TB
         K002["<b>K-002</b><br/>Resource Limits OPA"]
         K003["<b>K-003</b><br/>No Privileged Containers"]
         DEV001["<b>DEV-001</b><br/>Onboarding Guide"]
+        AI001["<b>AI-001</b><br/>Backstage MCP Interface"]
+        AI002["<b>AI-002</b><br/>Rich Entity Hierarchy"]
+        AI003["<b>AI-003</b><br/>VS Code MCP Config"]
     end
 
     subgraph ADRs["📖 Architectural Decision Records"]
@@ -62,6 +65,7 @@ graph TB
         ADR006["<b>ADR-0006</b><br/>Doc Coverage Gate<br/><i>related: D-001, D-002</i>"]
         ADR007["<b>ADR-0007</b><br/>Semantic Versioning<br/><i>related: V-001, V-002, V-003</i>"]
         ADR008["<b>ADR-0008</b><br/>Kubernetes & Helm<br/><i>related: K-001, K-002, K-003</i>"]
+        ADR009["<b>ADR-0009</b><br/>Backstage MCP Server<br/><i>related: AI-001, AI-002, AI-003</i>"]
     end
 
     subgraph Policies["🔒 OPA Policies"]
@@ -93,7 +97,8 @@ graph TB
         RUNBOOK["docs/runbook/index.md<br/><i>Operational runbook</i>"]
         VERSION["version.txt + cliff.toml"]
         ONBOARD["docs/onboarding/index.md"]
-        FINOPS_PAGE["docs/finops/index.md"]
+        MCPCONF["backstage/mcp-clients/\n.vscode/mcp.json"]
+        CATINFO["catalog-info.yaml\n(7 entities)"]
     end
 
     M001 --> ADR001
@@ -128,6 +133,9 @@ graph TB
     K001 --> ADR008
     K002 --> ADR008
     K003 --> ADR008
+    AI001 --> ADR009
+    AI002 --> ADR009
+    AI003 --> ADR009
 
     ADR001 --> TF
     ADR001 --> NETW
@@ -155,6 +163,8 @@ graph TB
     ADR007 --> VERSION
     ADR008 --> K8SMAN
     ADR008 --> HELM
+    ADR009 --> MCPCONF
+    ADR009 --> CATINFO
 
     OPS001 --> RUNBOOK
     OPS002 --> NETW
@@ -172,6 +182,7 @@ graph TB
     K8S002POL -.->|"enforces K-002"| K8SMAN
     K8S003POL -.->|"enforces K-003/FIN"| K8SMAN
     DOCCOV -.->|"gates D-001"| SCRIPT
+    MCPCONF -.->|"exposes AI-001"| CATINFO
 ```
 
 ---
@@ -203,6 +214,7 @@ graph TB
 | [ADR-0006](../adrs/0006-enforce-doc-coverage-gate.md) — Doc Coverage Gate | [D-001](../requirements/moscow.md#should-have--documentation-governance), [D-002](../requirements/moscow.md#should-have--documentation-governance) | `scripts/check-doc-coverage.sh`, CI `doc-coverage` job |
 | [ADR-0007](../adrs/0007-semantic-versioning-and-changelog.md) — Semantic Versioning | [V-001](../requirements/moscow.md#should-have--versioning--changelog), [V-002](../requirements/moscow.md#should-have--versioning--changelog), [V-003](../requirements/moscow.md#should-have--versioning--changelog) | `version.txt`, `cliff.toml`, CI `release` job |
 | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) — Kubernetes & Helm | [K-001](../requirements/moscow.md#should-have--kubernetes), [K-002](../requirements/moscow.md#should-have--kubernetes), [K-003](../requirements/moscow.md#should-have--kubernetes) | `kubernetes/`, `helm/`, `policies/kubernetes/` |
+| [ADR-0009](../adrs/0009-backstage-mcp-server.md) — Backstage MCP Server | [AI-001](../requirements/moscow.md#should-have--ai--mcp-integration), [AI-002](../requirements/moscow.md#should-have--ai--mcp-integration), [AI-003](../requirements/moscow.md#should-have--ai--mcp-integration) | `catalog-info.yaml`, `backstage/app-config.yaml`, `.vscode/mcp.json`, `backstage/mcp-clients/` |
 
 ---
 
@@ -258,16 +270,16 @@ sequenceDiagram
 ```mermaid
 pie title MoSCoW Requirement Coverage by Category
     "Must Have (implemented)" : 6
-    "Should Have (implemented)" : 30
+    "Should Have (implemented)" : 33
     "Could Have (deferred)" : 3
     "Won't Have (out of scope)" : 3
 ```
 
 !!! success "All Must-Have and Should-Have requirements are covered"
-    Every M-xxx, S-xxx, D-xxx, V-xxx, FIN-xxx, K-xxx, and DEV-xxx requirement
-    in the MoSCoW document has at least one ADR, OPA policy, or implementation
-    artefact that satisfies it.  The traceability metadata in each source file
-    makes this verifiable automatically.
+    Every M-xxx, S-xxx, D-xxx, V-xxx, FIN-xxx, K-xxx, DEV-xxx, and AI-xxx
+    requirement in the MoSCoW document has at least one ADR, OPA policy, or
+    implementation artefact that satisfies it.  The traceability metadata in
+    each source file makes this verifiable automatically.
 
 ---
 
