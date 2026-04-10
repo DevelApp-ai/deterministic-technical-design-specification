@@ -34,8 +34,8 @@
 
 | Package | Status |
 |---------|--------|
-| `telnet` | {{ '✅ Absent (CIS 2.3.4)' if (pkg_telnet_absent | default(true)) else '❌ Present — remove' }} |
-| `rsh-client` | {{ '✅ Absent (CIS 2.3.2)' if (pkg_rsh_absent | default(true)) else '❌ Present — remove' }} |
+| `telnet` | {{ '✅ Absent (CIS 2.3.4)' if (pkg_telnet_absent | default(false)) else '❌ Present — remove' }} |
+| `rsh-client` | {{ '✅ Absent (CIS 2.3.2)' if (pkg_rsh_absent | default(false)) else '❌ Present — remove' }} |
 
 ## Audit Logging
 

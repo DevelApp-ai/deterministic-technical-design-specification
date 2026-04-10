@@ -86,8 +86,10 @@ class DTDS_AuditPolicy {
             return
         }
         $flagStr = $this._AuditFlagToString($this.AuditFlag)
+        $successFlag = if ($this.AuditFlag -eq [AuditTracking]::Success -or $this.AuditFlag -eq [AuditTracking]::SuccessAndFailure) { "enable" } else { "disable" }
+        $failureFlag = if ($this.AuditFlag -eq [AuditTracking]::Failure -or $this.AuditFlag -eq [AuditTracking]::SuccessAndFailure) { "enable" } else { "disable" }
         Write-Verbose "DTDS_AuditPolicy: Setting '$($this.Subcategory)' to '$flagStr'"
-        $result = auditpol /set /subcategory:"$($this.Subcategory)" /success:$(if ($this.AuditFlag -eq [AuditTracking]::Success -or $this.AuditFlag -eq [AuditTracking]::SuccessAndFailure) { "enable" } else { "disable" }) /failure:$(if ($this.AuditFlag -eq [AuditTracking]::Failure -or $this.AuditFlag -eq [AuditTracking]::SuccessAndFailure) { "enable" } else { "disable" }) 2>&1
+        $result = auditpol /set /subcategory:"$($this.Subcategory)" /success:$successFlag /failure:$failureFlag 2>&1
         if ($LASTEXITCODE -ne 0) {
             throw "auditpol failed for subcategory '$($this.Subcategory)': $result"
         }

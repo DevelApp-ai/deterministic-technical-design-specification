@@ -115,7 +115,7 @@ resource "local_file" "cloudtrail_s3_bucket" {
           { days = 90, storage_class = "STANDARD_IA" },
           { days = 365, storage_class = "GLACIER" }
         ]
-        expiration = { days = 2555 }   # 7 years (DORA Art.15 retention)
+        expiration = { days = 2555 }   # 7 years (365 * 7) — DORA Art.15 retention
       }
     ]
     tags = merge(local.common_tags, { Purpose = "audit-log-backup", DORA = "Art.12" })

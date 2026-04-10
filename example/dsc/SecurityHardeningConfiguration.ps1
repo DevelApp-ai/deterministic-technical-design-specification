@@ -156,7 +156,7 @@ Configuration SecurityHardening {
         # Compliance marker — records when hardening was applied
         DTDS_FileContent HardeningAppliedMarker {
             Path    = 'C:\ProgramData\DTDS\security-hardening-applied.txt'
-            Content = "hardened=true`ncis_level=1`ndora_art9=compliant`nnot_after=never"
+            Content = "hardened=true`ncis_level=1`ndora_art9=compliant`nexpiration=none"
             Ensure  = 'Present'
         }
 

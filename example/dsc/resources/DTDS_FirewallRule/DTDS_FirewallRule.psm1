@@ -159,7 +159,8 @@ class DTDS_FirewallRule {
             $action = $this.Action.ToString().ToLower()
             $proto  = $this.Protocol.ToLower()
             $port   = $this.LocalPort
-            # Delete any existing rule with this name first (idempotent update)
+            # Delete any existing rule with this name first (idempotent update pattern:
+            # netsh has no "update" command; delete+add is the standard approach)
             netsh advfirewall firewall delete rule name="$($this.RuleName)" 2>&1 | Out-Null
             $cmd = "netsh advfirewall firewall add rule name=`"$($this.RuleName)`" dir=$dir action=$action protocol=$proto localport=$port enable=yes"
             if ($this.Description) { $cmd += " description=`"$($this.Description)`"" }

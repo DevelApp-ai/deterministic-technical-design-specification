@@ -46,8 +46,8 @@
 
 | Evidence | Status |
 |----------|--------|
-| auditd service | {{ '✅ active' if (service_facts_dora.ansible_facts.services['auditd.service'].state | default('') == 'running') else '⚠️ not active' }} |
-| journald service | {{ '✅ active' if (service_facts_dora.ansible_facts.services['systemd-journald.service'].state | default('') == 'running') else '⚠️ check' }} |
+| auditd service | {{ '✅ active' if ((service_facts_dora.ansible_facts.services | default({})).get('auditd.service', {}).get('state', '') == 'running') else '⚠️ not active' }} |
+| journald service | {{ '✅ active' if ((service_facts_dora.ansible_facts.services | default({})).get('systemd-journald.service', {}).get('state', '') == 'running') else '⚠️ check' }} |
 | Log retention policy | {{ dora_retention_days }} days |
 
 **Recent auth log sample (last 20 lines):**

@@ -2,11 +2,15 @@
 # Audit logging configuration — auditd / systemd-journald
 # CIS Benchmark Section 4, DORA Art.10
 ---
-- name: Check if auditd is installed
-  ansible.builtin.command: dpkg -l auditd 2>/dev/null || rpm -q audit 2>/dev/null
-  register: auditd_check
-  changed_when: false
+- name: DTDS_AuditPolicy — Check if auditd is installed
+  ansible.builtin.package_facts:
+    manager: auto
   ignore_errors: true
+  tags: [audit, dora]
+
+- name: DTDS_AuditPolicy — Set auditd install fact
+  ansible.builtin.set_fact:
+    auditd_installed: "{{ 'auditd' in ansible_facts.packages | default({}) }}"
   tags: [audit, dora]
 
 - name: Check auditd service status
@@ -29,7 +33,7 @@
 
 - name: Set audit check facts
   ansible.builtin.set_fact:
-    auditd_installed: "{{ auditd_check.rc == 0 }}"
+    auditd_installed: "{{ auditd_installed | default(false) }}"
     listening_services_list: "{{ listening_services.stdout_lines | default([]) }}"
     journald_persistent: >-
       {{ journald_conf.content | default('') | b64decode |
