@@ -192,22 +192,12 @@ Describe 'DTDS_FileContent DSC resource' {
 
         BeforeAll {
             $randomSegment    = [System.IO.Path]::GetRandomFileName()
-            $script:deepFile  = [System.IO.Path]::Combine(
-                [System.IO.Path]::GetTempPath(), $randomSegment, 'nested', 'path', 'output.txt'
-            )
+            $script:deepRoot  = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $randomSegment)
+            $script:deepFile  = [System.IO.Path]::Combine($script:deepRoot, 'nested', 'path', 'output.txt')
         }
 
         AfterAll {
-            $topDir = [System.IO.Path]::Combine(
-                [System.IO.Path]::GetTempPath(),
-                ([System.IO.Path]::GetDirectoryName($script:deepFile) -split [System.IO.Path]::DirectorySeparatorChar)[
-                    ([System.IO.Path]::GetDirectoryName($script:deepFile) -split [System.IO.Path]::DirectorySeparatorChar).Length - 3
-                ]
-            )
-            # Clean up from temp root
-            $parts = $script:deepFile -split [System.IO.Path]::DirectorySeparatorChar
-            $cleanDir = $parts[0..($parts.Length - 4)] -join [System.IO.Path]::DirectorySeparatorChar
-            if ($cleanDir -and (Test-Path $cleanDir)) { Remove-Item $cleanDir -Recurse -Force -ErrorAction SilentlyContinue }
+            if (Test-Path $script:deepRoot) { Remove-Item $script:deepRoot -Recurse -Force -ErrorAction SilentlyContinue }
         }
 
         It 'creates the file even when parent directories do not exist' {
