@@ -94,3 +94,73 @@ variable "dns_zone" {
   description = "Internal DNS zone name used for service discovery records."
   default     = "internal.example.com"
 }
+
+# ---------------------------------------------------------------------------
+# Compute variables
+# ---------------------------------------------------------------------------
+
+variable "instance_type" {
+  type        = string
+  description = "EC2 instance type for application tier launch template."
+  default     = "t3.medium"
+}
+
+variable "ami_id" {
+  type        = string
+  description = "Amazon Machine Image ID for the application tier (pin to a hardened AMI in production)."
+  default     = "ami-0123456789abcdef0"
+}
+
+variable "min_size" {
+  type        = number
+  description = "Minimum number of instances in the Auto Scaling group."
+  default     = 1
+
+  validation {
+    condition     = var.min_size >= 1
+    error_message = "min_size must be at least 1."
+  }
+}
+
+variable "max_size" {
+  type        = number
+  description = "Maximum number of instances in the Auto Scaling group."
+  default     = 4
+
+  validation {
+    condition     = var.max_size >= var.min_size
+    error_message = "max_size must be greater than or equal to min_size."
+  }
+}
+
+variable "desired_capacity" {
+  type        = number
+  description = "Desired number of instances in the Auto Scaling group at steady state."
+  default     = 2
+
+  validation {
+    condition     = var.desired_capacity >= var.min_size && var.desired_capacity <= var.max_size
+    error_message = "desired_capacity must be between min_size and max_size."
+  }
+}
+
+# ---------------------------------------------------------------------------
+# Logging variables
+# ---------------------------------------------------------------------------
+
+variable "cloudwatch_retention_days" {
+  type        = number
+  description = "CloudWatch log group retention in days. Must be > 0 (DORA-ICT-001 requirement)."
+  default     = 90
+
+  validation {
+    condition     = var.cloudwatch_retention_days > 0
+    error_message = "cloudwatch_retention_days must be greater than 0 (DORA-ICT-001)."
+  }
+}
+
+variable "enable_cloudtrail" {
+  type        = bool
+  description = "Enable CloudTrail with log file validation (DORA Art.9/10 requirement)."
+  default     = true
+}

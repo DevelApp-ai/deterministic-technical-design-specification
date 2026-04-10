@@ -1,0 +1,10 @@
+# ansible/group_vars/webservers.yml — variables for the webservers group
+---
+allowed_inbound_ports: [80, 443]
+tls_min_version: "TLSv1.2"
+tls_ciphers: "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
+access_log_path: /var/log/nginx/access.log
+error_log_path: /var/log/nginx/error.log
+health_check_path: /health
+health_check_port: 8080
+log_retention_days: 90

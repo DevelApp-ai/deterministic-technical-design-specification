@@ -75,3 +75,48 @@ output "monitoring_dashboard_path" {
   description = "Filesystem path to the generated operations dashboard JSON manifest."
   value       = local_file.monitoring_dashboard.filename
 }
+
+output "kms_key_path" {
+  description = "Filesystem path to the generated KMS key JSON manifest."
+  value       = local_file.kms_key.filename
+}
+
+output "kms_key_alias" {
+  description = "KMS key alias used for encryption across all resources in this module."
+  value       = local.kms_key_alias
+}
+
+output "ssm_parameters_path" {
+  description = "Filesystem path to the generated SSM Parameter Store JSON manifest."
+  value       = local_file.ssm_parameters.filename
+}
+
+output "secrets_manager_path" {
+  description = "Filesystem path to the generated Secrets Manager JSON manifest."
+  value       = local_file.secrets_manager.filename
+}
+
+output "launch_template_path" {
+  description = "Filesystem path to the generated EC2 launch template JSON manifest."
+  value       = local_file.launch_template.filename
+}
+
+output "auto_scaling_group_path" {
+  description = "Filesystem path to the generated Auto Scaling group JSON manifest."
+  value       = local_file.auto_scaling_group.filename
+}
+
+output "cloudtrail_path" {
+  description = "Filesystem path to the generated CloudTrail JSON manifest."
+  value       = local_file.cloudtrail.filename
+}
+
+output "cloudwatch_log_groups_path" {
+  description = "Filesystem path to the generated CloudWatch log groups JSON manifest."
+  value       = local_file.cloudwatch_log_groups.filename
+}
+
+output "cloudwatch_retention_days" {
+  description = "Effective CloudWatch log group retention period in days."
+  value       = local.effective_retention_days
+}

@@ -1,0 +1,14 @@
+# ansible/roles/security_baseline/handlers/main.yml
+---
+- name: restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+  listen: "restart sshd"
+  ignore_errors: true
+
+- name: reload sysctl
+  ansible.builtin.command: sysctl --system
+  changed_when: true
+  listen: "reload sysctl"
+  ignore_errors: true

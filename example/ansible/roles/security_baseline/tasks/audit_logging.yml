@@ -1,0 +1,37 @@
+# ansible/roles/security_baseline/tasks/audit_logging.yml
+# Audit logging configuration — auditd / systemd-journald
+# CIS Benchmark Section 4, DORA Art.10
+---
+- name: Check if auditd is installed
+  ansible.builtin.command: dpkg -l auditd 2>/dev/null || rpm -q audit 2>/dev/null
+  register: auditd_check
+  changed_when: false
+  ignore_errors: true
+  tags: [audit, dora]
+
+- name: Check auditd service status
+  ansible.builtin.service_facts:
+  tags: [audit, dora]
+
+- name: Check journald configuration
+  ansible.builtin.slurp:
+    src: /etc/systemd/journald.conf
+  register: journald_conf
+  ignore_errors: true
+  tags: [audit, dora]
+
+- name: Collect listening services for audit report
+  ansible.builtin.command: ss -tlnp
+  register: listening_services
+  changed_when: false
+  ignore_errors: true
+  tags: [audit, dora]
+
+- name: Set audit check facts
+  ansible.builtin.set_fact:
+    auditd_installed: "{{ auditd_check.rc == 0 }}"
+    listening_services_list: "{{ listening_services.stdout_lines | default([]) }}"
+    journald_persistent: >-
+      {{ journald_conf.content | default('') | b64decode |
+         regex_search('Storage=persistent|Storage=auto') is not none }}
+  tags: [audit, dora]

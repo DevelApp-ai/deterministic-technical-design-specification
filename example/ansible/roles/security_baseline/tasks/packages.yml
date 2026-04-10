@@ -1,0 +1,32 @@
+# ansible/roles/security_baseline/tasks/packages.yml
+# Package hygiene — remove insecure/unnecessary packages, install security tools
+# CIS Benchmark Section 1.1 / 2.x
+---
+- name: Collect installed packages (Debian/Ubuntu)
+  ansible.builtin.command: dpkg-query -W -f='${Package} ${Version}\n'
+  register: installed_packages
+  changed_when: false
+  when: ansible_os_family == "Debian"
+  ignore_errors: true
+  tags: packages
+
+- name: Check for telnet client (should be absent)
+  ansible.builtin.command: dpkg -l telnet 2>/dev/null
+  register: telnet_check
+  changed_when: false
+  ignore_errors: true
+  tags: packages
+
+- name: Check for rsh-client (should be absent)
+  ansible.builtin.command: dpkg -l rsh-client 2>/dev/null
+  register: rsh_check
+  changed_when: false
+  ignore_errors: true
+  tags: packages
+
+- name: Set package check facts
+  ansible.builtin.set_fact:
+    pkg_telnet_absent: "{{ telnet_check.rc != 0 }}"
+    pkg_rsh_absent: "{{ rsh_check.rc != 0 }}"
+    installed_packages_list: "{{ installed_packages.stdout_lines | default([]) }}"
+  tags: packages

@@ -1,0 +1,77 @@
+# ansible/roles/security_baseline/tasks/ssh_hardening.yml
+# SSH daemon configuration — CIS Benchmark Section 5.2
+---
+- name: Read current sshd_config
+  ansible.builtin.slurp:
+    src: /etc/ssh/sshd_config
+  register: sshd_config_raw
+  ignore_errors: true
+  tags: ssh
+
+- name: Check PermitRootLogin setting
+  ansible.builtin.command: grep -i "^PermitRootLogin" /etc/ssh/sshd_config
+  register: root_login_check
+  changed_when: false
+  ignore_errors: true
+  tags: ssh
+
+- name: Check PermitEmptyPasswords setting
+  ansible.builtin.command: grep -i "^PermitEmptyPasswords" /etc/ssh/sshd_config
+  register: empty_pass_check
+  changed_when: false
+  ignore_errors: true
+  tags: ssh
+
+- name: Check MaxAuthTries setting
+  ansible.builtin.command: grep -i "^MaxAuthTries" /etc/ssh/sshd_config
+  register: max_auth_check
+  changed_when: false
+  ignore_errors: true
+  tags: ssh
+
+- name: Ensure PermitRootLogin is disabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: "PermitRootLogin {{ cis_ssh_permit_root_login }}"
+    state: present
+    backup: true
+  notify: restart sshd
+  ignore_errors: true   # No-op when sshd is not present (CI runner)
+  tags: ssh
+
+- name: Ensure PermitEmptyPasswords is disabled
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitEmptyPasswords'
+    line: "PermitEmptyPasswords {{ cis_ssh_permit_empty_passwords }}"
+    state: present
+  notify: restart sshd
+  ignore_errors: true
+  tags: ssh
+
+- name: Ensure MaxAuthTries is set
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?MaxAuthTries'
+    line: "MaxAuthTries {{ cis_ssh_max_auth_tries }}"
+    state: present
+  notify: restart sshd
+  ignore_errors: true
+  tags: ssh
+
+- name: Ensure ClientAliveInterval is set
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?ClientAliveInterval'
+    line: "ClientAliveInterval {{ cis_ssh_client_alive_interval }}"
+    state: present
+  notify: restart sshd
+  ignore_errors: true
+  tags: ssh
+
+- name: Set SSH check results as facts
+  ansible.builtin.set_fact:
+    ssh_root_login_disabled: "{{ root_login_check.stdout | default('') is search('no', ignorecase=True) }}"
+    ssh_empty_pass_disabled: "{{ empty_pass_check.stdout | default('') is search('no', ignorecase=True) }}"
+  tags: ssh

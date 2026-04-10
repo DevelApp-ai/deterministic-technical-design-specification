@@ -1,0 +1,11 @@
+# ansible/host_vars/localhost.yml — host-specific overrides for localhost
+#
+# Used only for the local demonstration run in CI/CD.
+---
+ansible_connection: local
+ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+# Override log paths for the local demo (no real service logs)
+access_log_path: /tmp/demo-access.log
+error_log_path: /tmp/demo-error.log
+db_audit_log_path: /tmp/demo-db.log

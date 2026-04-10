@@ -1,0 +1,50 @@
+# ansible/site.yml — master orchestration playbook
+#
+# Applies all roles to the appropriate host groups in the correct order:
+#   1. security_baseline — OS hardening for every managed host
+#   2. dora_evidence     — DORA audit evidence collection
+#
+# Usage — full site:
+#   ansible-playbook -i inventory.yml site.yml
+#
+# Usage — specific host group:
+#   ansible-playbook -i inventory.yml site.yml --limit webservers
+#
+# Usage — dry-run (check mode):
+#   ansible-playbook -i inventory.yml site.yml --check --diff
+#
+# Usage — only certain tags:
+#   ansible-playbook -i inventory.yml site.yml --tags "hardening"
+#
+# Related ADR:          docs/adrs/0003-use-ansible-for-linux-config.md
+# Related requirements: M-003, S-001, CYB-002, CYB-003, DORA-002, DORA-003
+
+---
+- name: Apply security baseline to all managed hosts
+  hosts: all
+  gather_facts: true
+  become: false   # Set to true when running against real targets
+  roles:
+    - role: security_baseline
+      tags: [hardening, security]
+
+- name: Collect DORA audit evidence from all managed hosts
+  hosts: all
+  gather_facts: true
+  become: false
+  roles:
+    - role: dora_evidence
+      tags: [dora, compliance, audit]
+
+- name: Generate host inventory report
+  hosts: all
+  gather_facts: true
+  become: false
+  tasks:
+    - name: Render host report from Jinja2 template
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/host-report.md.j2"
+        dest: "{{ playbook_dir }}/../docs/generated/host-report-{{ inventory_hostname }}.md"
+        mode: "0644"
+      delegate_to: localhost
+      tags: [reporting, docs]

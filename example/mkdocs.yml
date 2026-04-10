@@ -102,4 +102,7 @@ nav:
   - Generated:
       - Terraform README: generated/terraform-readme.md
       - Network Topology: generated/network-topology.md
+      - KMS & Secrets: generated/kms-summary.md
+      - Compute: generated/compute-summary.md
+      - Logging & Audit: generated/logging-summary.md
       - DSC Resources Overview: generated/dsc-resources.md

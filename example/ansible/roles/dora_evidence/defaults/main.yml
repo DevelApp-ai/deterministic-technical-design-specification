@@ -1,0 +1,6 @@
+# ansible/roles/dora_evidence/defaults/main.yml
+---
+dora_evidence_output_dir: "/tmp/dora-evidence"
+dora_retention_days: 90
+dora_contact_email: "security@example.com"
+dora_assessment_date: "{{ ansible_date_time.date | default('unknown') }}"
