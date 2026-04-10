@@ -295,7 +295,7 @@ Use this checklist during a NIS2 supervisory inspection or self-assessment:
 
 ```bash
 # Run all OPA policy tests (must be 76/76 PASS)
-opa test example/policies/ -v
+opa test example/policies/terraform/ example/policies/kubernetes/ -v
 
 # Evaluate all policies against a plan file
 opa eval \
