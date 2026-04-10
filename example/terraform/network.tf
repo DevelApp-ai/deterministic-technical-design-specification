@@ -21,7 +21,7 @@ locals {
     "private-${idx + 1}" => {
       cidr              = cidr
       role              = "private"
-      availability_zone = "az-${(idx % length(var.availability_zones)) + 1}"
+      availability_zone = var.availability_zones[idx % length(var.availability_zones)]
       nat_gateway       = var.enable_nat_gateway
     }
   }
@@ -31,7 +31,7 @@ locals {
     "public-${idx + 1}" => {
       cidr              = cidr
       role              = "public"
-      availability_zone = "az-${(idx % length(var.availability_zones)) + 1}"
+      availability_zone = var.availability_zones[idx % length(var.availability_zones)]
       internet_gateway  = true
     }
   }
