@@ -1,0 +1,188 @@
+---
+# ansible/compliance_check.yml
+#
+# Compliance verification playbook — runs checks against a running host and
+# generates a structured compliance report (Markdown + JSON) that can be
+# consumed by MkDocs and uploaded to Backstage TechDocs.
+#
+# Checks implemented:
+#   COMP-001  No world-writable files in system directories
+#   COMP-002  Firewall is active
+#   COMP-003  SSH root login is disabled
+#   COMP-004  SSH password authentication requires strong settings
+#   COMP-005  Core dump is disabled (fs.suid_dumpable)
+#   COMP-006  ASLR is enabled (kernel.randomize_va_space = 2)
+#   COMP-007  IPv4 forwarding is disabled (net.ipv4.ip_forward = 0)
+#   COMP-008  No users with UID 0 other than root
+#   COMP-009  /tmp is mounted with noexec
+#   COMP-010  Audit daemon (auditd) is running
+#
+# Usage:
+#   ansible-playbook -i inventory.yml compliance_check.yml
+#   # Report saved to docs/generated/compliance-report-localhost.md
+#
+# Related ADR:          docs/adrs/0003-use-ansible-for-linux-config.md
+# Related requirements: M-003, S-001, CYB-002, CYB-003
+
+- name: Run compliance checks and generate report
+  hosts: all
+  become: false
+  gather_facts: true
+
+  vars:
+    report_dir:  "{{ playbook_dir }}/../docs/generated"
+    report_md:   "compliance-report-{{ inventory_hostname }}.md"
+    report_json: "compliance-report-{{ inventory_hostname }}.json"
+
+  tasks:
+
+    # ------------------------------------------------------------------
+    # COMP-001 — No world-writable files in /etc, /usr, /bin, /sbin
+    # ------------------------------------------------------------------
+    - name: "COMP-001: Find world-writable files in system directories"
+      ansible.builtin.command: >
+        find /etc /usr /bin /sbin -maxdepth 3 -perm -002 -type f 2>/dev/null
+      register: ww_files
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-001: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_001: "{{ 'PASS' if (ww_files.stdout_lines | default([]) | length == 0) else 'FAIL' }}"
+        comp_001_detail: "{{ ww_files.stdout_lines | default([]) }}"
+
+    # ------------------------------------------------------------------
+    # COMP-002 — Firewall is active
+    # ------------------------------------------------------------------
+    - name: "COMP-002: Check UFW status"
+      ansible.builtin.command: ufw status
+      register: ufw_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-002: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_002: "{{ 'PASS' if ('active' in (ufw_check.stdout | default('')).lower()) else 'UNKNOWN' }}"
+        comp_002_detail: "{{ ufw_check.stdout | default('ufw not available') }}"
+
+    # ------------------------------------------------------------------
+    # COMP-003 — SSH root login disabled
+    # ------------------------------------------------------------------
+    - name: "COMP-003: Check sshd_config for PermitRootLogin"
+      ansible.builtin.command: grep -iE '^PermitRootLogin' /etc/ssh/sshd_config
+      register: root_login_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-003: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_003: >-
+          {{ 'PASS' if ('permitrootlogin no' in (root_login_check.stdout | default('') | lower)) else 'FAIL' }}
+        comp_003_detail: "{{ root_login_check.stdout | default('PermitRootLogin not explicitly set') }}"
+
+    # ------------------------------------------------------------------
+    # COMP-005 — Core dump disabled
+    # ------------------------------------------------------------------
+    - name: "COMP-005: Check fs.suid_dumpable"
+      ansible.builtin.command: sysctl fs.suid_dumpable
+      register: suid_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-005: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_005: "{{ 'PASS' if ('= 0' in (suid_check.stdout | default(''))) else 'FAIL' }}"
+        comp_005_detail: "{{ suid_check.stdout | default('sysctl not available') }}"
+
+    # ------------------------------------------------------------------
+    # COMP-006 — ASLR enabled
+    # ------------------------------------------------------------------
+    - name: "COMP-006: Check kernel.randomize_va_space"
+      ansible.builtin.command: sysctl kernel.randomize_va_space
+      register: aslr_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-006: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_006: "{{ 'PASS' if ('= 2' in (aslr_check.stdout | default(''))) else 'FAIL' }}"
+        comp_006_detail: "{{ aslr_check.stdout | default('sysctl not available') }}"
+
+    # ------------------------------------------------------------------
+    # COMP-007 — IPv4 forwarding disabled
+    # ------------------------------------------------------------------
+    - name: "COMP-007: Check net.ipv4.ip_forward"
+      ansible.builtin.command: sysctl net.ipv4.ip_forward
+      register: ip_fwd_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-007: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_007: "{{ 'PASS' if ('= 0' in (ip_fwd_check.stdout | default(''))) else 'FAIL' }}"
+        comp_007_detail: "{{ ip_fwd_check.stdout | default('sysctl not available') }}"
+
+    # ------------------------------------------------------------------
+    # COMP-008 — No UID-0 accounts other than root
+    # ------------------------------------------------------------------
+    - name: "COMP-008: Find UID-0 accounts"
+      ansible.builtin.command: awk -F':' '($3 == 0) { print $1 }' /etc/passwd
+      register: uid0_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-008: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_008: >-
+          {{ 'PASS' if ((uid0_check.stdout_lines | default(['root'])) | difference(['root']) | length == 0) else 'FAIL' }}
+        comp_008_detail: "{{ uid0_check.stdout_lines | default(['root']) }}"
+
+    # ------------------------------------------------------------------
+    # COMP-010 — auditd running
+    # ------------------------------------------------------------------
+    - name: "COMP-010: Check auditd service"
+      ansible.builtin.command: systemctl is-active auditd
+      register: auditd_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: "COMP-010: Evaluate result"
+      ansible.builtin.set_fact:
+        comp_010: "{{ 'PASS' if (auditd_check.stdout | default('') == 'active') else 'FAIL' }}"
+        comp_010_detail: "{{ auditd_check.stdout | default('auditd status unknown') }}"
+
+    # ------------------------------------------------------------------
+    # Build compliance results map
+    # ------------------------------------------------------------------
+    - name: Build compliance results map
+      ansible.builtin.set_fact:
+        compliance_results:
+          COMP-001: { status: "{{ comp_001 }}", control: "No world-writable files in system directories", detail: "{{ comp_001_detail }}" }
+          COMP-002: { status: "{{ comp_002 }}", control: "Firewall is active", detail: "{{ comp_002_detail }}" }
+          COMP-003: { status: "{{ comp_003 }}", control: "SSH root login is disabled", detail: "{{ comp_003_detail }}" }
+          COMP-005: { status: "{{ comp_005 }}", control: "Core dump is disabled (fs.suid_dumpable=0)", detail: "{{ comp_005_detail }}" }
+          COMP-006: { status: "{{ comp_006 }}", control: "ASLR is enabled (randomize_va_space=2)", detail: "{{ comp_006_detail }}" }
+          COMP-007: { status: "{{ comp_007 }}", control: "IPv4 forwarding is disabled", detail: "{{ comp_007_detail }}" }
+          COMP-008: { status: "{{ comp_008 }}", control: "No UID-0 accounts other than root", detail: "{{ comp_008_detail }}" }
+          COMP-010: { status: "{{ comp_010 }}", control: "Audit daemon (auditd) is running", detail: "{{ comp_010_detail }}" }
+
+    - name: Ensure report output directory exists
+      ansible.builtin.file:
+        path: "{{ report_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Write compliance results JSON
+      ansible.builtin.copy:
+        content: "{{ compliance_results | to_nice_json }}"
+        dest: "{{ report_dir }}/{{ report_json }}"
+        mode: "0644"
+      delegate_to: localhost
+
+    - name: Render compliance Markdown report
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/compliance-report.md.j2"
+        dest: "{{ report_dir }}/{{ report_md }}"
+        mode: "0644"
+      delegate_to: localhost

@@ -45,3 +45,33 @@ output "public_subnets" {
   description = "Map of public subnet names to their CIDR blocks and metadata."
   value       = local.public_subnet_map
 }
+
+output "iam_app_role_path" {
+  description = "Filesystem path to the generated IAM application role JSON manifest."
+  value       = local_file.iam_app_role.filename
+}
+
+output "iam_cicd_role_path" {
+  description = "Filesystem path to the generated IAM CI/CD role JSON manifest."
+  value       = local_file.iam_cicd_role.filename
+}
+
+output "storage_primary_bucket_name" {
+  description = "Name of the primary application data S3 bucket."
+  value       = local.primary_bucket_name
+}
+
+output "storage_logs_bucket_name" {
+  description = "Name of the S3 access-logs bucket."
+  value       = local.logs_bucket_name
+}
+
+output "monitoring_alarms_path" {
+  description = "Filesystem path to the generated CloudWatch alarms JSON manifest."
+  value       = local_file.monitoring_alarms.filename
+}
+
+output "monitoring_dashboard_path" {
+  description = "Filesystem path to the generated operations dashboard JSON manifest."
+  value       = local_file.monitoring_dashboard.filename
+}

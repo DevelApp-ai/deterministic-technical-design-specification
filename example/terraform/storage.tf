@@ -1,0 +1,172 @@
+# storage.tf — Object-storage and block-storage resources.
+#
+# Demonstrates encrypted, properly-tagged storage resources that satisfy
+# SEC-001 (encryption required) and SEC-002 (no public access).
+#
+# Related ADR:          docs/adrs/0002-use-opa-for-policy.md
+# Related requirements: M-001, M-002, CYB-002, S-001
+
+# ---------------------------------------------------------------------------
+# Variables — storage-specific
+# ---------------------------------------------------------------------------
+
+# These are declared in variables.tf; storage.tf references them.
+# enable_backups — whether to create backup bucket
+
+# ---------------------------------------------------------------------------
+# Locals — derived storage names and settings
+# ---------------------------------------------------------------------------
+
+locals {
+  primary_bucket_name  = "${var.app_name}-data-${var.environment}"
+  backup_bucket_name   = "${var.app_name}-backup-${var.environment}"
+  logs_bucket_name     = "${var.app_name}-logs-${var.environment}"
+
+  # Encryption configuration — AES-256 server-side encryption
+  s3_encryption_config = {
+    sse_algorithm     = "aws:kms"
+    kms_master_key_id = "alias/${var.app_name}-${var.environment}-key"
+  }
+
+  # Lifecycle rules for cost management
+  s3_lifecycle_rules = [
+    {
+      id     = "transition-to-ia"
+      status = "Enabled"
+      transitions = [{
+        days          = 30
+        storage_class = "STANDARD_IA"
+      }]
+    },
+    {
+      id     = "expire-old-versions"
+      status = "Enabled"
+      noncurrent_version_expiration = {
+        noncurrent_days = 90
+      }
+    }
+  ]
+}
+
+# ---------------------------------------------------------------------------
+# Primary data bucket — encrypted, versioned, no public access
+# ---------------------------------------------------------------------------
+
+resource "local_file" "storage_primary_bucket" {
+  filename = "${path.module}/output/storage-primary-bucket.json"
+  content = jsonencode({
+    schema_version        = "1.0"
+    bucket_name           = local.primary_bucket_name
+    environment           = var.environment
+    versioning_enabled    = true
+    encryption            = local.s3_encryption_config
+    public_access_block   = {
+      block_public_acls       = true
+      block_public_policy     = true
+      ignore_public_acls      = true
+      restrict_public_buckets = true
+    }
+    lifecycle_rules = local.s3_lifecycle_rules
+    tags            = local.common_tags
+  })
+  file_permission = "0644"
+}
+
+# ---------------------------------------------------------------------------
+# Backup bucket (conditional on enable_backups)
+# ---------------------------------------------------------------------------
+
+resource "local_file" "storage_backup_bucket" {
+  count    = var.enable_backups ? 1 : 0
+  filename = "${path.module}/output/storage-backup-bucket.json"
+  content = jsonencode({
+    schema_version      = "1.0"
+    bucket_name         = local.backup_bucket_name
+    environment         = var.environment
+    versioning_enabled  = true
+    encryption          = local.s3_encryption_config
+    public_access_block = {
+      block_public_acls       = true
+      block_public_policy     = true
+      ignore_public_acls      = true
+      restrict_public_buckets = true
+    }
+    replication = {
+      enabled              = true
+      destination_region   = "eu-west-1"
+      destination_bucket   = "${local.primary_bucket_name}-replica"
+    }
+    tags = merge(local.common_tags, { purpose = "backup" })
+  })
+  file_permission = "0644"
+}
+
+# ---------------------------------------------------------------------------
+# Access logs bucket — retains audit trail for all S3 operations
+# ---------------------------------------------------------------------------
+
+resource "local_file" "storage_logs_bucket" {
+  filename = "${path.module}/output/storage-logs-bucket.json"
+  content = jsonencode({
+    schema_version      = "1.0"
+    bucket_name         = local.logs_bucket_name
+    environment         = var.environment
+    versioning_enabled  = false
+    encryption          = { sse_algorithm = "AES256" }
+    public_access_block = {
+      block_public_acls       = true
+      block_public_policy     = true
+      ignore_public_acls      = true
+      restrict_public_buckets = true
+    }
+    lifecycle_rules = [{
+      id     = "expire-logs"
+      status = "Enabled"
+      expiration = { days = 365 }
+    }]
+    tags = merge(local.common_tags, { purpose = "access-logs" })
+  })
+  file_permission = "0644"
+}
+
+# ---------------------------------------------------------------------------
+# Storage summary Markdown (rendered into MkDocs "generated" section)
+# ---------------------------------------------------------------------------
+
+resource "local_file" "storage_summary_md" {
+  filename = "${path.module}/../docs/generated/storage-summary.md"
+  content  = <<-MARKDOWN
+    # Storage Summary — ${var.app_name} (${var.environment})
+
+    > Auto-generated by Terraform — do not edit manually.
+    > Source: `terraform/storage.tf`
+
+    ## S3 Buckets
+
+    | Bucket | Purpose | Versioning | Encryption | Public Access |
+    |--------|---------|-----------|-----------|--------------|
+    | `${local.primary_bucket_name}` | Application data | ✅ Enabled | AWS KMS | ❌ Blocked |
+    | `${local.backup_bucket_name}` | Automated backups | ✅ Enabled | AWS KMS | ❌ Blocked |
+    | `${local.logs_bucket_name}` | S3 access logs | ❌ Disabled | AES-256 | ❌ Blocked |
+
+    ## Encryption
+
+    All buckets use server-side encryption.  The primary and backup buckets use
+    AWS KMS with a customer-managed key (`alias/${var.app_name}-${var.environment}-key`).
+    The logs bucket uses AWS-managed AES-256 (cost optimisation).
+
+    ## Lifecycle Policies
+
+    | Bucket | Rule | Days | Transition / Action |
+    |--------|------|------|-------------------|
+    | Primary | `transition-to-ia` | 30 | Move to S3 Infrequent Access |
+    | Primary | `expire-old-versions` | 90 | Delete non-current versions |
+    | Logs | `expire-logs` | 365 | Delete log files after 1 year |
+
+    ## Related OPA Policies
+
+    - [SEC-001 — Storage Encryption Required](../compliance/opa-policies.md#sec-001--storage-encryption-required)
+    - [SEC-002 — Deny Publicly Exposed Resources](../compliance/opa-policies.md#sec-002--deny-publicly-exposed-resources)
+  MARKDOWN
+  file_permission = "0644"
+}

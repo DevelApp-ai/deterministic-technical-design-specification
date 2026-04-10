@@ -1,0 +1,91 @@
+{# ansible/templates/hardening-report.md.j2
+   Jinja2 template rendered by the 'hardening.yml' Ansible playbook.
+   Produces a deterministic Markdown document showing the hardening status
+   of the target host against CIS Benchmark Level 1 controls.
+#}
+# OS Hardening Report — {{ inventory_hostname }}
+
+> **Generated:** {{ ansible_date_time.iso8601 }}
+> **Source:** `ansible/hardening.yml` + `ansible/templates/hardening-report.md.j2`
+> **Managed by:** Ansible — do not edit manually.
+
+---
+
+## System Overview
+
+| Property | Value |
+|----------|-------|
+| Hostname | `{{ ansible_hostname }}` |
+| OS | {{ ansible_distribution }} {{ ansible_distribution_version }} |
+| Kernel | `{{ ansible_kernel }}` |
+| Architecture | `{{ ansible_architecture }}` |
+
+---
+
+## Kernel Hardening Parameters (sysctl)
+
+| CIS Control | Parameter | Expected | Status |
+|-------------|-----------|----------|--------|
+| CIS 3.1.1 | `net.ipv4.ip_forward` | `0` (disabled) | {{ '✅ PASS' if kernel_params.ip_forward_disabled == 'True' else '❌ FAIL' }} |
+| CIS 3.1.2 | `net.ipv4.conf.all.send_redirects` | `0` (disabled) | {{ '✅ PASS' if kernel_params.send_redirects_disabled == 'True' else '❌ FAIL' }} |
+| CIS 1.5.3  | `kernel.randomize_va_space` | `2` (ASLR full) | {{ '✅ PASS' if kernel_params.aslr_enabled == 'True' else '❌ FAIL' }} |
+| CIS 1.5.1  | `fs.suid_dumpable` | `0` (disabled) | {{ '✅ PASS' if kernel_params.suid_dumpable_disabled == 'True' else '❌ FAIL' }} |
+
+---
+
+## SSH Daemon Configuration
+
+{% if sshd_content %}
+Relevant settings extracted from `/etc/ssh/sshd_config`:
+
+```
+{% for line in sshd_content.split('\n') if line | trim and not line.strip().startswith('#') and line | trim | length > 0 %}
+{{ line }}
+{% endfor %}
+```
+{% else %}
+> ⚠️ `/etc/ssh/sshd_config` was not readable on this host.
+{% endif %}
+
+---
+
+## Firewall Status
+
+```
+{{ firewall_status }}
+```
+
+---
+
+## World-Writable Files in `/etc`
+
+{% if world_writable_files | length == 0 %}
+✅ No world-writable files found in `/etc`.
+{% else %}
+❌ **{{ world_writable_files | length }} world-writable file(s) found** — remediation required:
+
+{% for f in world_writable_files %}
+- `{{ f }}`
+{% endfor %}
+{% endif %}
+
+---
+
+## Listening Services
+
+```
+{% for line in listening %}
+{{ line }}
+{% endfor %}
+```
+
+---
+
+## Related Policies & Requirements
+
+| Requirement | Policy | Control |
+|-------------|--------|---------|
+| CYB-002 | [SEC-002](../compliance/opa-policies.md#sec-002) | No public exposure |
+| CYB-003 | [SEC-003](../compliance/opa-policies.md#sec-003) | Least-privilege IAM |
+| CYB-004 | [SEC-004](../compliance/opa-policies.md#sec-004) | No unrestricted egress |
+| M-003   | [FINOPS-001](../compliance/opa-policies.md#finops-001) | Mandatory tags |

@@ -1,0 +1,64 @@
+{# ansible/templates/compliance-report.md.j2
+   Rendered by compliance_check.yml.
+   Produces a structured compliance Markdown report for TechDocs / Backstage.
+#}
+# Compliance Report — {{ inventory_hostname }}
+
+> **Generated:** {{ ansible_date_time.iso8601 }}
+> **Source:** `ansible/compliance_check.yml`
+> **Managed by:** Ansible — do not edit manually.
+
+---
+
+## Summary
+
+{% set pass_count   = compliance_results.values() | selectattr('status', 'equalto', 'PASS')    | list | length %}
+{% set fail_count   = compliance_results.values() | selectattr('status', 'equalto', 'FAIL')    | list | length %}
+{% set unknown_count = compliance_results.values() | selectattr('status', 'equalto', 'UNKNOWN') | list | length %}
+
+| Result | Count |
+|--------|-------|
+| ✅ PASS | {{ pass_count }} |
+| ❌ FAIL | {{ fail_count }} |
+| ⚠️ UNKNOWN | {{ unknown_count }} |
+| **Total** | **{{ compliance_results | length }}** |
+
+{% if fail_count == 0 %}
+> **🎉 All checks passed** — this host is compliant with the platform security baseline.
+{% else %}
+> **⚠️ {{ fail_count }} check(s) failed** — remediation is required before this host is production-ready.
+{% endif %}
+
+---
+
+## Detailed Results
+
+| ID | Control | Status | Detail |
+|----|---------|--------|--------|
+{% for id, result in compliance_results.items() | sort %}
+| `{{ id }}` | {{ result.control }} | {% if result.status == 'PASS' %}✅ PASS{% elif result.status == 'FAIL' %}❌ FAIL{% else %}⚠️ {{ result.status }}{% endif %} | {{ result.detail | truncate(80) if result.detail is string else result.detail | join(', ') | truncate(80) }} |
+{% endfor %}
+
+---
+
+## System Context
+
+| Property | Value |
+|----------|-------|
+| Hostname | `{{ ansible_hostname }}` |
+| OS | {{ ansible_distribution }} {{ ansible_distribution_version }} |
+| Kernel | `{{ ansible_kernel }}` |
+| Architecture | `{{ ansible_architecture }}` |
+
+---
+
+## Related Requirements & Policies
+
+| Requirement | ADR | OPA Policy |
+|-------------|-----|-----------|
+| M-003 — Cost-allocation tags | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [FINOPS-001](../compliance/opa-policies.md#finops-001) |
+| CYB-002 — No public resources | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [SEC-002](../compliance/opa-policies.md#sec-002) |
+| CYB-003 — Least-privilege IAM | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [SEC-003](../compliance/opa-policies.md#sec-003) |
+| CYB-004 — No unrestricted egress | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [SEC-004](../compliance/opa-policies.md#sec-004) |
+| CYB-005 — HTTPS enforcement | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [SEC-005](../compliance/opa-policies.md#sec-005) |
+| CYB-006 — No deprecated TLS | [ADR-0002](../adrs/0002-use-opa-for-policy.md) | [SEC-006](../compliance/opa-policies.md#sec-006) |
