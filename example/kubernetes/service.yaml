@@ -1,0 +1,31 @@
+# kubernetes/service.yaml
+#
+# ClusterIP Service exposing the DTDS docs deployment inside the cluster.
+# An Ingress or LoadBalancer is intentionally out of scope for this example.
+#
+# Machine-readable metadata:
+#   related_requirements: [K-001]
+#   related_adr: [ADR-0008]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dtds-docs
+  namespace: dtds-example
+  labels:
+    app.kubernetes.io/name: dtds-docs
+    app.kubernetes.io/component: documentation
+    app.kubernetes.io/managed-by: helm
+    environment: staging
+    app_name: dtds-example
+    owner: platform-team
+    cost_center: CC-1001
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: dtds-docs
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http

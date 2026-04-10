@@ -40,6 +40,16 @@ graph TB
         A001["<b>A-001</b><br/>C4 Architecture Diagrams"]
         OPS001["<b>OPS-001</b><br/>Operational Runbook"]
         OPS002["<b>OPS-002</b><br/>Network as Code"]
+        D001["<b>D-001</b><br/>Doc Coverage Gate"]
+        D002["<b>D-002</b><br/>Coverage Rules in VCS"]
+        V001["<b>V-001</b><br/>Single Version File"]
+        V002["<b>V-002</b><br/>Git Tag on Release"]
+        V003["<b>V-003</b><br/>Auto-gen Changelog"]
+        FIN001["<b>FIN-001</b><br/>FinOps Persona Page"]
+        K001["<b>K-001</b><br/>K8s Manifests + Helm"]
+        K002["<b>K-002</b><br/>Resource Limits OPA"]
+        K003["<b>K-003</b><br/>No Privileged Containers"]
+        DEV001["<b>DEV-001</b><br/>Onboarding Guide"]
     end
 
     subgraph ADRs["📖 Architectural Decision Records"]
@@ -49,6 +59,9 @@ graph TB
         ADR003["<b>ADR-0003</b><br/>MkDocs for Publishing<br/><i>related: M-004, M-005, S-004, S-005</i>"]
         ADR004["<b>ADR-0004</b><br/>DSC for Windows Config<br/><i>related: M-005, S-008, S-009</i>"]
         ADR005["<b>ADR-0005</b><br/>Architecture Diagrams<br/><i>related: M-005, A-001, A-002</i>"]
+        ADR006["<b>ADR-0006</b><br/>Doc Coverage Gate<br/><i>related: D-001, D-002</i>"]
+        ADR007["<b>ADR-0007</b><br/>Semantic Versioning<br/><i>related: V-001, V-002, V-003</i>"]
+        ADR008["<b>ADR-0008</b><br/>Kubernetes & Helm<br/><i>related: K-001, K-002, K-003</i>"]
     end
 
     subgraph Policies["🔒 OPA Policies"]
@@ -58,13 +71,19 @@ graph TB
         SEC002["<b>SEC-002</b><br/>deny_public_access.rego<br/><i>CRITICAL severity</i>"]
         SEC003["<b>SEC-003</b><br/>deny_public_iam.rego<br/><i>HIGH severity</i>"]
         SEC004["<b>SEC-004</b><br/>deny_unrestricted_network.rego<br/><i>HIGH severity</i>"]
+        K8S001POL["<b>K8S-001</b><br/>deny_privileged_containers.rego<br/><i>CRITICAL severity</i>"]
+        K8S002POL["<b>K8S-002</b><br/>deny_missing_resource_limits.rego<br/><i>HIGH severity</i>"]
+        K8S003POL["<b>K8S-003</b><br/>deny_missing_labels.rego<br/><i>HIGH severity</i>"]
     end
 
     subgraph IaC["⚙️ Implementation"]
         direction TB
         TF["terraform/main.tf<br/><i>local_file resources</i>"]
         NETW["terraform/network.tf<br/><i>VPC/subnet/NSG/DNS</i>"]
+        K8SMAN["kubernetes/<br/><i>Namespace, Deployment, Service</i>"]
+        HELM["helm/<br/><i>Helm chart dtds-docs</i>"]
         SCRIPT["scripts/generate-docs.sh"]
+        DOCCOV["scripts/check-doc-coverage.sh"]
         DOCKER["Dockerfile"]
         MKDOCS["mkdocs.yml"]
         DSC["dsc/resources/DTDS_FileContent<br/><i>class-based DSC resource</i>"]
@@ -72,6 +91,9 @@ graph TB
         DSCBLD["dsc/build.ps1<br/><i>DscResource.DocGenerator</i>"]
         ARCH["docs/architecture/index.md<br/><i>C4 diagrams + tech radar</i>"]
         RUNBOOK["docs/runbook/index.md<br/><i>Operational runbook</i>"]
+        VERSION["version.txt + cliff.toml"]
+        ONBOARD["docs/onboarding/index.md"]
+        FINOPS_PAGE["docs/finops/index.md"]
     end
 
     M001 --> ADR001
@@ -98,6 +120,15 @@ graph TB
     M005 --> ADR005
     A001 --> ADR005
 
+    D001 --> ADR006
+    D002 --> ADR006
+    V001 --> ADR007
+    V002 --> ADR007
+    V003 --> ADR007
+    K001 --> ADR008
+    K002 --> ADR008
+    K003 --> ADR008
+
     ADR001 --> TF
     ADR001 --> NETW
     ADR001 --> SCRIPT
@@ -108,6 +139,9 @@ graph TB
     ADR002 --> SEC002
     ADR002 --> SEC003
     ADR002 --> SEC004
+    ADR002 --> K8S001POL
+    ADR002 --> K8S002POL
+    ADR002 --> K8S003POL
 
     ADR003 --> MKDOCS
 
@@ -117,8 +151,15 @@ graph TB
 
     ADR005 --> ARCH
 
+    ADR006 --> DOCCOV
+    ADR007 --> VERSION
+    ADR008 --> K8SMAN
+    ADR008 --> HELM
+
     OPS001 --> RUNBOOK
     OPS002 --> NETW
+    FIN001 --> FINOPS_PAGE
+    DEV001 --> ONBOARD
 
     FIN001 -.->|"enforces M-002"| TF
     SEC001 -.->|"enforces M-003"| TF
@@ -127,6 +168,10 @@ graph TB
     SEC003 -.->|"enforces CYB-003"| TF
     SEC004 -.->|"enforces CYB-004"| NETW
     PSTEST -.->|"tests S-009"| DSC
+    K8S001POL -.->|"enforces K-003"| K8SMAN
+    K8S002POL -.->|"enforces K-002"| K8SMAN
+    K8S003POL -.->|"enforces K-003/FIN"| K8SMAN
+    DOCCOV -.->|"gates D-001"| SCRIPT
 ```
 
 ---
@@ -140,6 +185,9 @@ graph TB
 | [SEC-002](../compliance/opa-policies.md#sec-002--deny-publicly-exposed-resources) | CRITICAL | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-002](../requirements/moscow.md#should-have--cybersecurity) | [ADR-0002](../adrs/0002-use-opa-for-policy.md) |
 | [SEC-003](../compliance/opa-policies.md#sec-003--deny-overly-permissive-iam) | HIGH | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-003](../requirements/moscow.md#should-have--cybersecurity) | [ADR-0002](../adrs/0002-use-opa-for-policy.md) |
 | [SEC-004](../compliance/opa-policies.md#sec-004--deny-unrestricted-network-egress) | HIGH | [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [CYB-004](../requirements/moscow.md#should-have--cybersecurity) | [ADR-0002](../adrs/0002-use-opa-for-policy.md) |
+| K8S-001 (deny_privileged_containers) | CRITICAL | [K-003](../requirements/moscow.md#should-have--kubernetes), [CYB-002](../requirements/moscow.md#should-have--cybersecurity) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
+| K8S-002 (deny_missing_resource_limits) | HIGH | [K-002](../requirements/moscow.md#should-have--kubernetes), [FIN-001](../requirements/moscow.md#should-have--finops) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
+| K8S-003 (deny_missing_labels) | HIGH | [K-003](../requirements/moscow.md#should-have--kubernetes), [FIN-001](../requirements/moscow.md#should-have--finops) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
 
 ---
 
@@ -148,10 +196,13 @@ graph TB
 | ADR | MoSCoW Requirements | Implementation |
 |-----|--------------------|-|
 | [ADR-0001](../adrs/0001-use-terraform-for-iac.md) — Terraform for IaC | [M-001](../requirements/moscow.md#must-have), [M-004](../requirements/moscow.md#must-have), [M-006](../requirements/moscow.md#must-have) | `terraform/`, `Dockerfile` |
-| [ADR-0002](../adrs/0002-use-opa-for-policy.md) — OPA for Policy | [M-002](../requirements/moscow.md#must-have), [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [S-002](../requirements/moscow.md#should-have), CYB-002 – CYB-004 | `policies/terraform/`, `.github/workflows/` |
+| [ADR-0002](../adrs/0002-use-opa-for-policy.md) — OPA for Policy | [M-002](../requirements/moscow.md#must-have), [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [S-002](../requirements/moscow.md#should-have), CYB-002 – CYB-004 | `policies/terraform/`, `policies/kubernetes/`, `.github/workflows/` |
 | [ADR-0003](../adrs/0003-use-mkdocs-for-publishing.md) — MkDocs for Publishing | [M-004](../requirements/moscow.md#must-have), [M-005](../requirements/moscow.md#must-have), [S-004](../requirements/moscow.md#should-have), [S-005](../requirements/moscow.md#should-have) | `mkdocs.yml`, `docs/`, `scripts/` |
 | [ADR-0004](../adrs/0004-use-dsc-for-windows-config.md) — DSC for Windows Config | [M-005](../requirements/moscow.md#must-have), [S-008](../requirements/moscow.md#should-have), [S-009](../requirements/moscow.md#should-have) | `dsc/resources/`, `dsc/tests/`, `dsc/build.ps1` |
 | [ADR-0005](../adrs/0005-architecture-documentation.md) — Architecture Diagrams | [M-005](../requirements/moscow.md#must-have), A-001, A-002 | `docs/architecture/index.md` |
+| [ADR-0006](../adrs/0006-enforce-doc-coverage-gate.md) — Doc Coverage Gate | [D-001](../requirements/moscow.md#should-have--documentation-governance), [D-002](../requirements/moscow.md#should-have--documentation-governance) | `scripts/check-doc-coverage.sh`, CI `doc-coverage` job |
+| [ADR-0007](../adrs/0007-semantic-versioning-and-changelog.md) — Semantic Versioning | [V-001](../requirements/moscow.md#should-have--versioning--changelog), [V-002](../requirements/moscow.md#should-have--versioning--changelog), [V-003](../requirements/moscow.md#should-have--versioning--changelog) | `version.txt`, `cliff.toml`, CI `release` job |
+| [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) — Kubernetes & Helm | [K-001](../requirements/moscow.md#should-have--kubernetes), [K-002](../requirements/moscow.md#should-have--kubernetes), [K-003](../requirements/moscow.md#should-have--kubernetes) | `kubernetes/`, `helm/`, `policies/kubernetes/` |
 
 ---
 
@@ -167,12 +218,15 @@ sequenceDiagram
     participant OPA as OPA Gate
     participant TF  as Terraform
     participant DSC as DSC Tests
+    participant DOC as Doc Coverage
     participant DOCS as Docs Build
     participant GH  as GitHub Pages
+    participant REL as Release Job
 
     PR->>CI: Push / PR event
-    CI->>CI: opa test policies/ [S-002]
+    CI->>CI: opa test policies/ [S-002, K-001–K-003]
     CI->>DSC: Invoke-Pester dsc/tests/ [S-009]
+    CI->>DOC: check-doc-coverage.sh [D-001, D-002]
     CI->>TF: terraform validate [M-001]
     CI->>TF: terraform plan -json [M-001, OPS-002]
     TF-->>OPA: plan.json
@@ -189,8 +243,12 @@ sequenceDiagram
     CI->>DOCS: terraform-docs [M-004]
     CI->>DOCS: pwsh dsc/build.ps1 [S-008]
     CI->>DOCS: Ansible fact-gather [S-003]
+    CI->>DOCS: git cliff → CHANGELOG.md [V-003]
     CI->>DOCS: mkdocs build [S-004]
     DOCS->>GH: deploy to GitHub Pages [S-005]
+    CI->>REL: version.txt changed? [V-001]
+    REL->>REL: git cliff → CHANGELOG.md [V-003]
+    REL->>GH: git tag vX.Y.Z + GitHub Release [V-002]
 ```
 
 ---
@@ -200,16 +258,16 @@ sequenceDiagram
 ```mermaid
 pie title MoSCoW Requirement Coverage by Category
     "Must Have (implemented)" : 6
-    "Should Have (implemented)" : 16
+    "Should Have (implemented)" : 30
     "Could Have (deferred)" : 3
     "Won't Have (out of scope)" : 3
 ```
 
 !!! success "All Must-Have and Should-Have requirements are covered"
-    Every M-xxx and S-xxx requirement in the MoSCoW document has at least one
-    ADR, OPA policy, or implementation artefact that satisfies it.  The
-    traceability metadata in each source file makes this verifiable
-    automatically.
+    Every M-xxx, S-xxx, D-xxx, V-xxx, FIN-xxx, K-xxx, and DEV-xxx requirement
+    in the MoSCoW document has at least one ADR, OPA policy, or implementation
+    artefact that satisfies it.  The traceability metadata in each source file
+    makes this verifiable automatically.
 
 ---
 

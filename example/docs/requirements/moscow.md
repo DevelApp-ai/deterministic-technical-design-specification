@@ -83,6 +83,55 @@ if omitted from the current iteration.
 
 ---
 
+## Should Have — Documentation Governance
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| D-001 | A CI gate must fail the build when infrastructure or policy code is changed without a corresponding documentation update | `scripts/check-doc-coverage.sh`, `.github/workflows/docs-pipeline.yml` → `doc-coverage` job |
+| D-002 | Documentation coverage rules must be version-controlled alongside the source code they govern | `scripts/check-doc-coverage.sh` |
+
+---
+
+## Should Have — Versioning & Changelog
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| V-001 | The repository must use a single source-of-truth version file (`version.txt`) read by CI, Docker builds, and the MkDocs footer | `version.txt` |
+| V-002 | The CI pipeline must tag git commits with `v<version>` on every version bump and create a corresponding GitHub Release | `.github/workflows/docs-pipeline.yml` → `release` job |
+| V-003 | A machine-generated `CHANGELOG.md` must be produced from conventional-commit history using `git-cliff`; no hand-written release notes are permitted | `cliff.toml`, `.github/workflows/docs-pipeline.yml` → `release` job |
+
+---
+
+## Should Have — FinOps
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| FIN-001 | FinOps persona page must document tag policy, the OPA enforcement gate, and a resource cost-centre mapping table | `docs/finops/index.md` |
+| FIN-002 | All Kubernetes workloads must carry the same four cost-allocation labels enforced on Terraform resources | `policies/kubernetes/deny_missing_labels.rego` (K8S-003) |
+| FIN-003 | A cost-anomaly runbook section must document how to detect and remediate tag violations in CI and in production | `docs/finops/index.md` |
+
+---
+
+## Should Have — Kubernetes
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| K-001 | Kubernetes manifests must be provided as both raw YAML and a Helm chart | `kubernetes/`, `helm/` |
+| K-002 | OPA policy must block Kubernetes containers that do not declare CPU and memory limits | `policies/kubernetes/deny_missing_resource_limits.rego` (K8S-002) |
+| K-003 | OPA policy must block Kubernetes containers that run as privileged or allow privilege escalation | `policies/kubernetes/deny_privileged_containers.rego` (K8S-001) |
+
+---
+
+## Should Have — Developer Experience
+
+| ID | Requirement | Satisfied By |
+|----|-------------|-------------|
+| DEV-001 | A developer onboarding guide must enable a new team member to run the full local pipeline in under 15 minutes with no host tool installation | `docs/onboarding/index.md` |
+| DEV-002 | Commit message format (Conventional Commits) must be documented alongside the versioning strategy | `docs/versioning/index.md` |
+| DEV-003 | The repository map in the onboarding guide must be a Mermaid diagram generated from the actual directory structure | `docs/onboarding/index.md` |
+
+---
+
 ## Could Have
 
 Desirable enhancements that are deferred to a future iteration.

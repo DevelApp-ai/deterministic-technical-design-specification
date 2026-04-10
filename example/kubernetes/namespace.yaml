@@ -1,0 +1,21 @@
+# kubernetes/namespace.yaml
+#
+# Namespace for the DTDS example workload.
+# Labels carry the same FinOps cost-allocation metadata required by OPA
+# policy FINOPS-001 and Kubernetes policy K8S-001.
+#
+# Machine-readable metadata used by OPA K8S-001:
+#   related_requirements: [K-001, K-002, FIN-001]
+#   related_adr: [ADR-0008]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dtds-example
+  labels:
+    app.kubernetes.io/name: dtds-example
+    app.kubernetes.io/managed-by: helm
+    environment: staging
+    app_name: dtds-example
+    owner: platform-team
+    cost_center: CC-1001

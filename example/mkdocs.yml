@@ -64,24 +64,35 @@ nav:
   - Infrastructure:
       - Terraform Module: infrastructure/terraform.md
       - Network Topology: network/index.md
+      - Kubernetes & Helm: kubernetes/index.md
   - Configuration:
       - Ansible Host Report: configuration/ansible.md
       - DSC Resources: dsc/index.md
   - Compliance:
       - OPA Policy Summary: compliance/opa-policies.md
       - Security Controls Matrix: security/index.md
+  - FinOps:
+      - Cost-Allocation Guide: finops/index.md
   - Architecture Decisions:
       - ADR-0001 Terraform for IaC: adrs/0001-use-terraform-for-iac.md
       - ADR-0002 OPA for Policy: adrs/0002-use-opa-for-policy.md
       - ADR-0003 MkDocs for Publishing: adrs/0003-use-mkdocs-for-publishing.md
       - ADR-0004 DSC for Windows Config: adrs/0004-use-dsc-for-windows-config.md
       - ADR-0005 Architecture Diagrams: adrs/0005-architecture-documentation.md
+      - ADR-0006 Doc Coverage Gate: adrs/0006-enforce-doc-coverage-gate.md
+      - ADR-0007 Semantic Versioning: adrs/0007-semantic-versioning-and-changelog.md
+      - ADR-0008 Kubernetes & Helm: adrs/0008-kubernetes-manifests-and-helm-chart.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
   - Backstage:
       - Integration Guide: backstage/index.md
   - Operations:
       - Runbook: runbook/index.md
+  - Developer Guide:
+      - Onboarding: onboarding/index.md
+      - Doc Coverage Gate: doc-review/index.md
+      - Versioning & Changelog: versioning/index.md
+      - Changelog: versioning/CHANGELOG.md
   - Generated:
       - Terraform README: generated/terraform-readme.md
       - Network Topology: generated/network-topology.md

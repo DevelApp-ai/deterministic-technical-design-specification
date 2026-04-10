@@ -7,11 +7,13 @@
 # pull request that touches files under `example/`.
 #
 # Jobs:
-#   1. opa-tests     — unit-test all OPA/Rego policies
-#   2. dsc-tests     — Pester unit tests for all DSC resources
-#   3. terraform     — validate Terraform + run OPA compliance gate
-#   4. docs-build    — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
-#   5. docs-publish  — deploy MkDocs site to GitHub Pages (main only)
+#   1. opa-tests      — unit-test all OPA/Rego policies (Terraform + Kubernetes)
+#   2. dsc-tests      — Pester unit tests for all DSC resources
+#   3. doc-coverage   — PR documentation coverage gate (ADR-0006)
+#   4. terraform      — validate Terraform + run OPA compliance gate
+#   5. docs-build     — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
+#   6. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
+#   7. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
 
 name: Deterministic Documentation Pipeline
 
@@ -44,9 +46,10 @@ env:
   TERRAFORM_DOCS_VERSION: "0.19.0"
   OPA_VERSION: "0.69.0"
   PYTHON_VERSION: "3.12"
+  GIT_CLIFF_VERSION: "2.4.0"
 
 # ---------------------------------------------------------------------------
-# Job 1 — OPA policy unit tests
+# Job 1 — OPA policy unit tests (Terraform + Kubernetes)
 # ---------------------------------------------------------------------------
 jobs:
   opa-tests:
@@ -67,7 +70,7 @@ jobs:
 
       - name: Run OPA policy unit tests
         run: |
-          opa test example/policies/terraform/ -v
+          opa test example/policies/ -v
 
 # ---------------------------------------------------------------------------
 # Job 2 — DSC resource Pester unit tests
@@ -113,7 +116,28 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 3 — Terraform validate + OPA compliance gate
+# Job 3 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
+# Runs on PRs only; skipped on direct pushes to main.
+# ---------------------------------------------------------------------------
+  doc-coverage:
+    name: Documentation Coverage Gate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run doc coverage check
+        run: |
+          chmod +x example/scripts/check-doc-coverage.sh
+          BASE_BRANCH="${{ github.base_ref }}" \
+            bash example/scripts/check-doc-coverage.sh
+
+# ---------------------------------------------------------------------------
+# Job 4 — Terraform validate + OPA compliance gate
 # ---------------------------------------------------------------------------
   terraform:
     name: Terraform Validate & OPA Gate
@@ -231,7 +255,7 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 4 — Documentation build
+# Job 5 — Documentation build
 # ---------------------------------------------------------------------------
   docs-build:
     name: Build Documentation Site
@@ -241,6 +265,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -255,6 +281,16 @@ jobs:
           tar -xzf /tmp/terraform-docs.tar.gz -C /usr/local/bin/ terraform-docs
           chmod +x /usr/local/bin/terraform-docs
           terraform-docs version
+
+      - name: Install git-cliff
+        run: |
+          curl -fsSL \
+            "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            -o /tmp/git-cliff.tar.gz
+          tar -xzf /tmp/git-cliff.tar.gz -C /tmp/
+          mv /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
+          chmod +x /usr/local/bin/git-cliff
+          git-cliff --version
 
       - name: Install Python tooling
         run: |
@@ -292,6 +328,11 @@ jobs:
             example/ansible/playbook.yml \
             --connection=local 2>&1 | grep -v '^\[WARNING\]' || true
 
+      - name: Generate CHANGELOG (git-cliff)
+        run: |
+          cd example
+          git cliff --config cliff.toml --output docs/versioning/CHANGELOG.md || true
+
       - name: Build MkDocs site
         run: mkdocs build --config-file example/mkdocs.yml --strict
 
@@ -309,7 +350,7 @@ jobs:
           path: example/site/
 
 # ---------------------------------------------------------------------------
-# Job 5 — Publish to GitHub Pages (main branch only)
+# Job 6 — Publish to GitHub Pages (main branch only)
 # ---------------------------------------------------------------------------
   docs-publish:
     name: Publish to GitHub Pages
@@ -325,3 +366,70 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+# ---------------------------------------------------------------------------
+# Job 7 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
+# ---------------------------------------------------------------------------
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if version.txt changed
+        id: version_changed
+        run: |
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q 'example/version.txt'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install git-cliff
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          curl -fsSL \
+            "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            -o /tmp/git-cliff.tar.gz
+          tar -xzf /tmp/git-cliff.tar.gz -C /tmp/
+          mv /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
+          chmod +x /usr/local/bin/git-cliff
+
+      - name: Generate CHANGELOG.md
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          cd example
+          git cliff --config cliff.toml --output CHANGELOG.md
+
+      - name: Read version
+        if: steps.version_changed.outputs.changed == 'true'
+        id: read_version
+        run: |
+          VERSION=$(cat example/version.txt | tr -d '[:space:]')
+          echo "version=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git identity
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit CHANGELOG and tag release
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          VERSION="${{ steps.read_version.outputs.version }}"
+          git add example/CHANGELOG.md
+          git commit -m "chore(release): update CHANGELOG for ${VERSION}" || true
+          git tag -a "${VERSION}" -m "Release ${VERSION}"
+          git push origin HEAD --tags
