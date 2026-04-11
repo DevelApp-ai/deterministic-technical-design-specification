@@ -226,7 +226,7 @@ identified, diffed, and audited.
 | Terraform modules | `?ref=vX.Y.Z` in source URI | `tflint` rule `terraform_module_pinned_source` |
 | Ansible collections | `version: X.Y.Z` in `requirements.yml` | `ansible-galaxy install` exits non-zero on unresolved pin |
 | DSC modules | `ModuleVersion` in `.psd1` | CI gate rejects unchanged `ModuleVersion` after code change |
-| Container images | `image:sha256:<digest>` in Kubernetes manifests | OPA K8S policy `deny_latest_image_tag` (K8S-003) |
+| Container images | `image:sha256:<digest>` in Kubernetes manifests | OPA K8S policy `deny_unpinned_image_tag` (K8S-004) |
 | Helm charts | `Chart.lock` digest | `helm dependency build --verify` on every CI run |
 | Application libraries | `poetry.lock` / `package-lock.json` / `go.sum` | Dependency audit in CI (`pip-audit`, `npm audit`, `govulncheck`) |
 
@@ -377,8 +377,8 @@ All eight OPA policies carry explicit NIS2 article references in their
 | HTTPS Enforcement | SEC-005 | HIGH | Art.21(2)(h), Art.21(2)(j) |
 | No Deprecated TLS | SEC-006 | HIGH | Art.21(2)(h) |
 | NIS2 Crypto & Key Management | NIS2-CRYPTO-001 | HIGH | Art.21(2)(h) |
-| IaC Provider Hash Lock | SC-001 | HIGH | Art.21(2)(d) |
-| No Unpinned Container Image Tags | K8S-003 | HIGH | Art.21(2)(d), Art.21(2)(e) |
+| IaC Dependency Pinning | SC-001 | HIGH | Art.21(2)(d) |
+| No Unpinned Container Image Tags | K8S-004 | HIGH | Art.21(2)(d), Art.21(2)(e) |
 
 ---
 
@@ -421,7 +421,7 @@ Use this checklist during a NIS2 supervisory inspection or self-assessment:
 - [ ] **Art.21(2)(d):** Container image signature verified — `cosign verify` succeeds against current image digest
 - [ ] **Art.21(2)(d):** Helm `Chart.lock` committed; `helm dependency build --verify` exits 0
 - [ ] **Art.21(2)(e):** CI/CD pipeline OPA gate is green — run `opa test policies/terraform/ -v`
-- [ ] **Art.21(2)(f):** All 76 OPA unit tests pass — `opa test policies/ -v`
+- [ ] **Art.21(2)(f):** All 119 OPA unit tests pass — `opa test policies/ -v`
 - [ ] **Art.21(2)(f):** Doc coverage gate passes — `scripts/check-doc-coverage.sh`
 - [ ] **Art.21(2)(h):** No deprecated TLS in use — verify SEC-006 gate passed on last merge
 - [ ] **Art.21(2)(h):** All KMS keys have rotation enabled — verify NIS2-CRYPTO-001 gate passed
@@ -435,7 +435,7 @@ Use this checklist during a NIS2 supervisory inspection or self-assessment:
 ## Running a Full NIS2 Evidence Check Locally
 
 ```bash
-# Run all OPA policy tests (must be 76/76 PASS)
+# Run all OPA policy tests (must be 119/119 PASS)
 opa test example/policies/terraform/ example/policies/kubernetes/ -v
 
 # Evaluate all policies against a plan file
@@ -449,7 +449,9 @@ opa eval \
    data.terraform.network.deny |
    data.terraform.https.deny |
    data.terraform.tls.deny |
-   data.terraform.nis2.deny'
+   data.terraform.nis2.deny |
+   data.terraform.supply_chain.deny |
+   data.terraform.dora.deny'
 
 # Run OS compliance checks (Ansible)
 ansible-playbook -i example/ansible/inventory.yml example/ansible/compliance_check.yml

@@ -78,6 +78,8 @@ graph TB
         K8S001POL["<b>K8S-001</b><br/>deny_privileged_containers.rego<br/><i>CRITICAL severity</i>"]
         K8S002POL["<b>K8S-002</b><br/>deny_missing_resource_limits.rego<br/><i>HIGH severity</i>"]
         K8S003POL["<b>K8S-003</b><br/>deny_missing_labels.rego<br/><i>HIGH severity</i>"]
+        SC001POL["<b>SC-001</b><br/>deny_nis2_supply_chain.rego<br/><i>HIGH severity</i>"]
+        K8S004POL["<b>K8S-004</b><br/>deny_unpinned_image_tag.rego<br/><i>HIGH severity</i>"]
     end
 
     subgraph IaC["⚙️ Implementation"]
@@ -150,6 +152,8 @@ graph TB
     ADR002 --> K8S001POL
     ADR002 --> K8S002POL
     ADR002 --> K8S003POL
+    ADR010 --> SC001POL
+    ADR008 --> K8S004POL
 
     ADR003 --> MKDOCS
 
@@ -181,6 +185,8 @@ graph TB
     K8S001POL -.->|"enforces K-003"| K8SMAN
     K8S002POL -.->|"enforces K-002"| K8SMAN
     K8S003POL -.->|"enforces K-003/FIN"| K8SMAN
+    SC001POL -.->|"enforces NIS2-007"| TF
+    K8S004POL -.->|"enforces NIS2-007"| K8SMAN
     DOCCOV -.->|"gates D-001"| SCRIPT
     MCPCONF -.->|"exposes AI-001"| CATINFO
 ```
@@ -199,6 +205,8 @@ graph TB
 | K8S-001 (deny_privileged_containers) | CRITICAL | [K-003](../requirements/moscow.md#should-have--kubernetes), [CYB-002](../requirements/moscow.md#should-have--cybersecurity) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
 | K8S-002 (deny_missing_resource_limits) | HIGH | [K-002](../requirements/moscow.md#should-have--kubernetes), [FIN-001](../requirements/moscow.md#should-have--finops) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
 | K8S-003 (deny_missing_labels) | HIGH | [K-003](../requirements/moscow.md#should-have--kubernetes), [FIN-001](../requirements/moscow.md#should-have--finops) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
+| [SC-001](../compliance/opa-policies.md#sc-001--nis2-supply-chain-iac-dependency-pinning) | HIGH | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555) | [ADR-0010](../adrs/0010-nis2-compliance.md) |
+| [K8S-004](../compliance/opa-policies.md#k8s-004--no-unpinned-container-image-tags) | HIGH | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555), [K-001](../requirements/moscow.md#should-have--kubernetes) | [ADR-0010](../adrs/0010-nis2-compliance.md), [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
 
 ---
 

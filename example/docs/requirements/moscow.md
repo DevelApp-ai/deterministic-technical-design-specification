@@ -179,6 +179,7 @@ See [ADR-0010](../adrs/0010-nis2-compliance.md) for the compliance strategy deci
 | NIS2-004 | Access control must enforce least-privilege; no wildcard IAM principals or actions on sensitive services | Art.21(2)(i) | `policies/terraform/deny_public_iam.rego` (SEC-003), `terraform/iam.tf` |
 | NIS2-005 | Incident handling procedures must be documented, including detection, response, and recovery steps | Art.21(2)(b) | `docs/runbook/index.md` |
 | NIS2-006 | The effectiveness of all security risk-management measures must be measurable and regularly assessed; automated test coverage must be maintained | Art.21(2)(f) | `policies/terraform/*_test.rego` (63 OPA unit tests), `scripts/check-doc-coverage.sh`, `.github/workflows/docs-pipeline.yml` |
+| NIS2-007 | Supply chain security must be enforced in CI/CD: Terraform providers and modules must be pinned to immutable, verified versions; container images must not use mutable tags (`:latest` or untagged) | Art.21(2)(d) | `policies/terraform/deny_nis2_supply_chain.rego` (SC-001), `policies/kubernetes/deny_unpinned_image_tag.rego` (K8S-004) |
 
 ---
 

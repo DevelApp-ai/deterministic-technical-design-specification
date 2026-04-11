@@ -68,7 +68,9 @@ graph LR
     ADR002 --> SEC005["SEC-005: deny_missing_https_redirect"]
     ADR002 --> SEC006["SEC-006: deny_deprecated_tls"]
     ADR010["ADR-0010: NIS2 Compliance"] --> NIS2C["NIS2-CRYPTO-001: deny_nis2_crypto"]
+    ADR010 --> SC001["SC-001: deny_nis2_supply_chain"]
     ADR011["ADR-0011: DORA Compliance"] --> DORA1["DORA-ICT-001: deny_dora_ict_risk"]
+    ADR008["ADR-0008: Kubernetes"] --> K8S004["K8S-004: deny_unpinned_image_tag"]
 ```
 
 ---
@@ -304,6 +306,99 @@ resource "aws_s3_bucket_versioning" "backup" {
 
 ---
 
+## SC-001 — NIS2 Supply Chain: IaC Dependency Pinning
+
+| Field | Value |
+|-------|-------|
+| **ID** | `SC-001` |
+| **Severity** | HIGH |
+| **File** | `policies/terraform/deny_nis2_supply_chain.rego` |
+| **Package** | `terraform.supply_chain` |
+| **Related ADR** | [ADR-0010 — NIS2 Compliance](../adrs/0010-nis2-compliance.md) |
+| **Related Requirements** | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555), [M-003](../requirements/moscow.md#must-have) |
+| **NIS2** | Art.21(2)(d) — Supply chain security |
+| **NIST 800-53** | SA-12, SA-15 |
+
+**Description:**  
+Terraform module and provider dependencies must be pinned to immutable,
+verifiable references.  Six rules are enforced:
+
+1. Git-sourced modules must include a `?ref=` parameter.
+2. Git-sourced module `?ref=` must not be a mutable branch (`main`, `master`,
+   `HEAD`, `develop`, `trunk`).
+3. Registry module calls must declare an explicit `version_constraint`.
+4. Registry module `version_constraint` must not be a floating `>= X` (no
+   upper bound).
+5. Provider `version_constraint` must be present.
+6. Provider `version_constraint` must not be a floating `>= X`.
+
+**Remediation:**
+
+```hcl
+# 1 & 2) Pin git modules to an immutable semver tag
+module "vpc" {
+  source = "git::https://github.com/org/vpc.git?ref=v1.3.0"
+}
+
+# 3 & 4) Pin registry modules with a pessimistic constraint
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 20.0"
+}
+
+# 5 & 6) Pin providers in required_providers
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.53"
+    }
+  }
+}
+```
+
+---
+
+## K8S-004 — No Unpinned Container Image Tags
+
+| Field | Value |
+|-------|-------|
+| **ID** | `K8S-004` |
+| **Severity** | HIGH |
+| **File** | `policies/kubernetes/deny_unpinned_image_tag.rego` |
+| **Package** | `kubernetes.supply_chain` |
+| **Related ADR** | [ADR-0010 — NIS2 Compliance](../adrs/0010-nis2-compliance.md), [ADR-0008 — Kubernetes](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
+| **Related Requirements** | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555), [K-001](../requirements/moscow.md#should-have--kubernetes) |
+| **NIS2** | Art.21(2)(d) — Supply chain security |
+| **NIST 800-53** | SA-12, CM-11 |
+| **CIS Kubernetes** | 5.4.1 |
+
+**Description:**  
+Container images in Kubernetes workloads must carry an explicit, non-mutable
+tag.  Two rules are enforced:
+
+1. **Untagged images** — A bare image name (e.g. `nginx`) has no tag and is
+   implicitly treated as `:latest` by the container runtime.
+2. **`:latest` tag** — The `:latest` tag is mutable; the registry may point
+   it at a different image layer at any time, including after a supply chain
+   compromise.
+
+Images pinned by SHA256 digest (e.g. `nginx:1.25.3@sha256:<digest>`) satisfy
+both rules and represent the gold standard for supply chain security.
+
+**Remediation:**
+
+```yaml
+# Replace :latest or untagged references with explicit semver tags
+containers:
+  - name: app
+    image: nginx:1.25.3            # semver tag — acceptable
+  - name: api
+    image: myapp:2.4.1@sha256:abc  # semver + digest — gold standard
+```
+
+---
+
 ## CI/CD Gate Behaviour
 
 ```mermaid
@@ -330,8 +425,9 @@ opa eval \
    data.terraform.https.deny |
    data.terraform.tls.deny |
    data.terraform.nis2.deny |
+   data.terraform.supply_chain.deny |
    data.terraform.dora.deny'
 
-# Run all unit tests (90 tests)
+# Run all unit tests (119 tests)
 opa test policies/terraform/ policies/kubernetes/ -v
 ```

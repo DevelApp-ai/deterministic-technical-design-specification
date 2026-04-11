@@ -15,7 +15,7 @@ import rego.v1
 
 _mock(module_calls, provider_config) := {
 	"configuration": {"root_module": {
-		"module_calls":   module_calls,
+		"module_calls": module_calls,
 		"provider_config": provider_config,
 	}},
 }

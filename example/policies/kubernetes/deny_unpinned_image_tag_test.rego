@@ -126,9 +126,9 @@ test_pod_untagged_denied if {
 
 test_multiple_containers_violations_counted if {
 	manifest := _deployment([
-		_container("app", "myapp:1.0.0"),         # compliant
-		_container("sidecar", "envoy:latest"),     # violates Rule 2
-		_container("init", "busybox"),             # violates Rule 1
+		_container("app", "myapp:1.0.0"),        # compliant
+		_container("sidecar", "envoy:latest"),    # violates Rule 2
+		_container("init", "busybox"),            # violates Rule 1
 	])
 	count(supply_chain.deny) == 2 with input as manifest
 }
