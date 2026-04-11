@@ -1,0 +1,35 @@
+# ansible/roles/certificate_management/defaults/main.yml
+#
+# Default variables for the certificate_management role.
+---
+# Organisation details for certificate evidence reporting
+cert_contact: "platform-team@example.com"
+
+# Days before expiry that a certificate is considered "expiring soon"
+cert_expiry_warning_days: 30
+
+# TLS certificate directories to inspect on managed hosts
+cert_scan_paths:
+  - /etc/ssl/certs
+  - /etc/pki/tls/certs
+  - /etc/nginx/ssl
+  - /etc/apache2/ssl
+  - /opt/app/certs
+
+# Minimum acceptable key size per algorithm
+cert_min_key_sizes:
+  RSA: 2048
+  ECDSA: 256
+
+# Forbidden TLS protocols (enforced alongside SEC-006 OPA policy at Terraform level)
+cert_forbidden_protocols:
+  - TLSv1
+  - TLSv1.1
+  - SSLv2
+  - SSLv3
+
+# Output directory for certificate inventory evidence reports
+cert_report_dir: "{{ playbook_dir }}/../docs/generated/certificates"
+
+# ACM certificate ARN prefix (used to identify managed certificates)
+cert_acm_prefix: "arn:aws:acm:"

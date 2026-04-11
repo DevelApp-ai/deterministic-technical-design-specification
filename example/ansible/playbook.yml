@@ -1,0 +1,56 @@
+---
+# ansible/playbook.yml
+#
+# Demonstration playbook that gathers host facts via the `setup` module and
+# renders a deterministic host-report Markdown file using a Jinja2 template.
+#
+# Usage (against the local machine):
+#   ansible-playbook -i inventory.yml playbook.yml
+#
+# In CI/CD the playbook runs against `localhost` (the runner itself) so that
+# no external SSH targets are required while still demonstrating the full
+# fact-gathering → Jinja2 → Markdown pipeline described in the document.
+
+- name: Gather host facts and generate deterministic host report
+  hosts: all
+  gather_facts: true   # Invokes the `setup` module automatically
+
+  vars:
+    report_output_dir: "{{ playbook_dir }}/../docs/generated"
+    report_filename: "host-report-{{ inventory_hostname }}.md"
+
+  tasks:
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ report_output_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    - name: Collect installed packages (Debian/Ubuntu)
+      ansible.builtin.command: dpkg-query -W -f='${Package} ${Version}\n'
+      register: installed_packages
+      changed_when: false
+      when: ansible_os_family == "Debian"
+      ignore_errors: true
+
+    - name: Collect listening network ports
+      ansible.builtin.command: ss -tlnp
+      register: listening_ports
+      changed_when: false
+      ignore_errors: true
+
+    - name: Collect running systemd services
+      ansible.builtin.service_facts:
+      register: services_facts
+
+    - name: Render host report from Jinja2 template
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/host-report.md.j2"
+        dest: "{{ report_output_dir }}/{{ report_filename }}"
+        mode: "0644"
+      delegate_to: localhost
+      vars:
+        packages: "{{ installed_packages.stdout_lines | default([]) }}"
+        ports: "{{ listening_ports.stdout_lines | default([]) }}"
+        services: "{{ services_facts.ansible_facts.services | default({}) }}"

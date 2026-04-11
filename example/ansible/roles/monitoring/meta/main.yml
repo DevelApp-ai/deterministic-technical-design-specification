@@ -1,0 +1,22 @@
+---
+# roles/monitoring/meta/main.yml
+galaxy_info:
+  author: platform-team
+  description: >
+    CloudWatch agent installation and configuration role.
+    Satisfies DORA Art.10 (continuous ICT monitoring) and
+    CIS Control 8 (Audit Log Management).
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: EL
+      versions: [8, 9]
+    - name: Ubuntu
+      versions: [22.04, 24.04]
+  galaxy_tags:
+    - monitoring
+    - cloudwatch
+    - dora
+    - cis
+
+dependencies: []

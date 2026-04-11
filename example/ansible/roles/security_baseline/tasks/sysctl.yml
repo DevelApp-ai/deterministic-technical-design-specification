@@ -1,0 +1,42 @@
+# ansible/roles/security_baseline/tasks/sysctl.yml
+# Kernel hardening via sysctl — CIS Benchmark Section 3
+---
+- name: Gather current sysctl values for the report
+  ansible.builtin.command: sysctl -a --ignore-errors
+  register: current_sysctl
+  changed_when: false
+  ignore_errors: true
+  tags: sysctl
+
+- name: Apply sysctl hardening settings
+  ansible.builtin.sysctl:
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: true
+    sysctl_file: /etc/sysctl.d/99-cis-hardening.conf
+  loop: "{{ sysctl_settings | dict2items }}"
+  when: sysctl_settings | length > 0
+  ignore_errors: true   # No-op in CI containers that restrict sysctl
+  notify: reload sysctl
+  tags: sysctl
+
+- name: Verify net.ipv4.tcp_syncookies is set
+  ansible.builtin.command: sysctl -n net.ipv4.tcp_syncookies
+  register: syncookies_check
+  changed_when: false
+  ignore_errors: true
+  tags: sysctl
+
+- name: Verify ASLR is enabled
+  ansible.builtin.command: sysctl -n kernel.randomize_va_space
+  register: aslr_check
+  changed_when: false
+  ignore_errors: true
+  tags: sysctl
+
+- name: Set sysctl check results as facts
+  ansible.builtin.set_fact:
+    sysctl_syncookies_ok: "{{ syncookies_check.stdout | default('unknown') == '1' }}"
+    sysctl_aslr_ok: "{{ aslr_check.stdout | default('unknown') == '2' }}"
+  tags: sysctl

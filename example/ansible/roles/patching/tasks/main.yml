@@ -1,0 +1,95 @@
+---
+# roles/patching/tasks/main.yml
+# Entry point — detect OS family and delegate to the appropriate task file.
+
+- name: Gather package facts before patching
+  ansible.builtin.package_facts:
+    manager: auto
+  tags: [patching, pre-patch]
+
+- name: Record pre-patch package list (audit trail for DORA Art.10)
+  ansible.builtin.copy:
+    content: "{{ ansible_facts.packages | to_nice_json }}"
+    dest: "{{ patching_report_dir }}/pre-patch-packages.json"
+    mode: "0640"
+  tags: [patching, audit]
+
+- name: Store pre-patch kernel version for reboot detection
+  ansible.builtin.set_fact:
+    pre_patch_kernel: "{{ ansible_kernel }}"
+  tags: [patching]
+
+- name: Ensure report directory exists
+  ansible.builtin.file:
+    path: "{{ patching_report_dir }}"
+    state: directory
+    mode: "0750"
+  tags: [patching]
+
+- name: Apply patches — RHEL / CentOS / Rocky
+  ansible.builtin.include_tasks: rhel.yml
+  when: ansible_facts['os_family'] == "RedHat"
+  tags: [patching]
+
+- name: Apply patches — Debian / Ubuntu
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_facts['os_family'] == "Debian"
+  tags: [patching]
+
+- name: Gather package facts after patching
+  ansible.builtin.package_facts:
+    manager: auto
+  tags: [patching, post-patch]
+
+- name: Re-gather facts to detect updated kernel version
+  ansible.builtin.setup:
+    filter: ansible_kernel
+  tags: [patching, post-patch]
+
+- name: Detect kernel update (reboot required when kernel changed)
+  ansible.builtin.set_fact:
+    kernel_updated: "{{ ansible_kernel != pre_patch_kernel }}"
+  tags: [patching]
+
+- name: Check if reboot is required (RHEL — /var/run/reboot-required equiv)
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+  when: ansible_facts['os_family'] == "Debian"
+  tags: [patching]
+
+- name: Trigger reboot handler when required
+  ansible.builtin.command: /bin/true
+  notify: reboot_required
+  changed_when: true
+  when:
+    - patching_reboot_policy == "when_required"
+    - >
+      (ansible_facts['os_family'] == "Debian" and reboot_required_file.stat.exists)
+      or (ansible_facts['os_family'] == "RedHat" and kernel_updated | bool)
+  tags: [patching]
+
+- name: Force reboot when policy is always
+  ansible.builtin.command: /bin/true
+  notify: reboot_required
+  changed_when: true
+  when: patching_reboot_policy == "always"
+  tags: [patching]
+
+- name: Flush handlers (reboot if needed before reporting)
+  ansible.builtin.meta: flush_handlers
+  tags: [patching]
+
+- name: Generate patch compliance report (DORA Art.10 evidence)
+  ansible.builtin.template:
+    src: patch-report.md.j2
+    dest: "{{ patching_report_dir }}/patch-report-{{ ansible_date_time.date }}.md"
+    mode: "0640"
+  tags: [patching, reporting]
+
+- name: Fetch report to controller for MkDocs inclusion
+  ansible.builtin.fetch:
+    src: "{{ patching_report_dir }}/patch-report-{{ ansible_date_time.date }}.md"
+    dest: "{{ patching_report_dest }}/{{ inventory_hostname }}-{{ ansible_date_time.date }}.md"
+    flat: true
+  tags: [patching, reporting]

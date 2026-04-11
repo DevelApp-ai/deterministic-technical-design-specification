@@ -1,0 +1,32 @@
+---
+# ansible/inventory.yml
+# Static inventory for local demonstration with host groups.
+# Replace `localhost` with real hostnames or use a dynamic inventory plugin
+# for production environments.
+
+all:
+  vars:
+    ansible_connection: local
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+
+  children:
+    webservers:
+      hosts:
+        localhost:
+      vars:
+        http_port: 443
+        http_redirect_port: 80
+        allowed_inbound_ports: [443, 80]
+
+    databases:
+      hosts:
+        localhost:
+      vars:
+        db_port: 5432
+        db_backup_enabled: true
+        max_connections: 100
+
+    all_managed:
+      children:
+        webservers:
+        databases:

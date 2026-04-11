@@ -1,0 +1,129 @@
+---
+# ansible/hardening.yml
+#
+# OS hardening playbook — applies a deterministic security baseline to managed
+# hosts based on CIS Benchmark Level 1 recommendations.
+#
+# Each task is annotated with the CIS control it satisfies and the MoSCoW
+# requirement it implements, making the entire hardening baseline traceable.
+#
+# Usage (local machine):
+#   ansible-playbook -i inventory.yml hardening.yml
+#
+# Usage (specific group):
+#   ansible-playbook -i inventory.yml hardening.yml --limit webservers
+#
+# Related ADR:          docs/adrs/0003-use-ansible-for-linux-config.md
+# Related requirements: M-003, S-001, CYB-002, CYB-003, CYB-004
+
+- name: Apply OS security hardening baseline
+  hosts: all
+  become: false   # Set to true on real targets; false for local demo
+  gather_facts: true
+
+  vars:
+    # CIS hardening settings (override via group_vars or host_vars in production)
+    cis_password_max_days: 90
+    cis_password_min_days: 7
+    cis_password_min_length: 14
+    cis_ssh_permit_root_login: "no"
+    cis_ssh_permit_empty_passwords: "no"
+    cis_ssh_max_auth_tries: 4
+    cis_ssh_client_alive_interval: 300
+    cis_ssh_client_alive_count_max: 3
+    hardening_report_dir: "{{ playbook_dir }}/../docs/generated"
+    hardening_report_file: "hardening-report-{{ inventory_hostname }}.md"
+
+  tasks:
+
+    # ------------------------------------------------------------------
+    # Fact gathering for the report
+    # ------------------------------------------------------------------
+
+    - name: Collect kernel hardening parameters (sysctl)
+      ansible.builtin.command: sysctl -a
+      register: sysctl_output
+      changed_when: false
+      ignore_errors: true
+
+    - name: Check SSH daemon configuration
+      ansible.builtin.slurp:
+        src: /etc/ssh/sshd_config
+      register: sshd_config_raw
+      ignore_errors: true
+
+    - name: Check login.defs password policy
+      ansible.builtin.slurp:
+        src: /etc/login.defs
+      register: login_defs_raw
+      ignore_errors: true
+
+    - name: Collect listening services
+      ansible.builtin.command: ss -tlnp
+      register: listening_services
+      changed_when: false
+      ignore_errors: true
+
+    - name: Check UFW/firewall status
+      ansible.builtin.command: ufw status verbose
+      register: ufw_status
+      changed_when: false
+      ignore_errors: true
+
+    - name: Collect world-writable files in /etc (audit)
+      ansible.builtin.command: find /etc -maxdepth 2 -perm -002 -type f
+      register: world_writable_etc
+      changed_when: false
+      ignore_errors: true
+
+    # ------------------------------------------------------------------
+    # Validate hardening settings (report only — no changes on demo host)
+    # ------------------------------------------------------------------
+
+    - name: Check net.ipv4.ip_forward is disabled (CIS 3.1.1)
+      ansible.builtin.set_fact:
+        ip_forward_ok: >-
+          {{ 'net.ipv4.ip_forward = 0' in (sysctl_output.stdout | default('')) }}
+
+    - name: Check net.ipv4.conf.all.send_redirects is disabled (CIS 3.1.2)
+      ansible.builtin.set_fact:
+        send_redirects_ok: >-
+          {{ 'net.ipv4.conf.all.send_redirects = 0' in (sysctl_output.stdout | default('')) }}
+
+    - name: Check kernel.randomize_va_space is enabled (CIS 1.5.3 — ASLR)
+      ansible.builtin.set_fact:
+        aslr_ok: >-
+          {{ 'kernel.randomize_va_space = 2' in (sysctl_output.stdout | default('')) }}
+
+    - name: Check fs.suid_dumpable is disabled (CIS 1.5.1)
+      ansible.builtin.set_fact:
+        suid_dumpable_ok: >-
+          {{ 'fs.suid_dumpable = 0' in (sysctl_output.stdout | default('')) }}
+
+    - name: Ensure output directory exists
+      ansible.builtin.file:
+        path: "{{ hardening_report_dir }}"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+
+    # ------------------------------------------------------------------
+    # Generate deterministic hardening report
+    # ------------------------------------------------------------------
+
+    - name: Render hardening report from Jinja2 template
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/hardening-report.md.j2"
+        dest: "{{ hardening_report_dir }}/{{ hardening_report_file }}"
+        mode: "0644"
+      delegate_to: localhost
+      vars:
+        kernel_params:
+          ip_forward_disabled: "{{ ip_forward_ok }}"
+          send_redirects_disabled: "{{ send_redirects_ok }}"
+          aslr_enabled: "{{ aslr_ok }}"
+          suid_dumpable_disabled: "{{ suid_dumpable_ok }}"
+        sshd_content: "{{ (sshd_config_raw.content | default('') | b64decode) if sshd_config_raw is defined else '' }}"
+        world_writable_files: "{{ world_writable_etc.stdout_lines | default([]) }}"
+        firewall_status: "{{ ufw_status.stdout | default('UFW not available') }}"
+        listening: "{{ listening_services.stdout_lines | default([]) }}"

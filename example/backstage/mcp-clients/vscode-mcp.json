@@ -1,0 +1,23 @@
+{
+  "_comment": "VS Code / GitHub Copilot MCP server configuration for the DTDS Backstage portal.",
+  "_usage": "Copy this file to .vscode/mcp.json in your workspace, or merge into an existing file.",
+  "_prerequisites": [
+    "1. Start the DTDS Backstage portal: docker run --rm -p 7007:7007 -e BACKSTAGE_MCP_TOKEN=dtds-mcp-demo-token-change-in-production dtds-backstage",
+    "2. Verify: curl http://localhost:7007/api/catalog/entities | head -c 200",
+    "3. In VS Code, open the MCP panel (Ctrl+Shift+P → 'MCP: List Servers') to activate the server."
+  ],
+  "servers": {
+    "dtds-backstage": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-mcp-backstage-example-evanshortiss"
+      ],
+      "env": {
+        "BACKSTAGE_BASE_URL": "http://localhost:7007",
+        "BACKSTAGE_API_TOKEN": "dtds-mcp-demo-token-change-in-production"
+      }
+    }
+  }
+}

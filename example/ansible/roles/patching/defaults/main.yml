@@ -1,0 +1,31 @@
+---
+# roles/patching/defaults/main.yml
+# Default variables for the patching role.
+# DORA Art.10 (§10.2.f) requires patch currency — security patches applied
+# within defined windows.  Override per environment in group_vars/.
+
+# ── Patch window ────────────────────────────────────────────────────────────
+# cron expression interpreted by the calling orchestration tool (AWX / AAP).
+# Not applied here; documented for scheduling reference.
+patching_window_cron: "0 2 * * 0"   # Sundays 02:00 UTC
+
+# Reboot policy after kernel / libc update.
+# Options: never | when_required | always
+patching_reboot_policy: when_required
+
+# Seconds to wait for the host to come back after a reboot.
+patching_reboot_timeout: 300
+
+# ── Package exclusions ───────────────────────────────────────────────────────
+# Packages to hold back from automatic updates (e.g., pinned app versions).
+# Add per-host overrides in host_vars/.
+patching_excluded_packages: []
+
+# ── Security-only vs full update ─────────────────────────────────────────────
+# true  → install only packages with a security advisory (recommended for prod)
+# false → install all available updates (useful for dev/CI)
+patching_security_only: true
+
+# ── Reporting ────────────────────────────────────────────────────────────────
+patching_report_dir: "/var/log/dtds/patching"
+patching_report_dest: "{{ playbook_dir }}/../docs/generated/patching"

@@ -1,0 +1,16 @@
+# ansible/roles/dora_evidence/meta/main.yml
+---
+galaxy_info:
+  role_name: dora_evidence
+  author: platform-team
+  description: >
+    Collects DORA (EU 2022/2554) audit evidence from managed hosts:
+    log integrity, retention policy compliance, patch status, and network
+    exposure. Generates a structured Markdown evidence report.
+  min_ansible_version: "2.14"
+  categories:
+    - compliance
+    - security
+
+dependencies:
+  - role: security_baseline

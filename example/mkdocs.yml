@@ -1,0 +1,108 @@
+site_name: Deterministic Technical Design Specification — Example
+site_description: >-
+  A working example of the deterministic documentation pipeline described in
+  "Documenting Deterministic Infrastructure Code". Infrastructure as Code,
+  Policy as Code, and Documentation as Code — all in one repository.
+site_author: platform-team
+repo_url: https://github.com/DevelApp-ai/deterministic-technical-design-specification
+repo_name: DevelApp-ai/deterministic-technical-design-specification
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - tags
+
+nav:
+  - Home: index.md
+  - Requirements:
+      - MoSCoW Prioritisation: requirements/moscow.md
+  - Architecture:
+      - Overview & C4 Diagrams: architecture/index.md
+  - Infrastructure:
+      - Terraform Module: infrastructure/terraform.md
+      - Network Topology: network/index.md
+      - Kubernetes & Helm: kubernetes/index.md
+  - Configuration:
+      - Ansible Host Report: configuration/ansible.md
+      - DSC Resources: dsc/index.md
+  - Compliance:
+      - OPA Policy Summary: compliance/opa-policies.md
+      - NIS2 Article 21 Evidence: compliance/nis2.md
+      - EU DORA Evidence: compliance/dora.md
+      - Security Controls Matrix: security/index.md
+  - FinOps:
+      - Cost-Allocation Guide: finops/index.md
+  - Architecture Decisions:
+      - ADR-0001 Terraform for IaC: adrs/0001-use-terraform-for-iac.md
+      - ADR-0002 OPA for Policy: adrs/0002-use-opa-for-policy.md
+      - ADR-0003 MkDocs for Publishing: adrs/0003-use-mkdocs-for-publishing.md
+      - ADR-0004 DSC for Windows Config: adrs/0004-use-dsc-for-windows-config.md
+      - ADR-0005 Architecture Diagrams: adrs/0005-architecture-documentation.md
+      - ADR-0006 Doc Coverage Gate: adrs/0006-enforce-doc-coverage-gate.md
+      - ADR-0007 Semantic Versioning: adrs/0007-semantic-versioning-and-changelog.md
+      - ADR-0008 Kubernetes & Helm: adrs/0008-kubernetes-manifests-and-helm-chart.md
+      - ADR-0009 Backstage MCP Server: adrs/0009-backstage-mcp-server.md
+      - ADR-0010 NIS2 Compliance: adrs/0010-nis2-compliance.md
+      - ADR-0011 DORA Compliance: adrs/0011-dora-compliance.md
+  - Traceability:
+      - Requirements → ADRs → Policies: traceability/index.md
+  - Backstage:
+      - Integration Guide: backstage/index.md
+      - MCP Server (AI Agent Access): backstage/mcp.md
+  - Operations:
+      - Runbook: runbook/index.md
+  - Developer Guide:
+      - Onboarding: onboarding/index.md
+      - Doc Coverage Gate: doc-review/index.md
+      - Versioning & Changelog: versioning/index.md
+      - Changelog: versioning/CHANGELOG.md
+  - Generated:
+      - Terraform README: generated/terraform-readme.md
+      - Network Topology: generated/network-topology.md
+      - KMS & Secrets: generated/kms-summary.md
+      - Compute: generated/compute-summary.md
+      - Logging & Audit: generated/logging-summary.md
+      - DSC Resources Overview: generated/dsc-resources.md

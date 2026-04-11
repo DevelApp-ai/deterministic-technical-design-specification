@@ -1,0 +1,101 @@
+# ansible/roles/dora_evidence/tasks/main.yml
+#
+# Collects DORA audit evidence from managed hosts and renders a structured
+# Markdown evidence report.
+#
+# DORA chapters covered:
+#   Ch.II Art.9/10 — ICT Risk: log integrity, patch state, open services
+#   Ch.II Art.12   — Backup: verify backup service is running
+#   Ch.III Art.17  — Incident detection: check monitoring agent
+#   Ch.IV Art.26   — Testing: verify vulnerability scan outputs exist
+#
+# Related ADR:          docs/adrs/0011-dora-compliance.md
+# Related requirements: DORA-001, DORA-002, DORA-003, DORA-004
+---
+- name: Ensure evidence output directory exists
+  ansible.builtin.file:
+    path: "{{ dora_evidence_output_dir }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+  tags: [dora, evidence]
+
+# ---------------------------------------------------------------------------
+# DORA Art.9/10 — ICT Risk Management evidence
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.9 — Collect kernel version (patch currency evidence)
+  ansible.builtin.command: uname -r
+  register: kernel_version
+  changed_when: false
+  ignore_errors: true
+  tags: [dora, ict-risk]
+
+- name: DORA Art.9 — Collect pending security updates
+  ansible.builtin.command: apt list --upgradable 2>/dev/null | grep -i security || true
+  register: pending_security_updates
+  changed_when: false
+  ignore_errors: true
+  when: ansible_os_family == "Debian"
+  tags: [dora, ict-risk]
+
+- name: DORA Art.10 — Verify auditd or journald is logging
+  ansible.builtin.service_facts:
+  register: service_facts_dora
+  ignore_errors: true
+  tags: [dora, ict-risk]
+
+- name: DORA Art.10 — Collect last 20 lines of auth log
+  ansible.builtin.command: tail -20 /var/log/auth.log
+  register: auth_log_tail
+  changed_when: false
+  ignore_errors: true
+  tags: [dora, ict-risk]
+
+# ---------------------------------------------------------------------------
+# DORA Art.12 — Backup evidence
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12 — Check if backup agent is running
+  ansible.builtin.command: systemctl is-active restic 2>/dev/null || echo "not-configured"
+  register: backup_agent_status
+  changed_when: false
+  ignore_errors: true
+  tags: [dora, backup]
+
+- name: DORA Art.12 — Check last backup timestamp file
+  ansible.builtin.stat:
+    path: /var/lib/backup/.last-success
+  register: last_backup_stat
+  ignore_errors: true
+  tags: [dora, backup]
+
+# ---------------------------------------------------------------------------
+# DORA Art.17 — Incident reporting — monitoring agent check
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.17 — Check monitoring agent service
+  ansible.builtin.command: systemctl is-active monitoring-agent 2>/dev/null || echo "not-installed"
+  register: monitoring_agent_status
+  changed_when: false
+  ignore_errors: true
+  tags: [dora, monitoring]
+
+- name: DORA Art.17 — Collect open listening ports for network exposure evidence
+  ansible.builtin.command: ss -tlnp
+  register: dora_listening_ports
+  changed_when: false
+  ignore_errors: true
+  tags: [dora, monitoring]
+
+# ---------------------------------------------------------------------------
+# Render DORA evidence report
+# ---------------------------------------------------------------------------
+
+- name: Render DORA evidence report
+  ansible.builtin.template:
+    src: dora-evidence-report.md.j2
+    dest: "{{ dora_evidence_output_dir }}/dora-evidence-{{ inventory_hostname }}.md"
+    mode: "0644"
+  delegate_to: localhost
+  tags: [dora, evidence, reporting]

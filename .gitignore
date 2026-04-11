@@ -35,3 +35,11 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Example pipeline generated artefacts
+example/terraform/output/
+example/terraform/plan.bin
+example/site/
+example/docs/generated/host-report-*.md
+example/docs/generated/plan.json
+example/docs/generated/plan.bin

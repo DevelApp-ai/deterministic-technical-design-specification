@@ -1,0 +1,73 @@
+---
+# roles/monitoring/tasks/main.yml
+# Install and configure the Amazon CloudWatch agent.
+# Satisfies DORA Art.10 (ICT monitoring) and CIS Control 8 (audit log mgmt).
+
+- name: Install CloudWatch agent — RHEL family
+  ansible.builtin.dnf:
+    name: "{{ monitoring_agent_package }}"
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+  tags: [monitoring]
+
+- name: Install CloudWatch agent — Debian family
+  ansible.builtin.apt:
+    name: "{{ monitoring_agent_package }}"
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+  tags: [monitoring]
+
+- name: Ensure CloudWatch agent config directory exists
+  ansible.builtin.file:
+    path: /opt/aws/amazon-cloudwatch-agent/etc
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  tags: [monitoring]
+
+- name: Deploy CloudWatch agent configuration (DORA Art.10 log/metric collection)
+  ansible.builtin.template:
+    src: amazon-cloudwatch-agent.json.j2
+    dest: "{{ monitoring_config_dest }}"
+    owner: root
+    group: root
+    mode: "0640"
+  notify: reload_cloudwatch_config
+  tags: [monitoring]
+
+- name: Enable and start CloudWatch agent service
+  ansible.builtin.service:
+    name: "{{ monitoring_agent_service }}"
+    state: started
+    enabled: true
+  tags: [monitoring]
+
+- name: Verify CloudWatch agent is running (health check)
+  ansible.builtin.command:
+    cmd: >
+      /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl
+      -a status
+  register: cw_agent_status
+  changed_when: false
+  failed_when: "'running' not in cw_agent_status.stdout"
+  tags: [monitoring, verify]
+
+- name: Configure log rotation for CloudWatch agent logs
+  ansible.builtin.copy:
+    dest: /etc/logrotate.d/amazon-cloudwatch-agent
+    content: |
+      /opt/aws/amazon-cloudwatch-agent/logs/*.log {
+          daily
+          rotate 14
+          compress
+          delaycompress
+          missingok
+          notifempty
+          sharedscripts
+          postrotate
+              systemctl reload {{ monitoring_agent_service }} || true
+          endscript
+      }
+    mode: "0644"
+  tags: [monitoring]

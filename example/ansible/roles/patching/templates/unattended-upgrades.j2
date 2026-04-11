@@ -1,0 +1,37 @@
+{# roles/patching/templates/unattended-upgrades.j2 #}
+{# Debian/Ubuntu unattended-upgrades configuration.                      #}
+{# Enables automatic security patch installation between scheduled runs. #}
+// Unattended-Upgrades::Allowed-Origins
+// Enable automatic security updates (DORA Art.10 patch currency)
+Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}";
+    "${distro_id}:${distro_codename}-security";
+    "${distro_id}ESMApps:${distro_codename}-apps-security";
+    "${distro_id}ESM:${distro_codename}-infra-security";
+};
+
+{% if patching_excluded_packages %}
+// Packages to never update automatically
+Unattended-Upgrade::Package-Blacklist {
+{% for pkg in patching_excluded_packages %}
+    "{{ pkg }}";
+{% endfor %}
+};
+{% endif %}
+
+// Automatically remove unused kernel packages after upgrading
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+
+// Automatically clean up packages that are no longer used
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+
+// Send email notifications on package install errors
+// Unattended-Upgrade::Mail "security-team@example.com";
+// Unattended-Upgrade::MailOnlyOnError "true";
+
+// Reboot if required (controlled by patching_reboot_policy)
+Unattended-Upgrade::Automatic-Reboot "{{ 'true' if patching_reboot_policy == 'always' else 'false' }}";
+Unattended-Upgrade::Automatic-Reboot-Time "{{ patching_window_cron.split(' ')[1] | default('03') }}:00";
+
+// Minimum age of a package before it is upgraded (days)
+Unattended-Upgrade::MinimalSteps "true";

@@ -1,0 +1,435 @@
+---
+# .github/workflows/docs-pipeline.yml
+#
+# Deterministic Documentation Pipeline
+# =====================================
+# Orchestrates the full pipeline on every push to `main` and on every
+# pull request that touches files under `example/`.
+#
+# Jobs:
+#   1. opa-tests      — unit-test all OPA/Rego policies (Terraform + Kubernetes)
+#   2. dsc-tests      — Pester unit tests for all DSC resources
+#   3. doc-coverage   — PR documentation coverage gate (ADR-0006)
+#   4. terraform      — validate Terraform + run OPA compliance gate
+#   5. docs-build     — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
+#   6. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
+#   7. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
+
+name: Deterministic Documentation Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "example/**"
+      - ".github/workflows/docs-pipeline.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "example/**"
+      - ".github/workflows/docs-pipeline.yml"
+  workflow_dispatch:
+
+# Allow the GITHUB_TOKEN to write to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; cancel in-progress runs on new pushes
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
+
+env:
+  TERRAFORM_VERSION: "1.9.8"
+  TERRAFORM_DOCS_VERSION: "0.19.0"
+  OPA_VERSION: "0.69.0"
+  PYTHON_VERSION: "3.12"
+  GIT_CLIFF_VERSION: "2.4.0"
+
+# ---------------------------------------------------------------------------
+# Job 1 — OPA policy unit tests (Terraform + Kubernetes)
+# ---------------------------------------------------------------------------
+jobs:
+  opa-tests:
+    name: OPA Policy Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install OPA
+        run: |
+          curl -fsSL \
+            "https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64_static" \
+            -o /usr/local/bin/opa
+          chmod +x /usr/local/bin/opa
+          opa version
+
+      - name: Run OPA policy unit tests
+        run: |
+          opa test example/policies/ -v
+
+# ---------------------------------------------------------------------------
+# Job 2 — DSC resource Pester unit tests
+# ---------------------------------------------------------------------------
+  dsc-tests:
+    name: DSC Resource Pester Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # GitHub Actions Ubuntu runners include PowerShell Core (pwsh) pre-installed.
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name Pester -RequiredVersion 5.6.1 -Force -SkipPublisherCheck
+          (Get-Module Pester -ListAvailable)[0].Version | ForEach-Object { "Pester version: $_" }
+
+      - name: Run Pester tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path          = 'example/dsc/tests/'
+          $config.Output.Verbosity  = 'Detailed'
+          $config.TestResult.Enabled       = $true
+          $config.TestResult.OutputPath    = 'test-results.xml'
+          $config.TestResult.OutputFormat  = 'JUnitXml'
+          $result = Invoke-Pester -Configuration $config
+          if ($result.FailedCount -gt 0) {
+            Write-Error "Pester: $($result.FailedCount) test(s) failed."
+            exit 1
+          }
+          Write-Host "Pester: $($result.PassedCount) test(s) passed."
+
+      - name: Upload Pester test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pester-test-results
+          path: test-results.xml
+          retention-days: 7
+
+# ---------------------------------------------------------------------------
+# Job 3 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
+# Runs on PRs only; skipped on direct pushes to main.
+# ---------------------------------------------------------------------------
+  doc-coverage:
+    name: Documentation Coverage Gate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run doc coverage check
+        run: |
+          chmod +x example/scripts/check-doc-coverage.sh
+          BASE_BRANCH="${{ github.base_ref }}" \
+            bash example/scripts/check-doc-coverage.sh
+
+# ---------------------------------------------------------------------------
+# Job 4 — Terraform validate + OPA compliance gate
+# ---------------------------------------------------------------------------
+  terraform:
+    name: Terraform Validate & OPA Gate
+    runs-on: ubuntu-latest
+    needs: opa-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Install OPA
+        run: |
+          curl -fsSL \
+            "https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64_static" \
+            -o /usr/local/bin/opa
+          chmod +x /usr/local/bin/opa
+
+      - name: Terraform Init
+        working-directory: example/terraform
+        run: terraform init -input=false -no-color
+
+      - name: Terraform Validate
+        working-directory: example/terraform
+        run: terraform validate -no-color
+
+      - name: Create example tfvars
+        working-directory: example/terraform
+        run: cp terraform.tfvars.example terraform.tfvars
+
+      - name: Terraform Plan (JSON output)
+        working-directory: example/terraform
+        run: |
+          mkdir -p ../docs/generated
+          terraform plan -input=false -no-color -out=plan.bin
+          terraform show -json plan.bin > ../docs/generated/plan.json
+
+      - name: OPA — FinOps policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.finops.deny)' 2>/dev/null || echo "0")
+          echo "FinOps violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.finops.deny'
+            exit 1
+          fi
+
+      - name: OPA — Security policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.security.deny)' 2>/dev/null || echo "0")
+          echo "Security violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.security.deny'
+            exit 1
+          fi
+
+      - name: OPA — IAM policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.iam.deny)' 2>/dev/null || echo "0")
+          echo "IAM violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.iam.deny'
+            exit 1
+          fi
+
+      - name: OPA — Network policy gate
+        run: |
+          COUNT=$(opa eval \
+            --data example/policies/terraform/ \
+            --input example/docs/generated/plan.json \
+            --format raw \
+            'count(data.terraform.network.deny)' 2>/dev/null || echo "0")
+          echo "Network violations: ${COUNT}"
+          if [ "${COUNT}" -gt 0 ]; then
+            opa eval \
+              --data example/policies/terraform/ \
+              --input example/docs/generated/plan.json \
+              --format pretty \
+              'data.terraform.network.deny'
+            exit 1
+          fi
+
+      - name: Upload plan JSON artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan-json
+          path: example/docs/generated/plan.json
+          retention-days: 7
+
+# ---------------------------------------------------------------------------
+# Job 5 — Documentation build
+# ---------------------------------------------------------------------------
+  docs-build:
+    name: Build Documentation Site
+    runs-on: ubuntu-latest
+    needs: [terraform, dsc-tests]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install terraform-docs
+        run: |
+          curl -fsSL \
+            "https://github.com/terraform-docs/terraform-docs/releases/download/v${TERRAFORM_DOCS_VERSION}/terraform-docs-v${TERRAFORM_DOCS_VERSION}-linux-amd64.tar.gz" \
+            -o /tmp/terraform-docs.tar.gz
+          tar -xzf /tmp/terraform-docs.tar.gz -C /usr/local/bin/ terraform-docs
+          chmod +x /usr/local/bin/terraform-docs
+          terraform-docs version
+
+      - name: Install git-cliff
+        run: |
+          curl -fsSL \
+            "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            -o /tmp/git-cliff.tar.gz
+          tar -xzf /tmp/git-cliff.tar.gz -C /tmp/
+          mv /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
+          chmod +x /usr/local/bin/git-cliff
+          git-cliff --version
+
+      - name: Install Python tooling
+        run: |
+          pip install --no-cache-dir \
+            "ansible==10.7.0" \
+            "mkdocs==1.6.1" \
+            "mkdocs-material==9.5.49" \
+            "pymdown-extensions==10.13"
+
+      - name: Install DSC documentation tools (PowerShell modules)
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module -Name PlatyPS                 -RequiredVersion 2.0.6  -Force
+          Install-Module -Name DscResource.DocGenerator -RequiredVersion 0.12.2 -Force
+
+      - name: Run terraform-docs
+        run: |
+          mkdir -p example/docs/generated
+          terraform-docs markdown table \
+            --output-file example/docs/generated/terraform-readme.md \
+            --output-mode replace \
+            example/terraform/
+
+      - name: Generate DSC resource documentation
+        shell: pwsh
+        run: |
+          pwsh -File example/dsc/build.ps1 `
+            -OutputPath example/docs/generated/dsc-resources
+
+      - name: Run Ansible playbook (localhost facts)
+        run: |
+          ansible-playbook \
+            -i example/ansible/inventory.yml \
+            example/ansible/playbook.yml \
+            --connection=local 2>&1 | grep -v '^\[WARNING\]' || true
+
+      - name: Generate CHANGELOG (git-cliff)
+        run: |
+          cd example
+          git cliff --config cliff.toml --output docs/versioning/CHANGELOG.md || true
+
+      - name: Build MkDocs site
+        run: mkdocs build --config-file example/mkdocs.yml --strict
+
+      - name: Upload site artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mkdocs-site
+          path: example/site/
+          retention-days: 7
+
+      - name: Upload Pages artefact (main branch only)
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: example/site/
+
+# ---------------------------------------------------------------------------
+# Job 6 — Publish to GitHub Pages (main branch only)
+# ---------------------------------------------------------------------------
+  docs-publish:
+    name: Publish to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: github.ref == 'refs/heads/main'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+# ---------------------------------------------------------------------------
+# Job 7 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
+# ---------------------------------------------------------------------------
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+    needs: docs-build
+    if: |
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if version.txt changed
+        id: version_changed
+        run: |
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q 'example/version.txt'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install git-cliff
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          curl -fsSL \
+            "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-musl.tar.gz" \
+            -o /tmp/git-cliff.tar.gz
+          tar -xzf /tmp/git-cliff.tar.gz -C /tmp/
+          mv /tmp/git-cliff-*/git-cliff /usr/local/bin/git-cliff
+          chmod +x /usr/local/bin/git-cliff
+
+      - name: Generate CHANGELOG.md
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          cd example
+          git cliff --config cliff.toml --output CHANGELOG.md
+
+      - name: Read version
+        if: steps.version_changed.outputs.changed == 'true'
+        id: read_version
+        run: |
+          VERSION=$(cat example/version.txt | tr -d '[:space:]')
+          echo "version=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure git identity
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit CHANGELOG and tag release
+        if: steps.version_changed.outputs.changed == 'true'
+        run: |
+          VERSION="${{ steps.read_version.outputs.version }}"
+          git add example/CHANGELOG.md
+          git commit -m "chore(release): update CHANGELOG for ${VERSION}" || true
+          git tag -a "${VERSION}" -m "Release ${VERSION}"
+          git push origin HEAD --tags

@@ -1,0 +1,33 @@
+---
+# roles/monitoring/defaults/main.yml
+# Default variables for the CloudWatch agent monitoring role.
+# DORA Art.10 requires continuous monitoring of ICT systems.
+
+# ── CloudWatch agent ─────────────────────────────────────────────────────────
+monitoring_agent_package: "amazon-cloudwatch-agent"
+monitoring_agent_service: "amazon-cloudwatch-agent"
+monitoring_config_dest: "/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+
+# ── Log groups ───────────────────────────────────────────────────────────────
+# Log group names — set to match the Terraform logging.tf definitions
+# so log groups are created by Terraform before the agent starts.
+monitoring_log_group_app:    "/dtds/{{ app_name | default('app') }}/application"
+monitoring_log_group_system: "/dtds/{{ app_name | default('app') }}/system"
+monitoring_log_group_audit:  "/dtds/{{ app_name | default('app') }}/audit"
+monitoring_log_retention:    90    # days — must match Terraform CloudWatch retention
+
+# ── Metric collection ─────────────────────────────────────────────────────────
+# Interval in seconds for host-level metrics.
+monitoring_metrics_interval: 60
+
+# Collect disk metrics for these mount points.
+monitoring_disk_mounts:
+  - "/"
+  - "/var"
+  - "/tmp"
+
+# ── Alerting ─────────────────────────────────────────────────────────────────
+monitoring_sns_alarm_arn: ""   # override in group_vars or from Terraform outputs
+
+# ── Compliance ────────────────────────────────────────────────────────────────
+monitoring_dora_art10_enabled: true    # flag for reporting

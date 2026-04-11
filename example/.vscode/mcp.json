@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "dtds-backstage": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-mcp-backstage-example-evanshortiss"
+      ],
+      "env": {
+        "BACKSTAGE_BASE_URL": "http://localhost:7007",
+        "BACKSTAGE_API_TOKEN": "dtds-mcp-demo-token-change-in-production"
+      }
+    }
+  }
+}

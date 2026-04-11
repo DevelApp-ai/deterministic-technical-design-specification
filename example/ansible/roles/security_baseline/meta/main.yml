@@ -1,0 +1,19 @@
+# ansible/roles/security_baseline/meta/main.yml
+---
+galaxy_info:
+  role_name: security_baseline
+  author: platform-team
+  description: >
+    CIS Benchmark Level 1 OS hardening baseline — SSH, sysctl, password policy,
+    and audit logging. Implements M-003, S-001, CYB-002, CYB-003 requirements.
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions: ["22.04", "24.04"]
+    - name: Debian
+      versions: ["12"]
+  categories:
+    - security
+    - system
+
+dependencies: []

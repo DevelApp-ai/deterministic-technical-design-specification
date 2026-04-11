@@ -1,0 +1,44 @@
+---
+# roles/patching/tasks/rhel.yml
+# Patch RHEL-family hosts using dnf/yum.
+# Applies security-only updates by default (patching_security_only: true).
+
+- name: Update dnf cache
+  ansible.builtin.dnf:
+    update_cache: true
+  tags: [patching, rhel]
+
+- name: List available security updates (pre-check)
+  ansible.builtin.command:
+    cmd: dnf updateinfo list security --available
+  register: rhel_security_updates
+  changed_when: false
+  tags: [patching, rhel, pre-check]
+
+- name: Apply security-only updates (DORA Art.10 patch currency)
+  ansible.builtin.dnf:
+    security: true
+    state: latest
+    exclude: "{{ patching_excluded_packages | join(',') }}"
+    update_only: true
+  when: patching_security_only | bool
+  notify:
+    - restart_auditd
+    - restart_rsyslog
+  tags: [patching, rhel]
+
+- name: Apply all available updates
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    exclude: "{{ patching_excluded_packages | join(',') }}"
+  when: not (patching_security_only | bool)
+  notify:
+    - restart_auditd
+    - restart_rsyslog
+  tags: [patching, rhel]
+
+- name: Remove orphaned packages (cleanup)
+  ansible.builtin.dnf:
+    autoremove: true
+  tags: [patching, rhel, cleanup]

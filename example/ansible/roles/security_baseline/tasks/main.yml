@@ -1,0 +1,32 @@
+# ansible/roles/security_baseline/tasks/main.yml
+#
+# Entry-point for the security_baseline role.
+# Includes modular task files grouped by hardening domain.
+#
+# Related ADR:          docs/adrs/0003-use-ansible-for-linux-config.md
+# Related requirements: M-003, S-001, CYB-002, CYB-003, CYB-004
+# CIS Benchmark:        Level 1 Server
+---
+- name: Apply kernel sysctl hardening
+  ansible.builtin.include_tasks: sysctl.yml
+  tags: [sysctl, hardening]
+
+- name: Apply SSH hardening
+  ansible.builtin.include_tasks: ssh_hardening.yml
+  tags: [ssh, hardening]
+
+- name: Apply package hygiene
+  ansible.builtin.include_tasks: packages.yml
+  tags: [packages, hardening]
+
+- name: Apply audit logging configuration
+  ansible.builtin.include_tasks: audit_logging.yml
+  tags: [audit, hardening, dora]
+
+- name: Generate hardening report
+  ansible.builtin.template:
+    src: hardening-summary.md.j2
+    dest: "{{ hardening_report_dir }}/hardening-report-{{ inventory_hostname }}.md"
+    mode: "0644"
+  delegate_to: localhost
+  tags: [reporting, docs]

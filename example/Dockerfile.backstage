@@ -1,0 +1,101 @@
+# syntax=docker/dockerfile:1
+#
+# Backstage Integration Image
+# ============================
+# A standalone Backstage instance pre-configured to:
+#   - Register the deterministic-docs-example component from catalog-info.yaml
+#   - Render the MkDocs site as TechDocs using a local builder
+#   - Serve the developer portal on http://localhost:7007
+#
+# ⚠  Build time: ~8-12 minutes (downloads Node.js dependencies for Backstage)
+# ⚠  Image size: ~1.5 GB (Node.js + Backstage monorepo dependencies)
+#
+# Build:
+#   docker build -f Dockerfile.backstage -t dtds-backstage .
+#
+# Run (with optional GitHub token for higher API limits):
+#   docker run --rm -p 7007:7007 \
+#     -e GITHUB_TOKEN=<your-token> \
+#     dtds-backstage
+#
+# Then open: http://localhost:7007
+#
+# The portal will show:
+#   - Service catalog entry for "deterministic-docs-example"
+#   - TechDocs site rendered from the MkDocs configuration
+#   - All ADRs, MoSCoW requirements, and compliance pages
+
+# ---------------------------------------------------------------------------
+# Stage 1 — Bootstrap a Backstage app
+# ---------------------------------------------------------------------------
+FROM node:20-bookworm-slim AS backstage-source
+
+WORKDIR /app
+
+# Install system build tools needed for some native Node modules
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        make \
+        g++ \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Scaffold a new Backstage app non-interactively.
+# BACKSTAGE_APP_NAME is read by @backstage/create-app to skip the name prompt.
+ENV BACKSTAGE_APP_NAME=dtds-backstage
+RUN npx --yes @backstage/create-app@latest --skip-install
+
+WORKDIR /app/dtds-backstage
+
+# Install all dependencies (this is the slow step)
+RUN yarn install --frozen-lockfile
+
+# ---------------------------------------------------------------------------
+# Stage 2 — Build the Backstage backend and frontend
+# ---------------------------------------------------------------------------
+FROM backstage-source AS backstage-build
+
+WORKDIR /app/dtds-backstage
+
+# Copy our custom app-config (overrides the scaffolded default)
+COPY backstage/app-config.yaml app-config.yaml
+
+# Copy the catalog-info.yaml so the local catalog location resolves correctly
+COPY catalog-info.yaml ../catalog-info.yaml
+
+# Build the TypeScript backend
+RUN yarn build:backend
+
+# ---------------------------------------------------------------------------
+# Stage 3 — Minimal runtime image
+# ---------------------------------------------------------------------------
+FROM node:20-bookworm-slim AS runtime
+
+# Python + MkDocs are needed by the TechDocs local builder to generate the site
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        git \
+    && pip3 install --no-cache-dir --break-system-packages \
+        "mkdocs==1.6.1" \
+        "mkdocs-material==9.5.49" \
+        "pymdown-extensions==10.13" \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app/dtds-backstage
+
+# Copy the built backend bundle
+COPY --from=backstage-build /app/dtds-backstage/packages/backend/dist     ./packages/backend/dist
+COPY --from=backstage-build /app/dtds-backstage/node_modules              ./node_modules
+COPY --from=backstage-build /app/dtds-backstage/app-config.yaml           ./app-config.yaml
+COPY --from=backstage-build /app/catalog-info.yaml                        ../catalog-info.yaml
+
+# Copy the entire docs source so the TechDocs local builder can read mkdocs.yml
+COPY docs/     ../docs/
+COPY mkdocs.yml ../mkdocs.yml
+
+EXPOSE 7007
+
+ENV NODE_ENV=production
+
+CMD ["node", "packages/backend", "--config", "app-config.yaml"]

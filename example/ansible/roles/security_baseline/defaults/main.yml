@@ -1,0 +1,14 @@
+# ansible/roles/security_baseline/defaults/main.yml
+# Default variables for the security_baseline role.
+# Override in group_vars/ or host_vars/ as needed.
+---
+cis_password_max_days: 90
+cis_password_min_days: 7
+cis_password_min_length: 14
+cis_ssh_permit_root_login: "no"
+cis_ssh_permit_empty_passwords: "no"
+cis_ssh_max_auth_tries: 4
+cis_ssh_client_alive_interval: 300
+cis_ssh_client_alive_count_max: 3
+sysctl_settings: {}
+hardening_report_dir: "/tmp/hardening-reports"

@@ -1,0 +1,13 @@
+# ansible/group_vars/databases.yml — variables for the databases group
+---
+db_port: 5432
+db_backup_enabled: true
+db_backup_retention_days: 30
+db_max_connections: 100
+pg_ssl_mode: require
+pg_log_connections: true
+pg_log_disconnections: true
+pg_log_min_duration_statement: 1000
+allowed_inbound_ports: [5432]
+log_retention_days: 90
+db_audit_log_path: /var/log/postgresql/postgresql.log
