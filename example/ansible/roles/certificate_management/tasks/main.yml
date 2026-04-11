@@ -1,0 +1,151 @@
+# ansible/roles/certificate_management/tasks/main.yml
+#
+# TLS certificate inventory, expiry monitoring, and compliance evidence.
+#
+# Steps:
+#   1. Ensure report directory exists
+#   2. Discover certificate files on the host
+#   3. Read certificate details (subject, expiry, key size, algorithm)
+#   4. Detect weak or expired certificates
+#   5. Check running TLS services for protocol support
+#   6. Render Markdown evidence report
+#
+# Related ADR:          docs/adrs/0010-nis2-compliance.md
+# Related requirements: NIS2-002, CYB-002
+# NIS2:                 Art.21(2)(h) — Cryptography and encryption
+# OPA policies:         SEC-006 (deny_deprecated_tls)
+---
+
+# ---------------------------------------------------------------------------
+# 0. Prepare
+# ---------------------------------------------------------------------------
+
+- name: Ensure certificate report directory exists
+  ansible.builtin.file:
+    path: "{{ cert_report_dir }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+  run_once: true
+  tags: [certificates, nis2]
+
+# ---------------------------------------------------------------------------
+# 1. Discover certificate files
+# ---------------------------------------------------------------------------
+
+- name: NIS2 Art.21(2)(h) — Find PEM certificate files on host
+  ansible.builtin.find:
+    paths: "{{ cert_scan_paths }}"
+    patterns: "*.crt,*.pem,*.cer"
+    recurse: true
+  register: cert_files_found
+  ignore_errors: true
+  tags: [certificates, nis2]
+
+- name: NIS2 Art.21(2)(h) — Set cert file list
+  ansible.builtin.set_fact:
+    cert_file_list: "{{ cert_files_found.files | map(attribute='path') | list | default([]) }}"
+  tags: [certificates, nis2]
+
+# ---------------------------------------------------------------------------
+# 2. Read certificate details using openssl
+# ---------------------------------------------------------------------------
+
+- name: NIS2 Art.21(2)(h) — Read each certificate's subject and expiry
+  ansible.builtin.shell: >-
+    openssl x509 -in '{{ item }}'
+    -noout
+    -subject -enddate -pubkey 2>/dev/null
+    | grep -E '(subject|notAfter|BEGIN PUBLIC KEY)' | head -3
+  loop: "{{ cert_file_list }}"
+  register: cert_details_raw
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2]
+
+- name: NIS2 Art.21(2)(h) — Check certificate expiry dates
+  ansible.builtin.shell: >-
+    openssl x509 -in '{{ item }}'
+    -noout -checkend {{ cert_expiry_warning_days * 86400 }} 2>/dev/null
+    && echo "VALID" || echo "EXPIRING"
+  loop: "{{ cert_file_list }}"
+  register: cert_expiry_checks
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2]
+
+- name: NIS2 Art.21(2)(h) — Get key algorithm and size for each certificate
+  ansible.builtin.shell: >-
+    openssl x509 -in '{{ item }}'
+    -noout -text 2>/dev/null
+    | grep -E '(Public Key Algorithm|RSA Public-Key|EC Key Size|Public-Key:)'
+    | head -2
+  loop: "{{ cert_file_list }}"
+  register: cert_key_details
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2]
+
+# ---------------------------------------------------------------------------
+# 3. Check for active deprecated TLS protocol listeners
+# ---------------------------------------------------------------------------
+
+- name: SEC-006 — Check for TLS 1.0 listener on port 443
+  ansible.builtin.command: >-
+    openssl s_client -connect localhost:443 -tls1 -brief 2>&1 | head -5
+  register: tls10_check
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2, tls]
+
+- name: SEC-006 — Check for TLS 1.1 listener on port 443
+  ansible.builtin.command: >-
+    openssl s_client -connect localhost:443 -tls1_1 -brief 2>&1 | head -5
+  register: tls11_check
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2, tls]
+
+- name: SEC-006 — Check TLS 1.2 / 1.3 availability on port 443
+  ansible.builtin.command: >-
+    openssl s_client -connect localhost:443 -tls1_2 -brief 2>&1 | head -5
+  register: tls12_check
+  changed_when: false
+  ignore_errors: true
+  tags: [certificates, nis2, tls]
+
+- name: SEC-006 — Parse TLS protocol support
+  ansible.builtin.set_fact:
+    tls10_accepted: "{{ 'Verify return code: 0' in (tls10_check.stdout | default('')) }}"
+    tls11_accepted: "{{ 'Verify return code: 0' in (tls11_check.stdout | default('')) }}"
+    tls12_accepted: "{{ 'Verify return code: 0' in (tls12_check.stdout | default('')) }}"
+  tags: [certificates, nis2, tls]
+
+# ---------------------------------------------------------------------------
+# 4. Count expiring / total certificates
+# ---------------------------------------------------------------------------
+
+- name: NIS2 Art.21(2)(h) — Count certificates by status
+  ansible.builtin.set_fact:
+    cert_total_count: "{{ cert_file_list | length }}"
+    cert_expiring_count: >-
+      {{
+        cert_expiry_checks.results
+        | selectattr('stdout', 'defined')
+        | selectattr('stdout', 'equalto', 'EXPIRING')
+        | list
+        | length
+      }}
+  tags: [certificates, nis2]
+
+# ---------------------------------------------------------------------------
+# 5. Render evidence report
+# ---------------------------------------------------------------------------
+
+- name: NIS2 Art.21(2)(h) — Render certificate management evidence report
+  ansible.builtin.template:
+    src: certificate-report.md.j2
+    dest: "{{ cert_report_dir }}/cert-inventory-{{ inventory_hostname }}-{{ ansible_date_time.date }}.md"
+    mode: "0644"
+  delegate_to: localhost
+  tags: [certificates, nis2, reporting]

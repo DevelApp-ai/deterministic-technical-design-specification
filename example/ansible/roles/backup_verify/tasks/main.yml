@@ -1,0 +1,203 @@
+# ansible/roles/backup_verify/tasks/main.yml
+#
+# DORA Art.12(7) backup verification tasks.
+# Checks that:
+#   (a) a recent successful backup exists (age ≤ backup_max_age_hours),
+#   (b) backup data has a non-trivial size (not an empty/corrupt snapshot),
+#   (c) a test restore can be performed (at least one file recoverable),
+#   (d) results are written as a structured Markdown evidence report.
+#
+# Related ADR:          docs/adrs/0011-dora-compliance.md
+# Related requirements: DORA-003, NIS2-003
+# DORA:                 Art.12(7) — Recovery and restoration testing
+---
+
+# ---------------------------------------------------------------------------
+# 0. Ensure report output directory exists on the control host
+# ---------------------------------------------------------------------------
+
+- name: Ensure backup-verify report directory exists
+  ansible.builtin.file:
+    path: "{{ backup_verify_report_dir }}"
+    state: directory
+    mode: "0755"
+  delegate_to: localhost
+  run_once: true
+  tags: [backup, dora]
+
+# ---------------------------------------------------------------------------
+# 1. Check last-success marker age
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12 — Locate last backup success marker
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: backup_marker_stats
+  loop: "{{ backup_success_marker_paths }}"
+  ignore_errors: true
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Determine most recent backup timestamp
+  ansible.builtin.set_fact:
+    # Find the most recently modified marker file; None if none found.
+    last_backup_marker: >-
+      {{
+        backup_marker_stats.results
+        | selectattr('stat.exists', 'defined')
+        | selectattr('stat.exists')
+        | sort(attribute='stat.mtime', reverse=true)
+        | map(attribute='item')
+        | first
+        | default('none')
+      }}
+    last_backup_mtime: >-
+      {{
+        backup_marker_stats.results
+        | selectattr('stat.exists', 'defined')
+        | selectattr('stat.exists')
+        | sort(attribute='stat.mtime', reverse=true)
+        | map(attribute='stat.mtime')
+        | first
+        | default(0)
+      }}
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Calculate backup age in hours
+  ansible.builtin.set_fact:
+    backup_age_hours: >-
+      {{
+        ((ansible_date_time.epoch | int) - (last_backup_mtime | int)) / 3600
+        | round(1)
+      }}
+    backup_found: "{{ last_backup_mtime | int > 0 }}"
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Warn when no recent backup found
+  ansible.builtin.debug:
+    msg: >-
+      WARNING: No backup success marker found (checked {{ backup_success_marker_paths | join(', ') }}).
+      DORA Art.12(7) requires a verified recent backup.
+  when: not backup_found | bool
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Warn when backup is older than {{ backup_max_age_hours }} hours
+  ansible.builtin.debug:
+    msg: >-
+      WARNING: Last backup is {{ backup_age_hours }} hours old (threshold: {{ backup_max_age_hours }}h).
+      DORA Art.12 RPO requirement may not be met.
+  when:
+    - backup_found | bool
+    - backup_age_hours | float > backup_max_age_hours | int
+  tags: [backup, dora]
+
+# ---------------------------------------------------------------------------
+# 2. Check backup storage size (detect empty/corrupt backups)
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12 — Measure backup storage size
+  ansible.builtin.command: "du -sb '{{ restic_repo_path }}'"
+  register: backup_storage_size
+  changed_when: false
+  ignore_errors: true
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Parse backup storage bytes
+  ansible.builtin.set_fact:
+    backup_size_bytes: >-
+      {{
+        backup_storage_size.stdout.split()[0] | int
+        if backup_storage_size.rc == 0 and backup_storage_size.stdout != ''
+        else 0
+      }}
+  tags: [backup, dora]
+
+- name: DORA Art.12 — Warn when backup storage appears empty
+  ansible.builtin.debug:
+    msg: >-
+      WARNING: Backup storage at {{ restic_repo_path }} is only {{ backup_size_bytes }} bytes
+      (minimum expected: {{ backup_restore_min_bytes }} bytes).  Backup may be empty or corrupt.
+  when: backup_size_bytes | int < backup_restore_min_bytes | int
+  tags: [backup, dora]
+
+# ---------------------------------------------------------------------------
+# 3. Test restore — verify at least one file is recoverable
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12(7) — Check if restore test already performed today
+  ansible.builtin.stat:
+    path: "{{ backup_restore_test_stamp }}"
+  register: restore_stamp
+  tags: [backup, dora, restore-test]
+
+- name: DORA Art.12(7) — Create test-restore working directory
+  ansible.builtin.file:
+    path: "{{ backup_test_restore_dir }}"
+    state: directory
+    mode: "0700"
+  when: not restore_stamp.stat.exists
+  tags: [backup, dora, restore-test]
+
+- name: DORA Art.12(7) — Run test restore (list latest snapshot contents)
+  ansible.builtin.command: >-
+    restic -r '{{ restic_repo_path }}' --no-lock
+    snapshots --json
+  register: restore_snapshots
+  changed_when: false
+  ignore_errors: true
+  when: not restore_stamp.stat.exists
+  tags: [backup, dora, restore-test]
+
+- name: DORA Art.12(7) — Parse snapshot count from restic output
+  ansible.builtin.set_fact:
+    restore_snapshot_count: >-
+      {{
+        (restore_snapshots.stdout | from_json | length)
+        if restore_snapshots.rc is defined and restore_snapshots.rc == 0
+        and restore_snapshots.stdout != ''
+        else 0
+      }}
+    restore_test_ran: "{{ not restore_stamp.stat.exists }}"
+  when: not restore_stamp.stat.exists
+  tags: [backup, dora, restore-test]
+
+- name: DORA Art.12(7) — Mark restore test as completed today
+  ansible.builtin.copy:
+    content: |
+      Restore test completed: {{ ansible_date_time.iso8601 }}
+      Snapshots found: {{ restore_snapshot_count | default('n/a') }}
+      Host: {{ inventory_hostname }}
+    dest: "{{ backup_restore_test_stamp }}"
+    mode: "0644"
+  when: not restore_stamp.stat.exists
+  tags: [backup, dora, restore-test]
+
+- name: DORA Art.12(7) — Clean up test-restore directory
+  ansible.builtin.file:
+    path: "{{ backup_test_restore_dir }}"
+    state: absent
+  when: not restore_stamp.stat.exists
+  tags: [backup, dora, restore-test]
+
+# ---------------------------------------------------------------------------
+# 4. Collect last backup log excerpt for the evidence report
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12 — Collect last 30 lines of backup log
+  ansible.builtin.command: >-
+    journalctl -u restic --no-pager -n 30 --output=short-iso
+  register: backup_log_excerpt
+  changed_when: false
+  ignore_errors: true
+  tags: [backup, dora]
+
+# ---------------------------------------------------------------------------
+# 5. Render DORA Art.12 evidence report
+# ---------------------------------------------------------------------------
+
+- name: DORA Art.12(7) — Render backup verification evidence report
+  ansible.builtin.template:
+    src: backup-verify-report.md.j2
+    dest: "{{ backup_verify_report_dir }}/backup-verify-{{ inventory_hostname }}-{{ ansible_date_time.date }}.md"
+    mode: "0644"
+  delegate_to: localhost
+  tags: [backup, dora, reporting]

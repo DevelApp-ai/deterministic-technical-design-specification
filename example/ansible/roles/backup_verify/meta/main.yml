@@ -1,0 +1,21 @@
+# ansible/roles/backup_verify/meta/main.yml
+---
+galaxy_info:
+  role_name: backup_verify
+  author: platform-team
+  description: >
+    DORA Art.12(7) backup verification role — checks backup age, verifies
+    integrity, performs a test restore, and renders a structured evidence
+    report for supervisory audit purposes.
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions: ["20.04", "22.04", "24.04"]
+    - name: EL
+      versions: ["8", "9"]
+  categories:
+    - compliance
+    - backup
+    - dora
+
+dependencies: []

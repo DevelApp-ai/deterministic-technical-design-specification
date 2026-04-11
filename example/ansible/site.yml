@@ -56,6 +56,22 @@
     - role: dora_evidence
       tags: [dora, compliance, audit]
 
+- name: Verify backup currency and run restore tests (DORA Art.12)
+  hosts: all
+  gather_facts: true
+  become: false
+  roles:
+    - role: backup_verify
+      tags: [backup, dora]
+
+- name: Inventory and verify TLS certificates (NIS2 Art.21(2)(h))
+  hosts: all
+  gather_facts: true
+  become: false
+  roles:
+    - role: certificate_management
+      tags: [certificates, nis2]
+
 - name: Generate host inventory report
   hosts: all
   gather_facts: true

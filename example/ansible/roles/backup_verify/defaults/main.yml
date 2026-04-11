@@ -1,0 +1,32 @@
+# ansible/roles/backup_verify/defaults/main.yml
+#
+# Default variables for the backup_verify role.
+# These are overridden in group_vars or host_vars as needed.
+---
+# Output directory for DORA Art.12(7) restore-test evidence reports
+backup_verify_report_dir: "{{ playbook_dir }}/../docs/generated/backup-verify"
+
+# Maximum acceptable age of the last successful backup in hours
+backup_max_age_hours: 25  # Slightly over 24h to tolerate scheduling drift
+
+# Paths to check for backup success markers left by the backup agent
+backup_success_marker_paths:
+  - /var/lib/backup/.last-success
+  - /var/lib/restic/.last-success
+  - /opt/backup/status/last-success.txt
+
+# Restic repository location (used when restic is the backup agent)
+restic_repo_path: /var/backup/restic
+
+# Test-restore working directory — temporary; cleaned up after the check
+backup_test_restore_dir: /tmp/backup-verify-restore
+
+# File whose existence indicates a previous restore test was run today
+backup_restore_test_stamp: /var/lib/backup/.restore-test-{{ ansible_date_time.date }}
+
+# Size threshold (bytes) below which a restore is considered suspiciously small
+backup_restore_min_bytes: 1024
+
+# Assessment metadata
+backup_verify_contact: "platform-team@example.com"
+backup_verify_standard: "DORA Art.12(7)"

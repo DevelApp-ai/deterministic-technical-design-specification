@@ -2,39 +2,41 @@
 
 <#
 .SYNOPSIS
-    Comprehensive DSC compliance-baseline configuration using all six DTDS resources.
+    Comprehensive DSC compliance-baseline configuration using all seven DTDS resources.
 
 .DESCRIPTION
-    ComplianceBaseline brings together all six DTDS_* class-based DSC resources
+    ComplianceBaseline brings together all seven DTDS_* class-based DSC resources
     into a single, end-to-end configuration that implements the CIS Windows
     Server Benchmark (Level 1) and the DORA/NIS2 hardening requirements derived
     from ADR-0004.
 
     Resources used:
-      DTDS_FileContent    — managed file content (motd, banners, config files)
-      DTDS_RegistryEntry  — registry hardening (NTLMv2, SMB signing, TLS 1.2)
-      DTDS_ServiceConfig  — service state (disable unneeded, enable auditd)
-      DTDS_AuditPolicy    — Windows audit subcategory policy (DORA Art.10)
-      DTDS_FirewallRule   — Windows Defender Firewall rules (SEC-004)
-      DTDS_LocalUser      — local account management (CIS 2.3.1, DORA Art.9)
+      DTDS_FileContent       — managed file content (motd, banners, config files)
+      DTDS_RegistryEntry     — registry hardening (NTLMv2, SMB signing)
+      DTDS_ServiceConfig     — service state (disable unneeded, enable auditd)
+      DTDS_AuditPolicy       — Windows audit subcategory policy (DORA Art.10)
+      DTDS_FirewallRule      — Windows Defender Firewall rules (SEC-004)
+      DTDS_LocalUser         — local account management (CIS 2.3.1, DORA Art.9)
+      DTDS_TlsConfiguration  — OS-level TLS/SSL Schannel settings (NIS2-CRYPTO-001, SEC-006)
 
 .NOTES
     Author:      platform-team
-    Version:     1.0.0
+    Version:     1.1.0
     ADR:         docs/adrs/0004-use-dsc-for-windows-config.md
-    Requirements: S-008, S-009, DORA-003, NIS2-003
+    Requirements: S-008, S-009, DORA-003, NIS2-003, NIS2-002
     Apply:       Start-DscConfiguration -Path .\ComplianceBaseline -Wait -Verbose
 #>
 
 # ── Module imports ────────────────────────────────────────────────────────────
 $resourceRoot = Join-Path $PSScriptRoot 'resources'
 
-Import-Module (Join-Path $resourceRoot 'DTDS_FileContent/DTDS_FileContent.psm1')     -Force
-Import-Module (Join-Path $resourceRoot 'DTDS_RegistryEntry/DTDS_RegistryEntry.psm1') -Force
-Import-Module (Join-Path $resourceRoot 'DTDS_ServiceConfig/DTDS_ServiceConfig.psm1') -Force
-Import-Module (Join-Path $resourceRoot 'DTDS_AuditPolicy/DTDS_AuditPolicy.psm1')     -Force
-Import-Module (Join-Path $resourceRoot 'DTDS_FirewallRule/DTDS_FirewallRule.psm1')    -Force
-Import-Module (Join-Path $resourceRoot 'DTDS_LocalUser/DTDS_LocalUser.psm1')         -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_FileContent/DTDS_FileContent.psm1')           -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_RegistryEntry/DTDS_RegistryEntry.psm1')       -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_ServiceConfig/DTDS_ServiceConfig.psm1')       -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_AuditPolicy/DTDS_AuditPolicy.psm1')           -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_FirewallRule/DTDS_FirewallRule.psm1')          -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_LocalUser/DTDS_LocalUser.psm1')               -Force
+Import-Module (Join-Path $resourceRoot 'DTDS_TlsConfiguration/DTDS_TlsConfiguration.psm1') -Force
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 Configuration ComplianceBaseline {
@@ -50,6 +52,7 @@ Configuration ComplianceBaseline {
     Import-DscResource -ModuleName DTDS_AuditPolicy
     Import-DscResource -ModuleName DTDS_FirewallRule
     Import-DscResource -ModuleName DTDS_LocalUser
+    Import-DscResource -ModuleName DTDS_TlsConfiguration
 
     Node 'localhost' {
 
@@ -314,6 +317,60 @@ Configuration ComplianceBaseline {
             PasswordNeverExpires = $true
             Ensure              = 'Present'
         }
+
+        # ════════════════════════════════════════════════════════════════════
+        # 7 ─ DTDS_TlsConfiguration  (Schannel TLS — NIS2 Art.21(2)(h), SEC-006)
+        #
+        #   Disables cryptographically broken protocols (SSL 2.0/3.0, TLS 1.0/1.1)
+        #   and enables TLS 1.2 and TLS 1.3 for both client and server roles.
+        #
+        #   This satisfies:
+        #     - NIS2 Art.21(2)(h) — Cryptography and encryption policies
+        #     - OPA policy SEC-006 — Prohibit deprecated TLS versions
+        #     - CIS Windows Server 18.9.83 — Schannel settings
+        # ════════════════════════════════════════════════════════════════════
+
+        # SSL 2.0 — permanently broken; no legitimate use case
+        DTDS_TlsConfiguration 'DisableSSL20_Server' {
+            Protocol = 'SSL_2_0'
+            Role     = 'Both'
+            State    = 'Disabled'
+        }
+
+        # SSL 3.0 — POODLE (CVE-2014-3566)
+        DTDS_TlsConfiguration 'DisableSSL30_Server' {
+            Protocol = 'SSL_3_0'
+            Role     = 'Both'
+            State    = 'Disabled'
+        }
+
+        # TLS 1.0 — BEAST (CVE-2011-3389); OPA SEC-006 violation
+        DTDS_TlsConfiguration 'DisableTLS10_Server' {
+            Protocol = 'TLS_1_0'
+            Role     = 'Both'
+            State    = 'Disabled'
+        }
+
+        # TLS 1.1 — POODLE for TLS; OPA SEC-006 violation
+        DTDS_TlsConfiguration 'DisableTLS11_Server' {
+            Protocol = 'TLS_1_1'
+            Role     = 'Both'
+            State    = 'Disabled'
+        }
+
+        # TLS 1.2 — minimum required by NIS2 Art.21(2)(h)
+        DTDS_TlsConfiguration 'EnableTLS12_Both' {
+            Protocol = 'TLS_1_2'
+            Role     = 'Both'
+            State    = 'Enabled'
+        }
+
+        # TLS 1.3 — preferred; perfect forward secrecy guaranteed
+        DTDS_TlsConfiguration 'EnableTLS13_Both' {
+            Protocol = 'TLS_1_3'
+            Role     = 'Both'
+            State    = 'Enabled'
+        }
     }
 }
 
@@ -326,18 +383,19 @@ Write-Host ""
 Write-Host "ComplianceBaseline MOF compiled successfully." -ForegroundColor Green
 Write-Host ""
 Write-Host "Resources applied:" -ForegroundColor Cyan
-Write-Host "  DTDS_FileContent   — 3 managed files (banners, config, compliance marker)"
-Write-Host "  DTDS_RegistryEntry — 5 registry entries (NTLMv2, SMB signing, TLS 1.2)"
-Write-Host "  DTDS_ServiceConfig — 5 service states (disable legacy, enable defender/eventlog)"
-Write-Host "  DTDS_AuditPolicy   — 6 audit subcategories (logon, privilege, object, policy)"
-Write-Host "  DTDS_FirewallRule  — 4 firewall rules (allow RDP/HTTPS, block SMB/public RDP)"
-Write-Host "  DTDS_LocalUser     — 3 accounts (disable admin/guest, create svc account)"
+Write-Host "  DTDS_FileContent      — 3 managed files (banners, config, compliance marker)"
+Write-Host "  DTDS_RegistryEntry    — 5 registry entries (NTLMv2, SMB signing)"
+Write-Host "  DTDS_ServiceConfig    — 5 service states (disable legacy, enable defender/eventlog)"
+Write-Host "  DTDS_AuditPolicy      — 6 audit subcategories (logon, privilege, object, policy)"
+Write-Host "  DTDS_FirewallRule     — 4 firewall rules (allow RDP/HTTPS, block SMB/public RDP)"
+Write-Host "  DTDS_LocalUser        — 3 accounts (disable admin/guest, create svc account)"
+Write-Host "  DTDS_TlsConfiguration — 6 protocol settings (disable SSL2/3+TLS1.0/1.1, enable TLS1.2/1.3)"
 Write-Host ""
 Write-Host "Compliance mappings:" -ForegroundColor Cyan
-Write-Host "  CIS Benchmark  — CIS 1.7, 2.3.1, 2.3.11, 5.x, 9.x"
+Write-Host "  CIS Benchmark  — CIS 1.7, 2.3.1, 2.3.11, 5.x, 9.x, 18.9.83"
 Write-Host "  DORA Art.9     — Access control (local accounts, firewall)"
 Write-Host "  DORA Art.10    — Audit logging (audit policy, event log service)"
-Write-Host "  NIS2-CRYPTO-001— TLS 1.2 enforcement (registry)"
+Write-Host "  NIS2 Art.21(2)(h) — TLS/SSL Schannel hardening (SEC-006, NIS2-CRYPTO-001)"
 Write-Host "  SEC-004        — Network access control (firewall rules)"
 Write-Host ""
 Write-Host "Apply with:" -ForegroundColor Yellow

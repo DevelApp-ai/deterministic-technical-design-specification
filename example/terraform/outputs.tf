@@ -120,3 +120,33 @@ output "cloudwatch_retention_days" {
   description = "Effective CloudWatch log group retention period in days."
   value       = local.effective_retention_days
 }
+
+output "waf_web_acl_path" {
+  description = "Filesystem path to the generated WAF Web ACL JSON manifest."
+  value       = local_file.waf_web_acl.filename
+}
+
+output "waf_rate_limit" {
+  description = "Maximum requests per 5-minute window per IP before WAF blocks the source."
+  value       = local.waf_rate_limit
+}
+
+output "backup_vault_primary_path" {
+  description = "Filesystem path to the generated primary backup vault JSON manifest."
+  value       = local_file.backup_vault_primary.filename
+}
+
+output "backup_vault_dr_path" {
+  description = "Filesystem path to the generated DR backup vault JSON manifest."
+  value       = local_file.backup_vault_dr.filename
+}
+
+output "backup_rto_hours" {
+  description = "Documented RTO target in hours (DORA Art.12)."
+  value       = local.dora_rto_hours
+}
+
+output "backup_rpo_hours" {
+  description = "Documented RPO target in hours (DORA Art.12)."
+  value       = local.dora_rpo_hours
+}

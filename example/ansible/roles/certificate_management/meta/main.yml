@@ -1,0 +1,22 @@
+# ansible/roles/certificate_management/meta/main.yml
+---
+galaxy_info:
+  role_name: certificate_management
+  author: platform-team
+  description: >
+    TLS certificate inventory and expiry monitoring role.
+    Scans for certificates, checks validity and key strength,
+    and renders a compliance evidence report satisfying
+    NIS2 Art.21(2)(h) (cryptography) and SEC-006 (TLS version).
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions: ["20.04", "22.04", "24.04"]
+    - name: EL
+      versions: ["8", "9"]
+  categories:
+    - compliance
+    - tls
+    - nis2
+
+dependencies: []
