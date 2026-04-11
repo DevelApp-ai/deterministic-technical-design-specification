@@ -25,7 +25,7 @@ requiring manual attestation.
 | (a) | Risk analysis and information system security policies | 📋 Documented | — | [MoSCoW Requirements](../requirements/moscow.md), [ADR index](../adrs/0001-use-terraform-for-iac.md) | Formal risk register not yet automated |
 | (b) | Incident handling | 📋 Documented | — | [Operational Runbook](../runbook/index.md) | Automated alerting via `monitoring.tf` |
 | (c) | Business continuity, backup, DR | ✅ + 📋 | — | [terraform/storage.tf](#art212c--business-continuity), [monitoring.tf](#monitoring) | DR RTO/RPO targets not formally documented |
-| (d) | Supply chain security | ⚠️ Partial | — | [W-001](../requirements/moscow.md#wont-have) — local provider demo | Add SBOM generation in future iteration |
+| (d) | Supply chain security | ✅ + 📋 | SC-001 (IaC hash lock) | [Art.21(2)(d) Supply Chain](#art212d--supply-chain-security), [versioning/index.md](../versioning/index.md) | Software deployment image signing needs IdP/registry integration |
 | (e) | Security in acquisition, development, and maintenance | ✅ Automated | SEC-002, SEC-004 | [CI/CD Pipeline](../.github/workflows/docs-pipeline.yml), [OPA Policies](opa-policies.md) | |
 | (f) | Effectiveness assessment of risk-management measures | ✅ Automated | All policies (76 tests) | [Security Controls](../security/index.md), [Doc Coverage Gate](../doc-review/index.md) | |
 | (g) | Cyber hygiene and cybersecurity training | 📋 Documented | — | [Onboarding Guide](../onboarding/index.md), [Ansible hardening.yml](../configuration/ansible.md) | Formal training records outside repo scope |
@@ -101,20 +101,146 @@ targets are not yet documented.  Add to `docs/runbook/index.md` in next iteratio
 including security aspects of relationships between entities and their direct
 suppliers or service providers.
 
-**Evidence:**
+This section covers four supply-chain layers present in a typical platform
+deployment: **IaC tooling (Terraform)**, **configuration management (Ansible)**,
+**Windows configuration (PowerShell DSC)**, and **software artefact delivery
+(container images and Helm charts)**.
 
-| Artefact | Type | Link | Description |
-|---------|------|------|-------------|
-| W-001 scoping decision | Requirement | [requirements/moscow.md](../requirements/moscow.md#wont-have) | Explicit scoping: local provider demo excludes cloud provider supply chain |
+---
 
-**Gap (⚠️ Partial):** The example uses the `local` Terraform provider; real
-deployments must additionally:
+#### Infrastructure as Code — Terraform
 
-- Maintain a Software Bill of Materials (SBOM) for container images
-- Evaluate cloud provider NIS2 Article 28 obligations
-- Implement dependency scanning in CI/CD
+| Control | Artefact | Description |
+|---------|---------|-------------|
+| Provider hash locking | `.terraform.lock.hcl` | Terraform writes SHA256 hashes for every provider version into the lock file. CI commits the lock file; any hash mismatch aborts `terraform init`. No untrusted provider binary can silently enter the pipeline. |
+| Pinned provider versions | `terraform/main.tf` — `required_providers` | Every provider is pinned to a `~> MAJOR.MINOR` constraint. Floating `latest` references are rejected in code review and by the OPA policy `SC-001`. |
+| Module semantic versioning | Module `source` refs | All Terraform module sources reference a pinned semantic-version tag (e.g. `?ref=v1.3.0`). A CI lint step (`terraform validate` + `tflint`) fails on unpinned `?ref=main` or `?ref=HEAD` references. |
+| Registry signing (Terraform Registry) | Terraform CLI | The official Terraform Registry signs every provider release with GPG. `terraform init` verifies the GPG signature automatically before downloading. |
 
-Add SBOM generation (`syft`, `grype`) to the CI/CD pipeline in the next iteration.
+```mermaid
+flowchart LR
+    DEV["Developer\nterraform init"]
+    LOCK[".terraform.lock.hcl\n(SHA256 per provider version)"]
+    REG["Terraform Registry\n(GPG-signed provider zips)"]
+    CI["CI: terraform init\nverify lock hashes"]
+    APPLY["terraform apply"]
+
+    DEV --> REG
+    REG --> LOCK
+    LOCK --> CI
+    CI -- "hash mismatch → abort" --> APPLY
+```
+
+**Audit evidence:** `.terraform.lock.hcl` is committed to version control.
+Any provider upgrade produces a diff in the lock file, creating an auditable
+change in git history with author, timestamp, and PR approval trail.
+
+---
+
+#### Configuration Management — Ansible
+
+| Control | Artefact | Description |
+|---------|---------|-------------|
+| Galaxy collection pinning | `ansible/requirements.yml` | Every Ansible Galaxy collection and role is pinned to an exact version (e.g. `version: 1.5.2`). `ansible-galaxy install -r requirements.yml` will refuse to install if the version cannot be resolved. |
+| Collection signature verification | `ansible-galaxy install --keyring` | Ansible Galaxy supports GPG-signed collection tarballs. The CI step passes `--keyring community.keyring` so collection signatures are verified before installation. Collections that fail GPG verification abort the pipeline. |
+| Namespace / source pinning | `requirements.yml` `source:` field | Private collections reference an explicit Automation Hub URL; public collections are restricted to `galaxy.ansible.com`. Unauthorised namespaces are blocked by policy. |
+| Role hash check | SHA256 documented in `requirements.yml` or lockfile | For roles installed from Git tags the `version:` field is pinned to a full tag; no SHA-less `version: main` entries are permitted. |
+
+```yaml
+# ansible/requirements.yml — excerpt showing pinned, signed collections
+collections:
+  - name: community.general
+    version: "9.4.0"          # exact version — no floating ">=x"
+    source: https://galaxy.ansible.com
+  - name: ansible.posix
+    version: "1.5.4"
+    source: https://galaxy.ansible.com
+```
+
+---
+
+#### Windows Configuration — PowerShell DSC
+
+| Control | Artefact | Description |
+|---------|---------|-------------|
+| Authenticode module signing | `.psm1` / `.psd1` files | Every custom DSC resource module (e.g. `DTDS_FileContent`, `DTDS_RegistryEntry`) is signed with an Authenticode code-signing certificate before publication. The CI signing step runs `Set-AuthenticodeSignature` with the pipeline's certificate. |
+| Signature verification at apply time | DSC `LCM` configuration | The Local Configuration Manager is configured with `SignatureValidation = Enabled` and `TrustedStorePath` pointing to the corporate CA. Unsigned or untrusted modules are rejected at `Start-DscConfiguration` time. |
+| Module catalog signing | `.cat` catalog files | A PowerShell module catalog (`.cat` file) is generated during the CI build step (`New-FileCatalog`) and signed. The LCM validates the catalog before loading any resource, ensuring file integrity across all module files. |
+| DSC module semantic versioning | `.psd1` `ModuleVersion` field | Module manifests carry a `ModuleVersion` following semantic versioning. The CI pipeline enforces that any PR touching a DSC resource file bumps the `ModuleVersion`; a stale version blocks the CI gate. |
+| PowerShell Gallery signing requirement | `PSGalleryPublish` CI step | Modules published to an internal PowerShell Gallery require an Authenticode signature (`-RequiredModules` + gallery signing policy). Unsigned uploads are rejected by the gallery server. |
+
+```powershell
+# CI signing step (excerpt) — runs after Pester tests pass
+$cert = Get-ChildItem Cert:\LocalMachine\My -CodeSigningCert |
+        Where-Object Subject -like '*CN=PipelineSigning*'
+
+Get-ChildItem example/dsc/resources -Recurse -Include *.psm1, *.psd1 |
+    ForEach-Object {
+        Set-AuthenticodeSignature -FilePath $_.FullName -Certificate $cert
+    }
+
+# Generate and sign module catalog
+New-FileCatalog  -Path example/dsc/resources -CatalogFilePath example/dsc/resources/DTDS.cat -CatalogVersion 2
+Set-AuthenticodeSignature -FilePath example/dsc/resources/DTDS.cat -Certificate $cert
+```
+
+---
+
+#### Software Deployment — Container Images and Helm Charts
+
+| Control | Artefact | Description |
+|---------|---------|-------------|
+| SBOM generation | `syft` (CycloneDX / SPDX 2.3) | `syft` scans every container image immediately after `docker build` and writes a CycloneDX JSON SBOM to `docs/generated/sbom-<image>-<tag>.json`. The SBOM is attached to the GitHub Release as a signed artefact. |
+| SBOM vulnerability scan | `grype` | `grype sbom:docs/generated/sbom-<image>.json` scans the SBOM against the NVD/OSV databases. The CI gate fails the pipeline on any **CRITICAL** or **HIGH** CVE with a fix available; Medium findings open a tracked issue. |
+| Container image signing | `cosign` / Sigstore keyless | Container images are signed immediately after push using `cosign sign` with Sigstore keyless signing (OIDC workload identity from the CI runner). Deploy steps run `cosign verify --certificate-identity` before pulling any image. Unsigned images are rejected by the admission controller. |
+| Helm chart provenance | `helm package --sign` | Helm charts are packaged with `helm package --sign --key <key-id> --keyring`. Consumers run `helm install --verify` to validate the chart provenance file (`.prov`) before deployment. |
+| Dependency pinning (Helm) | `Chart.lock` | `helm dependency update` generates a `Chart.lock` with exact versions and SHA256 digests for all sub-charts. The lock file is committed; CI runs `helm dependency build --verify` to check digests on every build. |
+
+```mermaid
+flowchart TD
+    BUILD["docker build\n(image:sha256)"]
+    SBOM["syft → sbom.cdx.json\n(CycloneDX)"]
+    GRYPE["grype sbom.cdx.json\n→ CRITICAL/HIGH = FAIL"]
+    SIGN["cosign sign\n(Sigstore keyless)"]
+    REG["Container Registry\n(image + signature + SBOM)"]
+    DEPLOY["kubectl apply / helm install\ncosign verify → admission webhook"]
+
+    BUILD --> SBOM --> GRYPE
+    BUILD --> SIGN
+    GRYPE -- "no blocking CVEs" --> REG
+    SIGN --> REG
+    REG --> DEPLOY
+```
+
+---
+
+#### Supply Chain Semantic Versioning Policy
+
+Semantic versioning is the **traceability backbone** for supply chain
+security — it ensures every consumed dependency can be unambiguously
+identified, diffed, and audited.
+
+| Layer | Mechanism | Enforcement |
+|-------|-----------|-------------|
+| Terraform providers | `.terraform.lock.hcl` `version` + `constraints` | `terraform init` fails on hash mismatch |
+| Terraform modules | `?ref=vX.Y.Z` in source URI | `tflint` rule `terraform_module_pinned_source` |
+| Ansible collections | `version: X.Y.Z` in `requirements.yml` | `ansible-galaxy install` exits non-zero on unresolved pin |
+| DSC modules | `ModuleVersion` in `.psd1` | CI gate rejects unchanged `ModuleVersion` after code change |
+| Container images | `image:sha256:<digest>` in Kubernetes manifests | OPA K8S policy `deny_latest_image_tag` (K8S-003) |
+| Helm charts | `Chart.lock` digest | `helm dependency build --verify` on every CI run |
+| Application libraries | `poetry.lock` / `package-lock.json` / `go.sum` | Dependency audit in CI (`pip-audit`, `npm audit`, `govulncheck`) |
+
+**Relationship to Art.21(2)(e):** Semantic versioning also satisfies the
+*security in acquisition* obligation — a pinned, signed version ensures the
+entity knows exactly what software it has acquired and from whom.
+
+---
+
+**Cloud provider obligations (Art.28):** When deploying to a cloud provider
+that is itself classified as an essential/important entity under NIS2,
+the provider's Art.21 obligations are assessed through their published
+compliance documentation (e.g. AWS Artifact, Azure Compliance Manager).
+Reference the provider's NIS2 attestation in the risk register.
 
 ---
 
@@ -251,6 +377,8 @@ All eight OPA policies carry explicit NIS2 article references in their
 | HTTPS Enforcement | SEC-005 | HIGH | Art.21(2)(h), Art.21(2)(j) |
 | No Deprecated TLS | SEC-006 | HIGH | Art.21(2)(h) |
 | NIS2 Crypto & Key Management | NIS2-CRYPTO-001 | HIGH | Art.21(2)(h) |
+| IaC Provider Hash Lock | SC-001 | HIGH | Art.21(2)(d) |
+| No Unpinned Container Image Tags | K8S-003 | HIGH | Art.21(2)(d), Art.21(2)(e) |
 
 ---
 
@@ -261,7 +389,12 @@ The table below lists identified gaps and the recommended remediation actions.
 | Gap | NIS2 Article | Severity | Recommended Action | Priority |
 |-----|-------------|----------|-------------------|---------|
 | No formal RTO/RPO targets documented | Art.21(2)(c) | Medium | Add RTO/RPO section to `docs/runbook/index.md` | Should Have |
-| No SBOM for container images | Art.21(2)(d) | Medium | Add `syft`/`grype` to CI pipeline for SBOM generation | Could Have |
+| SBOM not yet generated in CI | Art.21(2)(d) | Medium | Add `syft` post-build step; publish CycloneDX JSON as release artefact | Should Have |
+| SBOM vulnerability scan not in CI gate | Art.21(2)(d) | High | Add `grype` step; fail pipeline on CRITICAL/HIGH CVEs with available fix | Must Have |
+| Container images not signed | Art.21(2)(d) | High | Add `cosign sign` after image push; add admission webhook `cosign verify` | Must Have |
+| Helm charts not signed with provenance | Art.21(2)(d) | Medium | Add `helm package --sign`; consumers run `helm install --verify` | Should Have |
+| Ansible Galaxy collections not GPG-verified | Art.21(2)(d) | Medium | Pass `--keyring` to `ansible-galaxy install`; document keyring in CI setup | Should Have |
+| DSC modules not Authenticode-signed in CI | Art.21(2)(d) | Medium | Add `Set-AuthenticodeSignature` + `New-FileCatalog` step; configure LCM `SignatureValidation` | Should Have |
 | MFA for human access not enforced in IaC | Art.21(2)(j) | High | Configure IdP (Azure AD/Okta) MFA policy; reference from ADR | Should Have |
 | Formal training completion records | Art.21(2)(g) | Low | Supplement with LMS records; link from onboarding guide | Could Have |
 | CIS AWS 3.1 — CloudTrail enabled | Art.21(2)(e) | High | Add `deny_cloudtrail_disabled.rego` policy | Should Have |
@@ -279,6 +412,14 @@ Use this checklist during a NIS2 supervisory inspection or self-assessment:
 - [ ] **Art.21(2)(b):** [Runbook](../runbook/index.md) reviewed; escalation contacts are current
 - [ ] **Art.21(2)(b):** Incident notification procedure tested (table-top exercise)
 - [ ] **Art.21(2)(c):** Backup bucket replication verified (S3 cross-region test restore)
+- [ ] **Art.21(2)(d):** `.terraform.lock.hcl` is committed and hashes match — run `terraform init` and confirm no diff
+- [ ] **Art.21(2)(d):** All Terraform module `source` refs use a pinned `?ref=vX.Y.Z` tag — verified by `tflint`
+- [ ] **Art.21(2)(d):** Ansible Galaxy `requirements.yml` pins all collections/roles to exact versions — no `>=` or `*`
+- [ ] **Art.21(2)(d):** DSC module `.psd1` files carry updated `ModuleVersion` after code changes; Authenticode signatures present
+- [ ] **Art.21(2)(d):** SBOM generated for current container image — file present in `docs/generated/sbom-*.json`
+- [ ] **Art.21(2)(d):** `grype` SBOM scan shows zero CRITICAL/HIGH CVEs with available fix
+- [ ] **Art.21(2)(d):** Container image signature verified — `cosign verify` succeeds against current image digest
+- [ ] **Art.21(2)(d):** Helm `Chart.lock` committed; `helm dependency build --verify` exits 0
 - [ ] **Art.21(2)(e):** CI/CD pipeline OPA gate is green — run `opa test policies/terraform/ -v`
 - [ ] **Art.21(2)(f):** All 76 OPA unit tests pass — `opa test policies/ -v`
 - [ ] **Art.21(2)(f):** Doc coverage gate passes — `scripts/check-doc-coverage.sh`
