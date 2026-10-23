@@ -7,6 +7,7 @@ author: security-team
 tags: [policy, opa, rego, compliance, security]
 supersedes: []
 related_requirements: [M-002, M-003, S-001, S-002]
+governs: [policies/, .github/workflows/docs-pipeline.yml]
 ---
 
 # ADR-0002 — Use Open Policy Agent (OPA) for Policy Enforcement

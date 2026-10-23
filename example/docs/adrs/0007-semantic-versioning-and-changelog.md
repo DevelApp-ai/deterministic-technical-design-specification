@@ -7,6 +7,7 @@ author: platform-team
 tags: [versioning, changelog, semantic-versioning, git-cliff, ci]
 supersedes: []
 related_requirements: [V-001, V-002, V-003]
+governs: [version.txt, cliff.toml]
 ---
 
 # ADR-0007 — Adopt Semantic Versioning and Auto-generated Changelog

@@ -19,7 +19,7 @@
 # — closure_1..closure_8 — because Rego forbids recursion.  Eight hops is
 # the declared cap; validate.rego flags any chain still growing at the cap
 # (catalog/chain-depth-exceeded), so the limit is loud, never silent.
-# (graph.reachable is deliberately not used: in OA 0.69 it stops after one
+# (graph.reachable is deliberately not used: in OPA 0.69 it stops after one
 # hop when the graph object is produced by a rule rather than a literal.)
 #
 # Run:

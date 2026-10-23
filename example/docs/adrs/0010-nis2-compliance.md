@@ -7,6 +7,7 @@ author: security-team
 tags: [compliance, nis2, security, policy, audit]
 supersedes: []
 related_requirements: [NIS2-001, NIS2-002, NIS2-003, NIS2-004, NIS2-005, NIS2-006, M-003, S-001, CYB-002, CYB-003, CYB-004]
+governs: [docs/compliance/nis2.md, docs/security/]
 ---
 
 # ADR-0010 — Adopt NIS2 Compliance Framework for Security Controls Documentation

@@ -7,6 +7,7 @@ author: platform-team
 tags: [iac, terraform, provisioning]
 supersedes: []
 related_requirements: [M-001, M-004, M-006]
+governs: [terraform/, Dockerfile, scripts/generate-docs.sh]
 ---
 
 # ADR-0001 — Use Terraform as the Primary Infrastructure Provisioning Tool

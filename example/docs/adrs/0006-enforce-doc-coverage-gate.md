@@ -7,6 +7,7 @@ author: platform-team
 tags: [documentation-as-code, ci-gate, doc-review, quality]
 supersedes: []
 related_requirements: [M-005, D-001, D-002]
+governs: [scripts/check-doc-coverage.sh]
 ---
 
 # ADR-0006 — Enforce Documentation Coverage as a CI Gate

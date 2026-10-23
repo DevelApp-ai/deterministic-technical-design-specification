@@ -7,6 +7,7 @@ author: platform-team
 tags: [docs, mkdocs, material, publishing]
 supersedes: []
 related_requirements: [M-004, M-005, S-004, S-005]
+governs: [mkdocs.yml, docs/, scripts/]
 ---
 
 # ADR-0003 — Use MkDocs with Material Theme as the Documentation Publishing Platform

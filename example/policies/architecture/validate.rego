@@ -78,7 +78,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/unknown-supersedes-ref",
-		"message": sprintf("ADR %v supersedes %v, but no ADR with id %v exists (%v)", [a.id, s, s, a.file]),
+		"message": sprintf("%v supersedes %v, but no ADR with id %v exists (%v)", [a.id, s, s, a.file]),
 		"path": sprintf("$.adrs[%d].supersedes[%d]", [i, j]),
 	}
 }
@@ -91,7 +91,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/supersede-cycle",
-		"message": sprintf("ADR %v sits on a supersede cycle — the chain loops back to itself and has no current ADR", [a.id]),
+		"message": sprintf("%v sits on a supersede cycle — the chain loops back to itself and has no current ADR", [a.id]),
 		"path": sprintf("$.adrs[%d].supersedes", [i]),
 	}
 }
@@ -103,7 +103,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/ambiguous-supersede-chain",
-		"message": sprintf("the supersede chain of ADR %v resolves to %d terminal ADRs (%v) — exactly one current ADR is required", [a.id, count(terminals), sort([t | some t in terminals])]),
+		"message": sprintf("the supersede chain of %v resolves to %d terminal ADRs (%v) — exactly one current ADR is required", [a.id, count(terminals), sort([t | some t in terminals])]),
 		"path": sprintf("$.adrs[%d]", [i]),
 	}
 }
@@ -114,7 +114,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/chain-depth-exceeded",
-		"message": sprintf("the supersede chain of ADR %v is still growing at the 8-hop traversal cap — flatten or split the chain", [a.id]),
+		"message": sprintf("the supersede chain of %v is still growing at the 8-hop traversal cap — flatten or split the chain", [a.id]),
 		"path": sprintf("$.adrs[%d].supersedes", [i]),
 	}
 }
@@ -126,7 +126,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/status-superseded-unmatched",
-		"message": sprintf("ADR %v has status Superseded, but no ADR supersedes it — either the successor's supersedes ref is missing or the status is stale", [a.id]),
+		"message": sprintf("%v has status Superseded, but no ADR supersedes it — either the successor's supersedes ref is missing or the status is stale", [a.id]),
 		"path": sprintf("$.adrs[%d].status", [i]),
 	}
 }
@@ -138,7 +138,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/superseded-but-accepted",
-		"message": sprintf("ADR %v is superseded by %v but its status is still %v — mark it Superseded", [a.id, sort([x.id | some x in input.adrs; a.id in x.supersedes]), a.status]),
+		"message": sprintf("%v is superseded by %v but its status is still %v — mark it Superseded", [a.id, sort([x.id | some x in input.adrs; a.id in x.supersedes]), a.status]),
 		"path": sprintf("$.adrs[%d].status", [i]),
 	}
 }
@@ -150,7 +150,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/adr-without-requirements",
-		"message": sprintf("Accepted ADR %v cites no MoSCoW requirement — every decision must trace back to the requirements document (%v)", [a.id, a.file]),
+		"message": sprintf("Accepted %v cites no MoSCoW requirement — every decision must trace back to the requirements document (%v)", [a.id, a.file]),
 		"path": sprintf("$.adrs[%d].related_requirements", [i]),
 	}
 }
@@ -162,7 +162,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/adr-without-governs",
-		"message": sprintf("Accepted ADR %v declares no governed paths — the boundary gate cannot protect a decision with no territory (%v)", [a.id, a.file]),
+		"message": sprintf("Accepted %v declares no governed paths — the boundary gate cannot protect a decision with no territory (%v)", [a.id, a.file]),
 		"path": sprintf("$.adrs[%d].governs", [i]),
 	}
 }
@@ -174,7 +174,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/dangling-requirement-ref",
-		"message": sprintf("ADR %v cites requirement %v, but the MoSCoW document declares no such requirement (%v)", [a.id, r, a.file]),
+		"message": sprintf("%v cites requirement %v, but the MoSCoW document declares no such requirement (%v)", [a.id, r, a.file]),
 		"path": sprintf("$.adrs[%d].related_requirements[%d]", [i, j]),
 	}
 }
@@ -198,7 +198,7 @@ findings contains f if {
 	f := {
 		"severity": "ERROR",
 		"rule": "catalog/policy-unknown-adr",
-		"message": sprintf("policy %v links ADR %v, but no ADR with that id exists (%v)", [p.id, x, p.file]),
+		"message": sprintf("policy %v links %v, but no ADR with that id exists (%v)", [p.id, x, p.file]),
 		"path": sprintf("$.policies[%d].related_adr[%d]", [i, j]),
 	}
 }

@@ -1,0 +1,700 @@
+<mxfile host="app.diagrams.net" agent="generate-traceability.py" version="24.7.8">
+  <diagram id="architecture-traceability" name="Architecture Traceability">
+    <mxGraphModel dx="800" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="4000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="adr-ADR-0001" value="ADR-0001 — Use Terraform as the Primary Infrastructure Provisioning Tool" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="40" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0002" value="ADR-0002 — Use Open Policy Agent (OPA) for Policy Enforcement" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="90" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0003" value="ADR-0003 — Use MkDocs with Material Theme as the Documentation Publishing Platform" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0004" value="ADR-0004 — Use PowerShell DSC for Windows Configuration Management" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0005" value="ADR-0005 — Use Mermaid Embedded in Markdown for Architecture Diagrams" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0006" value="ADR-0006 — Enforce Documentation Coverage as a CI Gate" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0007" value="ADR-0007 — Adopt Semantic Versioning and Auto-generated Changelog" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0008" value="ADR-0008 — Add Kubernetes Manifests and Helm Chart as IaC Examples" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0009" value="ADR-0009 — Expose Backstage Catalog Data via Model Context Protocol (MCP)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0010" value="ADR-0010 — Adopt NIS2 Compliance Framework for Security Controls Documentation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0011" value="ADR-0011 — Adopt EU DORA (Digital Operational Resilience Act) Compliance Framework" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="adr-ADR-0012" value="ADR-0012 — Machine-Readable ADR Traceability Kit" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-.github/workflows/docs-pipeline.yml" value=".github/workflows/docs-pipeline.yml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="40" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-.vscode/" value=".vscode/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="90" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-Dockerfile" value="Dockerfile" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-ansible/" value="ansible/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-backstage/" value="backstage/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-catalog-info.yaml" value="catalog-info.yaml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-cliff.toml" value="cliff.toml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/" value="docs/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/adrs/0012-machine-readable-adr-traceability.md" value="docs/adrs/0012-machine-readable-adr-traceability.md" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/architecture/" value="docs/architecture/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/compliance/dora.md" value="docs/compliance/dora.md" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/compliance/nis2.md" value="docs/compliance/nis2.md" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/generated/architecture-catalog.json" value="docs/generated/architecture-catalog.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="640" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/generated/traceability.drawio" value="docs/generated/traceability.drawio" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-docs/security/" value="docs/security/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="740" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-dsc/" value="dsc/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="790" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-helm/" value="helm/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="840" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-kubernetes/" value="kubernetes/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="890" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-mkdocs.yml" value="mkdocs.yml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="940" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-policies/" value="policies/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="990" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-policies/architecture/" value="policies/architecture/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1040" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/" value="scripts/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1090" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/architecture-demo-fixtures/" value="scripts/architecture-demo-fixtures/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/architecture-demo.sh" value="scripts/architecture-demo.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/architecture-gate.sh" value="scripts/architecture-gate.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/check-doc-coverage.sh" value="scripts/check-doc-coverage.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/generate-docs.sh" value="scripts/generate-docs.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/generate-traceability.py" value="scripts/generate-traceability.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-scripts/scan-architecture.py" value="scripts/scan-architecture.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-terraform/" value="terraform/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-version.txt" value="version.txt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="1540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-ARCH-001" value="ARCH-001 — ADR Catalog Validation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="40" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-ARCH-002" value="ARCH-002 — Supersede-Chain Traversal" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="90" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-ARCH-003" value="ARCH-003 — Boundary Gate for Pull Requests" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-DORA-ICT-001" value="DORA-ICT-001 — DORA Chapter II — ICT Risk Management: Logging, Retention, and Backup" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-FINOPS-001" value="FINOPS-001 — Mandatory FinOps Cost-Allocation Tags" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-K8S-001" value="K8S-001 — No Privileged Containers" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-K8S-002" value="K8S-002 — CPU and Memory Limits Required" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-K8S-003" value="K8S-003 — Required FinOps Labels on All Workloads" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-K8S-004" value="K8S-004 — No Unpinned Container Image Tags" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-NIS2-CRYPTO-001" value="NIS2-CRYPTO-001 — NIS2 Art.21(2)(h) — Cryptography and Key Management" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SC-001" value="SC-001 — NIS2 Art.21(2)(d) — IaC Dependency Pinning" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-001" value="SEC-001 — Storage Encryption Required" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-002" value="SEC-002 — Deny Publicly Exposed Resources" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="640" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-003" value="SEC-003 — Deny Overly Permissive IAM" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-004" value="SEC-004 — Deny Unrestricted Network Egress" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="740" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-005" value="SEC-005 — HTTPS Enforcement — HTTP Must Redirect to HTTPS" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="790" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pol-SEC-006" value="SEC-006 — Prohibit Deprecated TLS Versions (TLS 1.0 / 1.1)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="840" y="840" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-A-001" value="A-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-A-002" value="A-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-A-003" value="A-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-A-004" value="A-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-AI-001" value="AI-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-AI-002" value="AI-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-AI-003" value="AI-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-C-001" value="C-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-C-002" value="C-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-C-003" value="C-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-CYB-001" value="CYB-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-CYB-002" value="CYB-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-CYB-003" value="CYB-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="640" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-CYB-004" value="CYB-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-CYB-005" value="CYB-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="740" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-D-001" value="D-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="790" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-D-002" value="D-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="840" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DEV-001" value="DEV-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="890" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DEV-002" value="DEV-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="940" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DEV-003" value="DEV-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="990" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-001" value="DORA-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1040" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-002" value="DORA-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1090" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-003" value="DORA-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-004" value="DORA-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-005" value="DORA-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-DORA-006" value="DORA-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-FIN-001" value="FIN-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-FIN-002" value="FIN-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-FIN-003" value="FIN-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-K-001" value="K-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-K-002" value="K-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-K-003" value="K-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-001" value="M-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1640" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-002" value="M-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-003" value="M-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1740" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-004" value="M-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1790" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-005" value="M-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1840" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-M-006" value="M-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1890" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-001" value="NIS2-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1940" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-002" value="NIS2-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1990" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-003" value="NIS2-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2040" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-004" value="NIS2-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2090" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-005" value="NIS2-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-006" value="NIS2-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2190" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-NIS2-007" value="NIS2-007" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-OPS-001" value="OPS-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-OPS-002" value="OPS-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2340" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-OPS-003" value="OPS-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2390" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-001" value="S-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2440" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-002" value="S-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2490" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-003" value="S-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-004" value="S-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2590" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-005" value="S-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2640" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-006" value="S-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2690" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-007" value="S-007" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2740" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-008" value="S-008" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2790" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-S-009" value="S-009" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2840" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-V-001" value="V-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2890" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-V-002" value="V-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2940" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-V-003" value="V-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="2990" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-W-001" value="W-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3040" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-W-002" value="W-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3090" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-W-003" value="W-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3140" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0001-impl-Dockerfile" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0001" target="impl-Dockerfile">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0001-impl-scripts/generate-docs.sh" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0001" target="impl-scripts/generate-docs.sh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0001-impl-terraform/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0001" target="impl-terraform/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-impl-.github/workflows/docs-pipeline.yml" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="impl-.github/workflows/docs-pipeline.yml">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-impl-policies/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="impl-policies/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-DORA-ICT-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-DORA-ICT-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-FINOPS-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-FINOPS-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-NIS2-CRYPTO-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-NIS2-CRYPTO-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SC-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SC-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-005">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0002-pol-SEC-006" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0002" target="pol-SEC-006">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0003-impl-docs/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0003" target="impl-docs/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0003-impl-mkdocs.yml" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0003" target="impl-mkdocs.yml">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0003-impl-scripts/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0003" target="impl-scripts/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0004-impl-dsc/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0004" target="impl-dsc/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0005-impl-docs/architecture/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0005" target="impl-docs/architecture/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0006-impl-scripts/check-doc-coverage.sh" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0006" target="impl-scripts/check-doc-coverage.sh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0007-impl-cliff.toml" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0007" target="impl-cliff.toml">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0007-impl-version.txt" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0007" target="impl-version.txt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-impl-helm/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="impl-helm/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-impl-kubernetes/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="impl-kubernetes/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-pol-K8S-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="pol-K8S-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-pol-K8S-002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="pol-K8S-002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-pol-K8S-003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="pol-K8S-003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0008-pol-K8S-004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0008" target="pol-K8S-004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0009-impl-.vscode/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0009" target="impl-.vscode/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0009-impl-backstage/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0009" target="impl-backstage/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0009-impl-catalog-info.yaml" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0009" target="impl-catalog-info.yaml">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0010-impl-docs/compliance/nis2.md" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0010" target="impl-docs/compliance/nis2.md">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0010-impl-docs/security/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0010" target="impl-docs/security/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0010-pol-K8S-004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0010" target="pol-K8S-004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0010-pol-NIS2-CRYPTO-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0010" target="pol-NIS2-CRYPTO-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0010-pol-SC-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0010" target="pol-SC-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0011-impl-ansible/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0011" target="impl-ansible/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0011-impl-docs/compliance/dora.md" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0011" target="impl-docs/compliance/dora.md">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0011-pol-DORA-ICT-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0011" target="pol-DORA-ICT-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-docs/adrs/0012-machine-readable-adr-traceability.md" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-docs/adrs/0012-machine-readable-adr-traceability.md">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-docs/generated/architecture-catalog.json" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-docs/generated/architecture-catalog.json">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-docs/generated/traceability.drawio" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-docs/generated/traceability.drawio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-policies/architecture/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-policies/architecture/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-scripts/architecture-demo-fixtures/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-scripts/architecture-demo-fixtures/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-scripts/architecture-demo.sh" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-scripts/architecture-demo.sh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-scripts/architecture-gate.sh" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-scripts/architecture-gate.sh">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-scripts/generate-traceability.py" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-scripts/generate-traceability.py">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-impl-scripts/scan-architecture.py" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="impl-scripts/scan-architecture.py">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-pol-ARCH-001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="pol-ARCH-001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-pol-ARCH-002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="pol-ARCH-002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-adr-ADR-0012-pol-ARCH-003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0012" target="pol-ARCH-003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-A-001-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-A-001" target="adr-ADR-0005">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-A-002-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-A-002" target="adr-ADR-0005">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-A-003-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-A-003" target="adr-ADR-0005">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-AI-001-adr-ADR-0009" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-AI-001" target="adr-ADR-0009">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-AI-002-adr-ADR-0009" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-AI-002" target="adr-ADR-0009">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-AI-003-adr-ADR-0009" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-AI-003" target="adr-ADR-0009">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-CYB-002-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-CYB-002" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-CYB-003-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-CYB-003" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-CYB-004-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-CYB-004" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-D-001-adr-ADR-0006" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-D-001" target="adr-ADR-0006">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-D-001-adr-ADR-0012" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-D-001" target="adr-ADR-0012">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-D-002-adr-ADR-0006" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-D-002" target="adr-ADR-0006">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-001-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-001" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-002-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-002" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-003-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-003" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-004-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-004" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-005-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-005" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-DORA-006-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-DORA-006" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-FIN-001-adr-ADR-0008" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-FIN-001" target="adr-ADR-0008">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-K-001-adr-ADR-0008" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-K-001" target="adr-ADR-0008">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-K-002-adr-ADR-0008" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-K-002" target="adr-ADR-0008">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-K-003-adr-ADR-0008" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-K-003" target="adr-ADR-0008">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-001-adr-ADR-0001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-001" target="adr-ADR-0001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-002-adr-ADR-0002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-002" target="adr-ADR-0002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-003-adr-ADR-0002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-003" target="adr-ADR-0002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-003-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-003" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-003-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-003" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-004-adr-ADR-0001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-004" target="adr-ADR-0001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-004-adr-ADR-0003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-004" target="adr-ADR-0003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0005">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0006" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0006">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0012" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0012">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-M-006-adr-ADR-0001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-006" target="adr-ADR-0001">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-001-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-001" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-002-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-002" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-003-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-003" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-003-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-003" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-004-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-004" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-005-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-005" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-005-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-005" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-NIS2-006-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-006" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-001-adr-ADR-0002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-001" target="adr-ADR-0002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-001-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-001" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-001-adr-ADR-0011" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-001" target="adr-ADR-0011">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-002-adr-ADR-0002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-002" target="adr-ADR-0002">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-004-adr-ADR-0003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-004" target="adr-ADR-0003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-005-adr-ADR-0003" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-005" target="adr-ADR-0003">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-006-adr-ADR-0012" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-006" target="adr-ADR-0012">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-008-adr-ADR-0004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-008" target="adr-ADR-0004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-009-adr-ADR-0004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-009" target="adr-ADR-0004">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-V-001-adr-ADR-0007" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-V-001" target="adr-ADR-0007">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-V-002-adr-ADR-0007" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-V-002" target="adr-ADR-0007">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-V-003-adr-ADR-0007" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-V-003" target="adr-ADR-0007">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

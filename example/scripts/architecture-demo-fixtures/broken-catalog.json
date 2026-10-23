@@ -1,0 +1,49 @@
+{
+  "adrs": [
+    {
+      "id": "ADR-0001",
+      "title": "Decision One",
+      "status": "Superseded",
+      "date": "2024-01-15",
+      "author": "platform-team",
+      "tags": [],
+      "supersedes": ["ADR-0002"],
+      "related_requirements": ["M-001"],
+      "governs": ["terraform/"],
+      "file": "docs/adrs/0001-one.md"
+    },
+    {
+      "id": "ADR-0002",
+      "title": "Decision Two",
+      "status": "Superseded",
+      "date": "2025-01-15",
+      "author": "platform-team",
+      "tags": [],
+      "supersedes": ["ADR-0001"],
+      "related_requirements": ["M-999"],
+      "governs": ["dsc/"],
+      "file": "docs/adrs/0002-two.md"
+    }
+  ],
+  "policies": [
+    {
+      "id": "POL-001",
+      "title": "Fixture policy",
+      "severity": "HIGH",
+      "package": "fixture.pol1",
+      "related_adr": ["ADR-0099"],
+      "related_requirements": ["M-001"],
+      "file": "policies/fixture/pol1.rego"
+    }
+  ],
+  "requirements": [
+    {"id": "M-001"}
+  ],
+  "scan": {
+    "scanner": "fixture",
+    "status": "demo fixture — deliberately broken catalog",
+    "adr_count": 2,
+    "policy_count": 1,
+    "requirement_count": 1
+  }
+}

@@ -7,6 +7,7 @@ author: security-team
 tags: [compliance, dora, ict-risk, resilience, audit, financial]
 supersedes: []
 related_requirements: [DORA-001, DORA-002, DORA-003, DORA-004, DORA-005, DORA-006, M-003, S-001, NIS2-003, NIS2-005]
+governs: [docs/compliance/dora.md, ansible/]
 ---
 
 # ADR-0011 — Adopt EU DORA Compliance Framework
