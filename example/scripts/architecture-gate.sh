@@ -34,6 +34,7 @@ ROOT="${SCRIPT_DIR}/.."
 
 BASE_BRANCH="${BASE_BRANCH:-main}"
 PR_BODY="${PR_BODY:-}"
+CHANGED_FILES="${CHANGED_FILES:-}"
 
 CATALOG="${ROOT}/docs/generated/architecture-catalog.json"
 GATE_INPUT="$(mktemp)"
@@ -58,7 +59,9 @@ fi
 echo "✅ catalog valid — $(jq -r '.scan.adr_count' "${CATALOG}") ADRs, $(jq -r '.scan.policy_count' "${CATALOG}") policies, $(jq -r '.scan.requirement_count' "${CATALOG}") requirements, 0 findings"
 
 # ── 3. Collect the change set (paths relative to example/) ────────────────────
-if git rev-parse --git-dir > /dev/null 2>&1; then
+if [ -n "${CHANGED_FILES}" ]; then
+  CHANGED="${CHANGED_FILES}"
+elif git rev-parse --git-dir > /dev/null 2>&1; then
   git fetch origin "${BASE_BRANCH}" --quiet 2>/dev/null || true
   if git rev-parse "origin/${BASE_BRANCH}" &>/dev/null; then
     CHANGED=$(git diff --name-only "origin/${BASE_BRANCH}" HEAD 2>/dev/null || true)

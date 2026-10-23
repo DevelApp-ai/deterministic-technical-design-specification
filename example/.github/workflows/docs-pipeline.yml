@@ -8,12 +8,14 @@
 #
 # Jobs:
 #   1. opa-tests      — unit-test all OPA/Rego policies (Terraform + Kubernetes)
-#   2. dsc-tests      — Pester unit tests for all DSC resources
-#   3. doc-coverage   — PR documentation coverage gate (ADR-0006)
-#   4. terraform      — validate Terraform + run OPA compliance gate
-#   5. docs-build     — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
-#   6. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
-#   7. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
+#   2. architecture   — ADR traceability kit (ADR-0012): catalog scan, validation,
+#                       end-to-end demo, traceability diagram staleness, PR gate
+#   3. dsc-tests      — Pester unit tests for all DSC resources
+#   4. doc-coverage   — PR documentation coverage gate (ADR-0006)
+#   5. terraform      — validate Terraform + run OPA compliance gate
+#   6. docs-build     — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
+#   7. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
+#   8. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
 
 name: Deterministic Documentation Pipeline
 
@@ -73,7 +75,47 @@ jobs:
           opa test example/policies/ -v
 
 # ---------------------------------------------------------------------------
-# Job 2 — DSC resource Pester unit tests
+# Job 2 — ADR traceability kit (ADR-0012): catalog validation, end-to-end
+# demo, diagram staleness check, and the PR boundary gate.
+# ---------------------------------------------------------------------------
+  architecture:
+    name: ADR Traceability Kit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install OPA
+        run: |
+          curl -fsSL \
+            "https://github.com/open-policy-agent/opa/releases/download/v${OPA_VERSION}/opa_linux_amd64_static" \
+            -o /usr/local/bin/opa
+          chmod +x /usr/local/bin/opa
+          opa version
+
+      - name: End-to-end traceability demo
+        run: |
+          OPA=opa bash example/scripts/architecture-demo.sh
+
+      - name: Generated architecture artefacts are committed and current
+        run: |
+          git diff --exit-code \
+            example/docs/generated/architecture-catalog.json \
+            example/docs/generated/traceability.drawio
+
+      - name: ADR boundary gate (pull requests only)
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_BRANCH: ${{ github.base_ref }}
+        run: |
+          bash example/scripts/architecture-gate.sh
+
+# ---------------------------------------------------------------------------
+# Job 3 — DSC resource Pester unit tests
 # ---------------------------------------------------------------------------
   dsc-tests:
     name: DSC Resource Pester Tests
@@ -116,7 +158,7 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 3 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
+# Job 4 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
 # Runs on PRs only; skipped on direct pushes to main.
 # ---------------------------------------------------------------------------
   doc-coverage:
@@ -137,7 +179,7 @@ jobs:
             bash example/scripts/check-doc-coverage.sh
 
 # ---------------------------------------------------------------------------
-# Job 4 — Terraform validate + OPA compliance gate
+# Job 5 — Terraform validate + OPA compliance gate
 # ---------------------------------------------------------------------------
   terraform:
     name: Terraform Validate & OPA Gate
@@ -255,7 +297,7 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 5 — Documentation build
+# Job 6 — Documentation build
 # ---------------------------------------------------------------------------
   docs-build:
     name: Build Documentation Site
@@ -350,7 +392,7 @@ jobs:
           path: example/site/
 
 # ---------------------------------------------------------------------------
-# Job 6 — Publish to GitHub Pages (main branch only)
+# Job 7 — Publish to GitHub Pages (main branch only)
 # ---------------------------------------------------------------------------
   docs-publish:
     name: Publish to GitHub Pages
@@ -368,7 +410,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
 # ---------------------------------------------------------------------------
-# Job 7 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
+# Job 8 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
 # ---------------------------------------------------------------------------
   release:
     name: Semantic Release
