@@ -7,6 +7,7 @@ author: platform-team
 tags: [architecture, diagrams, mermaid, c4, documentation-as-code]
 supersedes: []
 related_requirements: [M-005, A-001, A-002, A-003]
+governs: [docs/architecture/]
 ---
 
 # ADR-0005 — Use Mermaid Embedded in Markdown for Architecture Diagrams

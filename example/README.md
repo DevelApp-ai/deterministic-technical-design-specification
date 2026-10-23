@@ -119,6 +119,26 @@ messages are surfaced as job output.
 
 ---
 
+## ADR Traceability Kit (ADR-0012)
+
+The repository's architecture decisions are machine-readable, traversable, and
+enforced at PR time:
+
+| Piece | Where | What it does |
+|-------|-------|--------------|
+| Catalog scanner | `scripts/scan-architecture.py` | Extracts ADR front-matter, policy metadocs, and MoSCoW requirement ids into `docs/generated/architecture-catalog.json` (deterministic, stdlib-only) |
+| Catalog validation | `policies/architecture/validate.rego` | 14 loud findings over the catalog — duplicate ids, cyclic/dangling supersedes, status/chain mismatches, ADRs without requirements or `governs` territory, policy metadoc defects |
+| Chain traversal | `policies/architecture/chain.rego` | `effective[id]` resolves the current ADR of any supersede chain (bounded 8-hop closure — Rego forbids recursion; the cap is loud, never silent) |
+| PR boundary gate | `policies/architecture/gate.rego` + `scripts/architecture-gate.sh` | Fails a PR that changes a governed path without citing the governing ADR (`ADR-####` in the PR description); redirects superseded links to the successor |
+| Diagram generator | `scripts/generate-traceability.py` | Regenerates `docs/generated/traceability.drawio` (book diagram conventions) byte-identically; CI fails if the committed diagram drifts |
+| End-to-end demo | `scripts/architecture-demo.sh` | Proves the done-when scenario with inverted expectations: blocked without a linked ADR, passes with one, superseded link redirected, diagram regen `cmp`-identical |
+
+Every ADR's front-matter declares a `governs:` list of the paths it protects —
+a change to any of them requires the ADR to be cited in the PR description.
+The `architecture` CI job runs the kit on every push and PR.
+
+---
+
 ## Directory Structure
 
 ```
@@ -188,8 +208,14 @@ example/
 ### Adding a new ADR
 
 1. Copy an existing ADR from `docs/adrs/` as a template.
-2. Increment the ADR number and update the front-matter metadata.
+2. Increment the ADR number and update the front-matter metadata, including
+   `governs:` — the paths the decision protects (required for Accepted ADRs;
+   `validate.rego` flags one without territory).
 3. Add the new file to the `nav` section of `mkdocs.yml`.
+4. Regenerate the artifacts and commit them:
+   `python3 scripts/scan-architecture.py && python3 scripts/generate-traceability.py`
+5. A PR touching a path in `governs:` must cite the ADR id (`ADR-####`) in
+   its description or the boundary gate fails it.
 
 ### Switching to real cloud infrastructure
 

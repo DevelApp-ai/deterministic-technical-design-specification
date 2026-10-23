@@ -1,0 +1,784 @@
+{
+  "adrs": [
+    {
+      "id": "ADR-0001",
+      "title": "Use Terraform as the Primary Infrastructure Provisioning Tool",
+      "status": "Accepted",
+      "date": "2024-01-15",
+      "author": "platform-team",
+      "tags": [
+        "iac",
+        "terraform",
+        "provisioning"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-001",
+        "M-004",
+        "M-006"
+      ],
+      "governs": [
+        "terraform/",
+        "Dockerfile",
+        "scripts/generate-docs.sh"
+      ],
+      "file": "docs/adrs/0001-use-terraform-for-iac.md"
+    },
+    {
+      "id": "ADR-0002",
+      "title": "Use Open Policy Agent (OPA) for Policy Enforcement",
+      "status": "Accepted",
+      "date": "2024-02-03",
+      "author": "security-team",
+      "tags": [
+        "policy",
+        "opa",
+        "rego",
+        "compliance",
+        "security"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-002",
+        "M-003",
+        "S-001",
+        "S-002"
+      ],
+      "governs": [
+        "policies/",
+        ".github/workflows/docs-pipeline.yml"
+      ],
+      "file": "docs/adrs/0002-use-opa-for-policy.md"
+    },
+    {
+      "id": "ADR-0003",
+      "title": "Use MkDocs with Material Theme as the Documentation Publishing Platform",
+      "status": "Accepted",
+      "date": "2024-02-20",
+      "author": "platform-team",
+      "tags": [
+        "docs",
+        "mkdocs",
+        "material",
+        "publishing"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-004",
+        "M-005",
+        "S-004",
+        "S-005"
+      ],
+      "governs": [
+        "mkdocs.yml",
+        "docs/",
+        "scripts/"
+      ],
+      "file": "docs/adrs/0003-use-mkdocs-for-publishing.md"
+    },
+    {
+      "id": "ADR-0004",
+      "title": "Use PowerShell DSC for Windows Configuration Management",
+      "status": "Accepted",
+      "date": "2024-03-15",
+      "author": "platform-team",
+      "tags": [
+        "dsc",
+        "powershell",
+        "windows",
+        "configuration-management",
+        "documentation-as-code"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-005",
+        "S-008",
+        "S-009"
+      ],
+      "governs": [
+        "dsc/"
+      ],
+      "file": "docs/adrs/0004-use-dsc-for-windows-config.md"
+    },
+    {
+      "id": "ADR-0005",
+      "title": "Use Mermaid Embedded in Markdown for Architecture Diagrams",
+      "status": "Accepted",
+      "date": "2024-03-20",
+      "author": "platform-team",
+      "tags": [
+        "architecture",
+        "diagrams",
+        "mermaid",
+        "c4",
+        "documentation-as-code"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-005",
+        "A-001",
+        "A-002",
+        "A-003"
+      ],
+      "governs": [
+        "docs/architecture/"
+      ],
+      "file": "docs/adrs/0005-architecture-documentation.md"
+    },
+    {
+      "id": "ADR-0006",
+      "title": "Enforce Documentation Coverage as a CI Gate",
+      "status": "Accepted",
+      "date": "2024-04-01",
+      "author": "platform-team",
+      "tags": [
+        "documentation-as-code",
+        "ci-gate",
+        "doc-review",
+        "quality"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "M-005",
+        "D-001",
+        "D-002"
+      ],
+      "governs": [
+        "scripts/check-doc-coverage.sh"
+      ],
+      "file": "docs/adrs/0006-enforce-doc-coverage-gate.md"
+    },
+    {
+      "id": "ADR-0007",
+      "title": "Adopt Semantic Versioning and Auto-generated Changelog",
+      "status": "Accepted",
+      "date": "2024-04-01",
+      "author": "platform-team",
+      "tags": [
+        "versioning",
+        "changelog",
+        "semantic-versioning",
+        "git-cliff",
+        "ci"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "V-001",
+        "V-002",
+        "V-003"
+      ],
+      "governs": [
+        "version.txt",
+        "cliff.toml"
+      ],
+      "file": "docs/adrs/0007-semantic-versioning-and-changelog.md"
+    },
+    {
+      "id": "ADR-0008",
+      "title": "Add Kubernetes Manifests and Helm Chart as IaC Examples",
+      "status": "Accepted",
+      "date": "2024-04-01",
+      "author": "platform-team",
+      "tags": [
+        "kubernetes",
+        "helm",
+        "iac",
+        "policy-as-code",
+        "opa",
+        "k8s"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "K-001",
+        "K-002",
+        "K-003",
+        "FIN-001"
+      ],
+      "governs": [
+        "kubernetes/",
+        "helm/"
+      ],
+      "file": "docs/adrs/0008-kubernetes-manifests-and-helm-chart.md"
+    },
+    {
+      "id": "ADR-0009",
+      "title": "Expose Backstage Catalog Data via Model Context Protocol (MCP)",
+      "status": "Accepted",
+      "date": "2024-04-01",
+      "author": "platform-team",
+      "tags": [
+        "backstage",
+        "mcp",
+        "ai-agents",
+        "catalog",
+        "model-context-protocol"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "AI-001",
+        "AI-002",
+        "AI-003"
+      ],
+      "governs": [
+        "catalog-info.yaml",
+        "backstage/",
+        ".vscode/"
+      ],
+      "file": "docs/adrs/0009-backstage-mcp-server.md"
+    },
+    {
+      "id": "ADR-0010",
+      "title": "Adopt NIS2 Compliance Framework for Security Controls Documentation",
+      "status": "Accepted",
+      "date": "2026-04-10",
+      "author": "security-team",
+      "tags": [
+        "compliance",
+        "nis2",
+        "security",
+        "policy",
+        "audit"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "NIS2-001",
+        "NIS2-002",
+        "NIS2-003",
+        "NIS2-004",
+        "NIS2-005",
+        "NIS2-006",
+        "M-003",
+        "S-001",
+        "CYB-002",
+        "CYB-003",
+        "CYB-004"
+      ],
+      "governs": [
+        "docs/compliance/nis2.md",
+        "docs/security/"
+      ],
+      "file": "docs/adrs/0010-nis2-compliance.md"
+    },
+    {
+      "id": "ADR-0011",
+      "title": "Adopt EU DORA (Digital Operational Resilience Act) Compliance Framework",
+      "status": "Accepted",
+      "date": "2026-04-10",
+      "author": "security-team",
+      "tags": [
+        "compliance",
+        "dora",
+        "ict-risk",
+        "resilience",
+        "audit",
+        "financial"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "DORA-001",
+        "DORA-002",
+        "DORA-003",
+        "DORA-004",
+        "DORA-005",
+        "DORA-006",
+        "M-003",
+        "S-001",
+        "NIS2-003",
+        "NIS2-005"
+      ],
+      "governs": [
+        "docs/compliance/dora.md",
+        "ansible/"
+      ],
+      "file": "docs/adrs/0011-dora-compliance.md"
+    },
+    {
+      "id": "ADR-0012",
+      "title": "Machine-Readable ADR Traceability Kit",
+      "status": "Accepted",
+      "date": "2026-10-23",
+      "author": "platform-team",
+      "tags": [
+        "adr",
+        "traceability",
+        "policy-as-code",
+        "ci-gate",
+        "drawio"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "S-006",
+        "M-005",
+        "D-001"
+      ],
+      "governs": [
+        "policies/architecture/",
+        "scripts/scan-architecture.py",
+        "scripts/generate-traceability.py",
+        "scripts/architecture-gate.sh",
+        "scripts/architecture-demo.sh",
+        "scripts/architecture-demo-fixtures/",
+        "docs/generated/architecture-catalog.json",
+        "docs/generated/traceability.drawio",
+        "docs/adrs/0012-machine-readable-adr-traceability.md"
+      ],
+      "file": "docs/adrs/0012-machine-readable-adr-traceability.md"
+    }
+  ],
+  "policies": [
+    {
+      "id": "ARCH-001",
+      "title": "ADR Catalog Validation",
+      "severity": "HIGH",
+      "package": "architecture.validate",
+      "related_adr": [
+        "ADR-0012"
+      ],
+      "related_requirements": [
+        "S-006",
+        "M-005",
+        "D-001"
+      ],
+      "file": "policies/architecture/validate.rego"
+    },
+    {
+      "id": "ARCH-002",
+      "title": "Supersede-Chain Traversal",
+      "severity": "HIGH",
+      "package": "architecture.chain",
+      "related_adr": [
+        "ADR-0012"
+      ],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "file": "policies/architecture/chain.rego"
+    },
+    {
+      "id": "ARCH-003",
+      "title": "Boundary Gate for Pull Requests",
+      "severity": "CRITICAL",
+      "package": "architecture.gate",
+      "related_adr": [
+        "ADR-0012"
+      ],
+      "related_requirements": [
+        "S-006",
+        "M-005",
+        "D-001"
+      ],
+      "file": "policies/architecture/gate.rego"
+    },
+    {
+      "id": "DORA-ICT-001",
+      "title": "DORA Chapter II — ICT Risk Management: Logging, Retention, and Backup",
+      "severity": "HIGH",
+      "package": "terraform.dora",
+      "related_adr": [
+        "ADR-0011",
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "DORA-002",
+        "DORA-003",
+        "M-003",
+        "S-001"
+      ],
+      "file": "policies/terraform/deny_dora_ict_risk.rego"
+    },
+    {
+      "id": "FINOPS-001",
+      "title": "Mandatory FinOps Cost-Allocation Tags",
+      "severity": "HIGH",
+      "package": "terraform.finops",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-002",
+        "M-003",
+        "S-001",
+        "S-002"
+      ],
+      "file": "policies/terraform/deny_missing_tags.rego"
+    },
+    {
+      "id": "K8S-001",
+      "title": "No Privileged Containers",
+      "severity": "CRITICAL",
+      "package": "kubernetes.security",
+      "related_adr": [
+        "ADR-0008"
+      ],
+      "related_requirements": [
+        "K-001",
+        "CYB-002"
+      ],
+      "file": "policies/kubernetes/deny_privileged_containers.rego"
+    },
+    {
+      "id": "K8S-002",
+      "title": "CPU and Memory Limits Required",
+      "severity": "HIGH",
+      "package": "kubernetes.resources",
+      "related_adr": [
+        "ADR-0008"
+      ],
+      "related_requirements": [
+        "K-002",
+        "FIN-001"
+      ],
+      "file": "policies/kubernetes/deny_missing_resource_limits.rego"
+    },
+    {
+      "id": "K8S-003",
+      "title": "Required FinOps Labels on All Workloads",
+      "severity": "HIGH",
+      "package": "kubernetes.finops",
+      "related_adr": [
+        "ADR-0008"
+      ],
+      "related_requirements": [
+        "K-003",
+        "FIN-001",
+        "M-002"
+      ],
+      "file": "policies/kubernetes/deny_missing_labels.rego"
+    },
+    {
+      "id": "K8S-004",
+      "title": "No Unpinned Container Image Tags",
+      "severity": "HIGH",
+      "package": "kubernetes.supply_chain",
+      "related_adr": [
+        "ADR-0010",
+        "ADR-0008"
+      ],
+      "related_requirements": [
+        "NIS2-007",
+        "K-001"
+      ],
+      "file": "policies/kubernetes/deny_unpinned_image_tag.rego"
+    },
+    {
+      "id": "NIS2-CRYPTO-001",
+      "title": "NIS2 Art.21(2)(h) — Cryptography and Key Management",
+      "severity": "HIGH",
+      "package": "terraform.nis2",
+      "related_adr": [
+        "ADR-0010",
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "NIS2-002",
+        "M-003",
+        "S-001"
+      ],
+      "file": "policies/terraform/deny_nis2_crypto.rego"
+    },
+    {
+      "id": "SC-001",
+      "title": "NIS2 Art.21(2)(d) — IaC Dependency Pinning",
+      "severity": "HIGH",
+      "package": "terraform.supply_chain",
+      "related_adr": [
+        "ADR-0010",
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "NIS2-007",
+        "M-003",
+        "S-001"
+      ],
+      "file": "policies/terraform/deny_nis2_supply_chain.rego"
+    },
+    {
+      "id": "SEC-001",
+      "title": "Storage Encryption Required",
+      "severity": "CRITICAL",
+      "package": "terraform.security",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001"
+      ],
+      "file": "policies/terraform/deny_unencrypted_storage.rego"
+    },
+    {
+      "id": "SEC-002",
+      "title": "Deny Publicly Exposed Resources",
+      "severity": "CRITICAL",
+      "package": "terraform.security",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001",
+        "CYB-002"
+      ],
+      "file": "policies/terraform/deny_public_access.rego"
+    },
+    {
+      "id": "SEC-003",
+      "title": "Deny Overly Permissive IAM",
+      "severity": "HIGH",
+      "package": "terraform.iam",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001",
+        "CYB-003"
+      ],
+      "file": "policies/terraform/deny_public_iam.rego"
+    },
+    {
+      "id": "SEC-004",
+      "title": "Deny Unrestricted Network Egress",
+      "severity": "HIGH",
+      "package": "terraform.network",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001",
+        "CYB-004"
+      ],
+      "file": "policies/terraform/deny_unrestricted_network.rego"
+    },
+    {
+      "id": "SEC-005",
+      "title": "HTTPS Enforcement — HTTP Must Redirect to HTTPS",
+      "severity": "HIGH",
+      "package": "terraform.https",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001",
+        "CYB-002"
+      ],
+      "file": "policies/terraform/deny_missing_https_redirect.rego"
+    },
+    {
+      "id": "SEC-006",
+      "title": "Prohibit Deprecated TLS Versions (TLS 1.0 / 1.1)",
+      "severity": "HIGH",
+      "package": "terraform.tls",
+      "related_adr": [
+        "ADR-0002"
+      ],
+      "related_requirements": [
+        "M-003",
+        "S-001",
+        "CYB-002"
+      ],
+      "file": "policies/terraform/deny_deprecated_tls.rego"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "A-001"
+    },
+    {
+      "id": "A-002"
+    },
+    {
+      "id": "A-003"
+    },
+    {
+      "id": "A-004"
+    },
+    {
+      "id": "AI-001"
+    },
+    {
+      "id": "AI-002"
+    },
+    {
+      "id": "AI-003"
+    },
+    {
+      "id": "C-001"
+    },
+    {
+      "id": "C-002"
+    },
+    {
+      "id": "C-003"
+    },
+    {
+      "id": "CYB-001"
+    },
+    {
+      "id": "CYB-002"
+    },
+    {
+      "id": "CYB-003"
+    },
+    {
+      "id": "CYB-004"
+    },
+    {
+      "id": "CYB-005"
+    },
+    {
+      "id": "D-001"
+    },
+    {
+      "id": "D-002"
+    },
+    {
+      "id": "DEV-001"
+    },
+    {
+      "id": "DEV-002"
+    },
+    {
+      "id": "DEV-003"
+    },
+    {
+      "id": "DORA-001"
+    },
+    {
+      "id": "DORA-002"
+    },
+    {
+      "id": "DORA-003"
+    },
+    {
+      "id": "DORA-004"
+    },
+    {
+      "id": "DORA-005"
+    },
+    {
+      "id": "DORA-006"
+    },
+    {
+      "id": "FIN-001"
+    },
+    {
+      "id": "FIN-002"
+    },
+    {
+      "id": "FIN-003"
+    },
+    {
+      "id": "K-001"
+    },
+    {
+      "id": "K-002"
+    },
+    {
+      "id": "K-003"
+    },
+    {
+      "id": "M-001"
+    },
+    {
+      "id": "M-002"
+    },
+    {
+      "id": "M-003"
+    },
+    {
+      "id": "M-004"
+    },
+    {
+      "id": "M-005"
+    },
+    {
+      "id": "M-006"
+    },
+    {
+      "id": "NIS2-001"
+    },
+    {
+      "id": "NIS2-002"
+    },
+    {
+      "id": "NIS2-003"
+    },
+    {
+      "id": "NIS2-004"
+    },
+    {
+      "id": "NIS2-005"
+    },
+    {
+      "id": "NIS2-006"
+    },
+    {
+      "id": "NIS2-007"
+    },
+    {
+      "id": "OPS-001"
+    },
+    {
+      "id": "OPS-002"
+    },
+    {
+      "id": "OPS-003"
+    },
+    {
+      "id": "S-001"
+    },
+    {
+      "id": "S-002"
+    },
+    {
+      "id": "S-003"
+    },
+    {
+      "id": "S-004"
+    },
+    {
+      "id": "S-005"
+    },
+    {
+      "id": "S-006"
+    },
+    {
+      "id": "S-007"
+    },
+    {
+      "id": "S-008"
+    },
+    {
+      "id": "S-009"
+    },
+    {
+      "id": "V-001"
+    },
+    {
+      "id": "V-002"
+    },
+    {
+      "id": "V-003"
+    },
+    {
+      "id": "W-001"
+    },
+    {
+      "id": "W-002"
+    },
+    {
+      "id": "W-003"
+    }
+  ],
+  "scan": {
+    "scanner": "scan-architecture.py",
+    "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
+    "adr_count": 12,
+    "policy_count": 17,
+    "requirement_count": 63
+  }
+}

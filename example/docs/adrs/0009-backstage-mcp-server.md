@@ -7,6 +7,7 @@ author: platform-team
 tags: [backstage, mcp, ai-agents, catalog, model-context-protocol]
 supersedes: []
 related_requirements: [AI-001, AI-002, AI-003]
+governs: [catalog-info.yaml, backstage/, .vscode/]
 ---
 
 # ADR-0009 — Expose Backstage Catalog Data via Model Context Protocol (MCP)

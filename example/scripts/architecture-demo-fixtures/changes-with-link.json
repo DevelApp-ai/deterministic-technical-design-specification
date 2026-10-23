@@ -1,0 +1,4 @@
+{
+  "changedPaths": ["terraform/main.tf"],
+  "adrLinks": ["ADR-0001"]
+}

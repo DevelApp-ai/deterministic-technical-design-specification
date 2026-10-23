@@ -7,6 +7,7 @@ author: platform-team
 tags: [dsc, powershell, windows, configuration-management, documentation-as-code]
 supersedes: []
 related_requirements: [M-005, S-008, S-009]
+governs: [dsc/]
 ---
 
 # ADR-0004 — Use PowerShell DSC for Windows Configuration Management

@@ -87,8 +87,10 @@ nav:
       - ADR-0009 Backstage MCP Server: adrs/0009-backstage-mcp-server.md
       - ADR-0010 NIS2 Compliance: adrs/0010-nis2-compliance.md
       - ADR-0011 DORA Compliance: adrs/0011-dora-compliance.md
+      - ADR-0012 ADR Traceability Kit: adrs/0012-machine-readable-adr-traceability.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
+      - Architecture Catalog (JSON): generated/architecture-catalog.json
   - Backstage:
       - Integration Guide: backstage/index.md
       - MCP Server (AI Agent Access): backstage/mcp.md

@@ -7,6 +7,7 @@ author: platform-team
 tags: [kubernetes, helm, iac, policy-as-code, opa, k8s]
 supersedes: []
 related_requirements: [K-001, K-002, K-003, FIN-001]
+governs: [kubernetes/, helm/]
 ---
 
 # ADR-0008 — Add Kubernetes Manifests and Helm Chart as IaC Examples
