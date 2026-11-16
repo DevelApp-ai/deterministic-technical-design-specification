@@ -10,6 +10,8 @@
 #   3. OPA policy evaluation — gate: non-zero violations abort the pipeline
 #   4. terraform-docs — update docs/generated/terraform-readme.md
 #   5. SpecTree AST generation — spectree-parse.py → docs/generated/spectree/
+#      + shared traceability metadata normalization (ADR-0019) →
+#        docs/generated/traceability/metadata-v1.json
 #   6. .NET build + DocFX + OpenAPI + C4 diagrams — API reference markdown,
 #      OpenAPI reference page, and C4 architecture diagrams
 #   7. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
@@ -135,6 +137,14 @@ if command -v python3 &> /dev/null; then
   python3 "${REPO_ROOT}/scripts/spectree-parse.py" --selftest
   python3 "${REPO_ROOT}/scripts/spectree-parse.py" --all
   success "SpecTree ASTs written to docs/generated/spectree/"
+
+  # Normalize every spec source family (MoSCoW tables, ADR front-matter,
+  # Rego metadocs, SpecTree ASTs) onto the shared metadata contract of
+  # ADR-0019, validated against
+  # spectree/schemas/traceability-metadata-v1.schema.json.
+  python3 "${REPO_ROOT}/scripts/normalize-traceability-metadata.py" --selftest
+  python3 "${REPO_ROOT}/scripts/normalize-traceability-metadata.py" --all
+  success "Normalized metadata written to docs/generated/traceability/metadata-v1.json"
 else
   warn "python3 not found — skipping SpecTree AST generation."
   warn "Install Python 3 to enable this step."

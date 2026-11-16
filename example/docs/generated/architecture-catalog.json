@@ -477,6 +477,35 @@
         "docs/generated/spectree/"
       ],
       "file": "docs/adrs/0018-spectree-specification-first-ingestion.md"
+    },
+    {
+      "id": "ADR-0019",
+      "title": "Use a Shared Traceability Metadata Contract for All Spec Sources",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "traceability",
+        "metadata",
+        "id-namespaces",
+        "json-schema",
+        "normalizer",
+        "specTree",
+        "determinism"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "governs": [
+        "spectree/schemas/",
+        "spectree/id-namespaces.json",
+        "scripts/normalize-traceability-metadata.py",
+        "docs/generated/traceability/",
+        "docs/traceability/metadata-contract.md"
+      ],
+      "file": "docs/adrs/0019-shared-traceability-metadata-contract.md"
     }
   ],
   "policies": [
@@ -955,7 +984,7 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 18,
+    "adr_count": 19,
     "policy_count": 17,
     "requirement_count": 71
   }
