@@ -120,12 +120,18 @@ jobs:
         run: |
           OPA=opa bash example/scripts/spectree-gate.sh
 
+      - name: TDS composition manifests are valid and current (ADR-0021)
+        run: |
+          python3 example/scripts/generate-tds-composition.py --selftest
+          python3 example/scripts/generate-tds-composition.py --all
+
       - name: Generated architecture artefacts are committed and current
         run: |
           git diff --exit-code \
             example/docs/generated/architecture-catalog.json \
             example/docs/generated/traceability.drawio \
-            example/docs/generated/traceability/metadata-v1.json
+            example/docs/generated/traceability/metadata-v1.json \
+            example/docs/generated/tds/
 
       - name: ADR boundary gate (pull requests only)
         if: github.event_name == 'pull_request'
@@ -497,6 +503,11 @@ jobs:
         run: |
           python3 example/scripts/normalize-traceability-metadata.py --selftest
           python3 example/scripts/normalize-traceability-metadata.py --all
+
+      - name: TDS composition report (ADR-0021)
+        run: |
+          python3 example/scripts/generate-tds-composition.py --selftest
+          python3 example/scripts/generate-tds-composition.py --all
 
       - name: Generate CHANGELOG (git-cliff)
         run: |

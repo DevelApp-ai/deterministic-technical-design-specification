@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tds-manifest-v1",
+  "title": "SpecTree TDS composition manifest (version 1)",
+  "description": "Parsed shape of a SpecTree .tds composition manifest (ADR-0021). The line grammar is the authoring format; this schema is the published contract for the parsed AST. Versioned independently of the vendored Minotaur-Grammars grammars.",
+  "type": "object",
+  "required": ["title", "solution", "version", "targets", "sections"],
+  "additionalProperties": false,
+  "properties": {
+    "title": {"type": "string", "minLength": 1},
+    "solution": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "description": "File name of the bound SolutionManifest under spectree/specs/."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of the composed TDS document."
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/Target"}
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/Section"}
+    }
+  },
+  "$defs": {
+    "Target": {
+      "type": "object",
+      "required": ["kind", "params"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": ["mkdocs", "techdocs", "standalone"],
+          "description": "Rendering target: mkdocs (nav anchor section), techdocs (Backstage TechDocs publisher), standalone (export directory)."
+        },
+        "params": {
+          "type": "object",
+          "description": "Target parameters, e.g. {\"nav\": \"Traceability\"} for mkdocs, {\"publisher\": \"docs\"} for techdocs, {\"path\": \"docs/generated/tds\"} for standalone."
+        }
+      }
+    },
+    "Section": {
+      "type": "object",
+      "required": ["title", "sources"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string", "minLength": 1},
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["pattern", "generated"],
+            "additionalProperties": false,
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Glob or path relative to the pipeline root (example/)."
+              },
+              "generated": {
+                "type": "boolean",
+                "description": "True for pipeline-generated artefacts declared with the (generated) qualifier: never blob-bound in the composition report; their integrity derives from the deterministic build that produces them from blob-bound sources (ADR-0013/0015)."
+              }
+            }
+          }
+        },
+        "selectors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[^#]+#[A-Za-z][A-Za-z0-9_-]*$",
+            "description": "AST node selector: <artefact path>#<node type>."
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "summarize wont requirements",
+              "appendix superseded adrs",
+              "exclude deprecated adrs",
+              "detail public api",
+              "exclude test projects"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

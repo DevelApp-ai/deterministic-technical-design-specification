@@ -106,9 +106,11 @@ nav:
       - ADR-0018 SpecTree Specification-First Ingestion: adrs/0018-spectree-specification-first-ingestion.md
       - ADR-0019 Shared Traceability Metadata Contract: adrs/0019-shared-traceability-metadata-contract.md
       - ADR-0020 SpecTree Validation Gate: adrs/0020-spectree-validation-gate.md
+      - ADR-0021 TDS Composition Manifest Grammar: adrs/0021-tds-composition-manifest-grammar.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
       - Metadata Contract: traceability/metadata-contract.md
+      - TDS Composition: traceability/tds-composition.md
       - Architecture Catalog (JSON): generated/architecture-catalog.json
   - Backstage:
       - Integration Guide: backstage/index.md

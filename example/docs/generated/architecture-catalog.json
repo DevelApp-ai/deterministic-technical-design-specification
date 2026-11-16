@@ -532,6 +532,36 @@
         "scripts/spectree-gate.sh"
       ],
       "file": "docs/adrs/0020-spectree-validation-gate.md"
+    },
+    {
+      "id": "ADR-0021",
+      "title": "SpecTree Line Grammar for the TDS Composition Manifest",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "spectree",
+        "tds",
+        "composition",
+        "grammar",
+        "determinism",
+        "mkdocs",
+        "techdocs",
+        "git-blob-sha"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "governs": [
+        "spectree/tds/",
+        "spectree/schemas/tds-manifest-v1.schema.json",
+        "scripts/generate-tds-composition.py",
+        "docs/generated/tds/",
+        "docs/traceability/tds-composition.md"
+      ],
+      "file": "docs/adrs/0021-tds-composition-manifest-grammar.md"
     }
   ],
   "policies": [
@@ -1024,7 +1054,7 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 20,
+    "adr_count": 21,
     "policy_count": 18,
     "requirement_count": 71
   }

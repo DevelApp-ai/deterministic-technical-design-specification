@@ -12,6 +12,8 @@
 #   5. SpecTree AST generation — spectree-parse.py → docs/generated/spectree/
 #      + shared traceability metadata normalization (ADR-0019) →
 #        docs/generated/traceability/metadata-v1.json
+#      + TDS composition manifests (ADR-0021) — generate-tds-composition.py →
+#        docs/generated/tds/*.composition.json (sources bound to git blob SHAs)
 #   6. .NET build + DocFX + OpenAPI + C4 diagrams — API reference markdown,
 #      OpenAPI reference page, and C4 architecture diagrams
 #   7. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
@@ -155,6 +157,13 @@ if command -v python3 &> /dev/null; then
     warn "opa not found — skipping the SpecTree validation gate."
     warn "Install OPA to enable this step."
   fi
+
+  # TDS composition manifests (ADR-0021): parse spectree/tds/*.tds and
+  # emit the drift-gated composition report binding every composed
+  # source to its git blob SHA.
+  python3 "${REPO_ROOT}/scripts/generate-tds-composition.py" --selftest
+  python3 "${REPO_ROOT}/scripts/generate-tds-composition.py" --all
+  success "TDS composition report written to docs/generated/tds/"
 else
   warn "python3 not found — skipping SpecTree AST generation."
   warn "Install Python 3 to enable this step."
