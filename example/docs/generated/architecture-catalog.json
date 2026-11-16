@@ -639,6 +639,29 @@
         "scripts/generate-drift-report.py"
       ],
       "file": "docs/adrs/0024-infrastructure-drift-detection.md"
+    },
+    {
+      "id": "ADR-0025",
+      "title": "AI as Consumer, Not Producer of TDS Content",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "ai",
+        "llm",
+        "mcp",
+        "determinism",
+        "traceability",
+        "documentation-governance"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "AI-004"
+      ],
+      "governs": [
+        "docs/architecture/ai-boundary.md"
+      ],
+      "file": "docs/adrs/0025-ai-consumer-not-producer.md"
     }
   ],
   "policies": [
@@ -936,6 +959,9 @@
       "id": "AI-003"
     },
     {
+      "id": "AI-004"
+    },
+    {
       "id": "APP-001"
     },
     {
@@ -1134,8 +1160,8 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 24,
+    "adr_count": 25,
     "policy_count": 18,
-    "requirement_count": 72
+    "requirement_count": 73
   }
 }

@@ -52,7 +52,7 @@
           "files": [
             {
               "path": "docs/requirements/moscow.md",
-              "blob": "8f7f5e5d1189cbfcd6bd3b15bc1c067c045a36ff"
+              "blob": "4895258dd22a0a06fcbac6c9d5cf711f9e1fae67"
             }
           ]
         }
@@ -70,6 +70,10 @@
           "pattern": "docs/architecture/*.md",
           "generated": false,
           "files": [
+            {
+              "path": "docs/architecture/ai-boundary.md",
+              "blob": "8401688476824262013577e7063f2b31ede4a7ab"
+            },
             {
               "path": "docs/architecture/index.md",
               "blob": "c377a292db03e65a1dacb121504a36938b41fa49"
@@ -389,6 +393,10 @@
             {
               "path": "docs/adrs/0024-infrastructure-drift-detection.md",
               "blob": "e95dda488119098166c99062198ae14032c41641"
+            },
+            {
+              "path": "docs/adrs/0025-ai-consumer-not-producer.md",
+              "blob": "bd0a073156e407e30015dd15adbb2d627b68cb96"
             }
           ]
         }
@@ -397,7 +405,7 @@
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
           "nodeType": "adr",
-          "count": 24
+          "count": 25
         }
       ],
       "rules": [
@@ -432,7 +440,7 @@
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
           "nodeType": "requirement",
-          "count": 80
+          "count": 81
         },
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
@@ -456,7 +464,7 @@
             },
             {
               "path": "docs/backstage/mcp.md",
-              "blob": "5cfac542d2db740e4a9e772b42475f163e35043d"
+              "blob": "e61b783afe9deb12b8c03bca148f05f9f49557be"
             }
           ]
         }
@@ -527,7 +535,7 @@
   ],
   "totals": {
     "sources": 20,
-    "files": 58,
+    "files": 60,
     "generated": 3,
     "selectors": 5,
     "rules": 5
