@@ -103,8 +103,11 @@ nav:
       - ADR-0015 Native .NET OpenAPI Generation: adrs/0015-native-dotnet-openapi.md
       - ADR-0016 Roslyn Code-Quality Gate: adrs/0016-roslyn-code-quality-gate.md
       - ADR-0017 C4Sharp Architecture Diagrams: adrs/0017-c4sharp-architecture-diagrams.md
+      - ADR-0018 SpecTree Specification-First Ingestion: adrs/0018-spectree-specification-first-ingestion.md
+      - ADR-0019 Shared Traceability Metadata Contract: adrs/0019-shared-traceability-metadata-contract.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
+      - Metadata Contract: traceability/metadata-contract.md
       - Architecture Catalog (JSON): generated/architecture-catalog.json
   - Backstage:
       - Integration Guide: backstage/index.md

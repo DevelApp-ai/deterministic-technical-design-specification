@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "contract": "traceability-metadata-v1",
+  "rules": [
+    "Every node id in the shared metadata envelope is namespace-qualified: '<namespace>:<id>'.",
+    "Ids are unique within a namespace; the normalizer fails loudly on duplicates.",
+    "Cross-format references are resolved by the referencing node's source family, documented per namespace below; unresolved references are recorded in the integrity section, never dropped silently.",
+    "Prefixes are allocated by the owner of the namespace's source format, recorded here; new prefixes require a registry update in the same pull request."
+  ],
+  "namespaces": [
+    {
+      "namespace": "moscow",
+      "nodeType": "requirement",
+      "source": "docs/requirements/moscow.md",
+      "idPattern": "^[A-Z]{1,6}[0-9]?-[0-9]{3}$",
+      "allocatedPrefixes": [
+        "A-",
+        "AI-",
+        "APP-",
+        "C-",
+        "CYB-",
+        "D-",
+        "DEV-",
+        "DORA-",
+        "FIN-",
+        "K-",
+        "M-",
+        "NIS2-",
+        "OPS-",
+        "S-",
+        "V-",
+        "W-"
+      ],
+      "referenceResolution": "Referenced by markdown ADR front-matter and OPA __rego__metadoc__ related_requirements fields.",
+      "notes": "The pipeline's own MoSCoW requirements; allocated in the moscow.md table by the requirements owner."
+    },
+    {
+      "namespace": "spec",
+      "nodeType": "requirement | component | test-suite | nfr | system",
+      "source": "spectree/specs/",
+      "idPattern": "grammar-defined per format (see spectree/grammars/)",
+      "allocatedPrefixes": [
+        "REQ-",
+        "M-",
+        "S-",
+        "C-",
+        "W-",
+        "PERF-",
+        "SCAL-",
+        "AVAIL-",
+        "SEC-",
+        "TEST-"
+      ],
+      "referenceResolution": "SpecTree specs reference each other: .ai requirementLinks and .test requirementCoverage resolve here; .ns adr fields resolve to the adr namespace; .ai adrReferences resolve to the adr namespace.",
+      "notes": "The SpecTree specification suite is a separate ID family from moscow: the .srs sample deliberately reuses M-/S- style prefixes. Namespace qualification (spec:M-001 vs moscow:M-001) is what makes the coexistence unambiguous; component ids are the .ai component names, test-suite ids are '<Component>.tests', nfr ids are the .ns entry ids."
+    },
+    {
+      "namespace": "adr",
+      "nodeType": "adr",
+      "source": "docs/adrs/*.md + spectree/specs/*.adr",
+      "idPattern": "^ADR-[0-9]{4}$",
+      "allocatedPrefixes": [
+        "ADR-"
+      ],
+      "referenceResolution": "Referenced by OPA metadoc related_adr, .ai adrReferences, .ns adr fields and ADR supersedes chains; markdown front-matter related_requirements resolve to moscow, spec-ADR related_requirements are preserved as evidence only.",
+      "notes": "A single decision has one node even if it exists as both a markdown ADR and an AdrSpec .adr file; the normalizer merges the sources."
+    },
+    {
+      "namespace": "policy",
+      "nodeType": "policy",
+      "source": "policies/**/*.rego (__rego__metadoc__)",
+      "idPattern": "^(?:ARCH|FINOPS|K8S|SC|SEC)-[0-9]{3}$ | ^(?:DORA-ICT|NIS2-CRYPTO)-[0-9]{3}$",
+      "allocatedPrefixes": [
+        "ARCH-",
+        "DORA-ICT-",
+        "FINOPS-",
+        "K8S-",
+        "NIS2-CRYPTO-",
+        "SC-",
+        "SEC-"
+      ],
+      "referenceResolution": "Policies reference moscow requirements (related_requirements) and adr decisions (related_adr).",
+      "notes": "OPA gate policies. The .NET architecture policy family (APP-ARCH-/APP-SEC-) is a future extension point documented in the metadata contract page."
+    }
+  ]
+}

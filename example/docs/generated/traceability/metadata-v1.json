@@ -1,0 +1,2812 @@
+{
+  "edges": [
+    {
+      "from": "adr:ADR-0001",
+      "to": "moscow:M-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0001",
+      "to": "moscow:M-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0001",
+      "to": "moscow:M-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0002",
+      "to": "moscow:M-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0002",
+      "to": "moscow:M-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0002",
+      "to": "moscow:S-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0002",
+      "to": "moscow:S-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0003",
+      "to": "moscow:M-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0003",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0003",
+      "to": "moscow:S-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0003",
+      "to": "moscow:S-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0004",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0004",
+      "to": "moscow:S-008",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0004",
+      "to": "moscow:S-009",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0005",
+      "to": "moscow:A-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0005",
+      "to": "moscow:A-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0005",
+      "to": "moscow:A-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0005",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0006",
+      "to": "moscow:D-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0006",
+      "to": "moscow:D-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0006",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0007",
+      "to": "moscow:V-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0007",
+      "to": "moscow:V-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0007",
+      "to": "moscow:V-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0008",
+      "to": "moscow:FIN-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0008",
+      "to": "moscow:K-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0008",
+      "to": "moscow:K-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0008",
+      "to": "moscow:K-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0009",
+      "to": "moscow:AI-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0009",
+      "to": "moscow:AI-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0009",
+      "to": "moscow:AI-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:CYB-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:CYB-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:CYB-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:M-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:NIS2-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0010",
+      "to": "moscow:S-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:DORA-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:M-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:NIS2-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:NIS2-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0011",
+      "to": "moscow:S-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0012",
+      "to": "moscow:D-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0012",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0012",
+      "to": "moscow:S-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0013",
+      "to": "moscow:APP-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0013",
+      "to": "moscow:M-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0014",
+      "to": "moscow:APP-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0014",
+      "to": "moscow:APP-007",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0014",
+      "to": "moscow:M-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0015",
+      "to": "moscow:APP-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0015",
+      "to": "moscow:APP-008",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0016",
+      "to": "moscow:APP-003",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0016",
+      "to": "moscow:APP-004",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0017",
+      "to": "moscow:APP-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0017",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0018",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0018",
+      "to": "moscow:S-006",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0019",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0019",
+      "to": "moscow:S-006",
+      "type": "references"
+    },
+    {
+      "from": "policy:ARCH-001",
+      "to": "adr:ADR-0012",
+      "type": "implements"
+    },
+    {
+      "from": "policy:ARCH-001",
+      "to": "moscow:D-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-001",
+      "to": "moscow:M-005",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-001",
+      "to": "moscow:S-006",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-002",
+      "to": "adr:ADR-0012",
+      "type": "implements"
+    },
+    {
+      "from": "policy:ARCH-002",
+      "to": "moscow:M-005",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-002",
+      "to": "moscow:S-006",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-003",
+      "to": "adr:ADR-0012",
+      "type": "implements"
+    },
+    {
+      "from": "policy:ARCH-003",
+      "to": "moscow:D-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-003",
+      "to": "moscow:M-005",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:ARCH-003",
+      "to": "moscow:S-006",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "adr:ADR-0011",
+      "type": "implements"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "moscow:DORA-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "moscow:DORA-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:DORA-ICT-001",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:FINOPS-001",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:FINOPS-001",
+      "to": "moscow:M-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:FINOPS-001",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:FINOPS-001",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:FINOPS-001",
+      "to": "moscow:S-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-001",
+      "to": "adr:ADR-0008",
+      "type": "implements"
+    },
+    {
+      "from": "policy:K8S-001",
+      "to": "moscow:CYB-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-001",
+      "to": "moscow:K-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-002",
+      "to": "adr:ADR-0008",
+      "type": "implements"
+    },
+    {
+      "from": "policy:K8S-002",
+      "to": "moscow:FIN-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-002",
+      "to": "moscow:K-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-003",
+      "to": "adr:ADR-0008",
+      "type": "implements"
+    },
+    {
+      "from": "policy:K8S-003",
+      "to": "moscow:FIN-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-003",
+      "to": "moscow:K-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-003",
+      "to": "moscow:M-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-004",
+      "to": "adr:ADR-0008",
+      "type": "implements"
+    },
+    {
+      "from": "policy:K8S-004",
+      "to": "adr:ADR-0010",
+      "type": "implements"
+    },
+    {
+      "from": "policy:K8S-004",
+      "to": "moscow:K-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:K8S-004",
+      "to": "moscow:NIS2-007",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:NIS2-CRYPTO-001",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:NIS2-CRYPTO-001",
+      "to": "adr:ADR-0010",
+      "type": "implements"
+    },
+    {
+      "from": "policy:NIS2-CRYPTO-001",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:NIS2-CRYPTO-001",
+      "to": "moscow:NIS2-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:NIS2-CRYPTO-001",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SC-001",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SC-001",
+      "to": "adr:ADR-0010",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SC-001",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SC-001",
+      "to": "moscow:NIS2-007",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SC-001",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-001",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-001",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-001",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-002",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-002",
+      "to": "moscow:CYB-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-002",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-002",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-003",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-003",
+      "to": "moscow:CYB-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-003",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-003",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-004",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-004",
+      "to": "moscow:CYB-004",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-004",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-004",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-005",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-005",
+      "to": "moscow:CYB-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-005",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-005",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-006",
+      "to": "adr:ADR-0002",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SEC-006",
+      "to": "moscow:CYB-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-006",
+      "to": "moscow:M-003",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SEC-006",
+      "to": "moscow:S-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "spec:TodoApi",
+      "to": "adr:ADR-0015",
+      "type": "implements"
+    },
+    {
+      "from": "spec:TodoApi",
+      "to": "spec:M-002",
+      "type": "satisfies"
+    },
+    {
+      "from": "spec:TodoService",
+      "to": "adr:ADR-0014",
+      "type": "implements"
+    },
+    {
+      "from": "spec:TodoService",
+      "to": "spec:M-001",
+      "type": "satisfies"
+    },
+    {
+      "from": "spec:TodoService.tests",
+      "to": "spec:M-001",
+      "type": "covers"
+    },
+    {
+      "from": "spec:TodoService.tests",
+      "to": "spec:REQ-2",
+      "type": "covers"
+    }
+  ],
+  "generated": {
+    "edgeCount": 145,
+    "namespaces": {
+      "adr": 19,
+      "moscow": 71,
+      "policy": 17,
+      "spec": 18
+    },
+    "nodeCount": 125,
+    "normalizer": "normalize-traceability-metadata.py",
+    "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
+  },
+  "integrity": {
+    "danglingEdges": [
+      {
+        "from": "spec:TodoService.tests",
+        "missing": "spec:REQ-2",
+        "to": "spec:REQ-2",
+        "type": "covers"
+      }
+    ],
+    "duplicateIds": []
+  },
+  "nodes": [
+    {
+      "author": "platform-team",
+      "date": "2024-01-15",
+      "evidence": [
+        "Dockerfile",
+        "scripts/generate-docs.sh",
+        "terraform/"
+      ],
+      "id": "adr:ADR-0001",
+      "relatedRequirements": [
+        "moscow:M-001",
+        "moscow:M-004",
+        "moscow:M-006"
+      ],
+      "source": "docs/adrs/0001-use-terraform-for-iac.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use Terraform as the Primary Infrastructure Provisioning Tool",
+      "type": "adr"
+    },
+    {
+      "author": "security-team",
+      "date": "2024-02-03",
+      "evidence": [
+        ".github/workflows/docs-pipeline.yml",
+        "policies/"
+      ],
+      "id": "adr:ADR-0002",
+      "relatedRequirements": [
+        "moscow:M-002",
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:S-002"
+      ],
+      "source": "docs/adrs/0002-use-opa-for-policy.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use Open Policy Agent (OPA) for Policy Enforcement",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-02-20",
+      "evidence": [
+        "docs/",
+        "mkdocs.yml",
+        "scripts/"
+      ],
+      "id": "adr:ADR-0003",
+      "relatedRequirements": [
+        "moscow:M-004",
+        "moscow:M-005",
+        "moscow:S-004",
+        "moscow:S-005"
+      ],
+      "source": "docs/adrs/0003-use-mkdocs-for-publishing.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use MkDocs with Material Theme as the Documentation Publishing Platform",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-03-15",
+      "evidence": [
+        "dsc/"
+      ],
+      "id": "adr:ADR-0004",
+      "relatedRequirements": [
+        "moscow:M-005",
+        "moscow:S-008",
+        "moscow:S-009"
+      ],
+      "source": "docs/adrs/0004-use-dsc-for-windows-config.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use PowerShell DSC for Windows Configuration Management",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-03-20",
+      "evidence": [
+        "docs/architecture/"
+      ],
+      "id": "adr:ADR-0005",
+      "relatedRequirements": [
+        "moscow:M-005",
+        "moscow:A-001",
+        "moscow:A-002",
+        "moscow:A-003"
+      ],
+      "source": "docs/adrs/0005-architecture-documentation.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use Mermaid Embedded in Markdown for Architecture Diagrams",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-04-01",
+      "evidence": [
+        "scripts/check-doc-coverage.sh"
+      ],
+      "id": "adr:ADR-0006",
+      "relatedRequirements": [
+        "moscow:M-005",
+        "moscow:D-001",
+        "moscow:D-002"
+      ],
+      "source": "docs/adrs/0006-enforce-doc-coverage-gate.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Enforce Documentation Coverage as a CI Gate",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-04-01",
+      "evidence": [
+        "cliff.toml",
+        "version.txt"
+      ],
+      "id": "adr:ADR-0007",
+      "relatedRequirements": [
+        "moscow:V-001",
+        "moscow:V-002",
+        "moscow:V-003"
+      ],
+      "source": "docs/adrs/0007-semantic-versioning-and-changelog.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Adopt Semantic Versioning and Auto-generated Changelog",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-04-01",
+      "evidence": [
+        "helm/",
+        "kubernetes/"
+      ],
+      "id": "adr:ADR-0008",
+      "relatedRequirements": [
+        "moscow:K-001",
+        "moscow:K-002",
+        "moscow:K-003",
+        "moscow:FIN-001"
+      ],
+      "source": "docs/adrs/0008-kubernetes-manifests-and-helm-chart.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Add Kubernetes Manifests and Helm Chart as IaC Examples",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2024-04-01",
+      "evidence": [
+        ".vscode/",
+        "backstage/",
+        "catalog-info.yaml"
+      ],
+      "id": "adr:ADR-0009",
+      "relatedRequirements": [
+        "moscow:AI-001",
+        "moscow:AI-002",
+        "moscow:AI-003"
+      ],
+      "source": "docs/adrs/0009-backstage-mcp-server.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Expose Backstage Catalog Data via Model Context Protocol (MCP)",
+      "type": "adr"
+    },
+    {
+      "author": "security-team",
+      "date": "2026-04-10",
+      "evidence": [
+        "docs/compliance/nis2.md",
+        "docs/security/"
+      ],
+      "id": "adr:ADR-0010",
+      "relatedRequirements": [
+        "moscow:NIS2-001",
+        "moscow:NIS2-002",
+        "moscow:NIS2-003",
+        "moscow:NIS2-004",
+        "moscow:NIS2-005",
+        "moscow:NIS2-006",
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-002",
+        "moscow:CYB-003",
+        "moscow:CYB-004"
+      ],
+      "source": "docs/adrs/0010-nis2-compliance.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Adopt NIS2 Compliance Framework for Security Controls Documentation",
+      "type": "adr"
+    },
+    {
+      "author": "security-team",
+      "date": "2026-04-10",
+      "evidence": [
+        "ansible/",
+        "docs/compliance/dora.md"
+      ],
+      "id": "adr:ADR-0011",
+      "relatedRequirements": [
+        "moscow:DORA-001",
+        "moscow:DORA-002",
+        "moscow:DORA-003",
+        "moscow:DORA-004",
+        "moscow:DORA-005",
+        "moscow:DORA-006",
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:NIS2-003",
+        "moscow:NIS2-005"
+      ],
+      "source": "docs/adrs/0011-dora-compliance.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Adopt EU DORA (Digital Operational Resilience Act) Compliance Framework",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-10-23",
+      "evidence": [
+        "docs/adrs/0012-machine-readable-adr-traceability.md",
+        "docs/generated/architecture-catalog.json",
+        "docs/generated/traceability.drawio",
+        "policies/architecture/",
+        "scripts/architecture-demo-fixtures/",
+        "scripts/architecture-demo.sh",
+        "scripts/architecture-gate.sh",
+        "scripts/generate-traceability.py",
+        "scripts/scan-architecture.py"
+      ],
+      "id": "adr:ADR-0012",
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005",
+        "moscow:D-001"
+      ],
+      "source": "docs/adrs/0012-machine-readable-adr-traceability.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Machine-Readable ADR Traceability Kit",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/generated/dotnet-api/",
+        "dotnet/docs/",
+        "dotnet/dotnet-tools.json"
+      ],
+      "id": "adr:ADR-0013",
+      "relatedRequirements": [
+        "moscow:APP-001",
+        "moscow:M-004"
+      ],
+      "source": "docs/adrs/0013-docfx-dotnet-api-reference.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use DocFX for .NET API Reference Generation",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/application/architecture-policies.md",
+        "dotnet/tests/MyApp.ArchitectureTests/",
+        "scripts/generate-dotnet-policy-docs.py"
+      ],
+      "id": "adr:ADR-0014",
+      "relatedRequirements": [
+        "moscow:APP-002",
+        "moscow:APP-007",
+        "moscow:M-003"
+      ],
+      "source": "docs/adrs/0014-netarchtest-architecture-policies.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use NetArchTest for .NET Architecture Policy Enforcement",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/application/api-reference.md",
+        "docs/generated/openapi.json",
+        "dotnet/src/MyApp.Api/MyApp.Api.csproj",
+        "scripts/generate-openapi-docs.py"
+      ],
+      "id": "adr:ADR-0015",
+      "relatedRequirements": [
+        "moscow:APP-005",
+        "moscow:APP-008"
+      ],
+      "source": "docs/adrs/0015-native-dotnet-openapi.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use Native .NET OpenAPI Generation for the API Contract",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "dotnet/.editorconfig",
+        "dotnet/Directory.Build.props"
+      ],
+      "id": "adr:ADR-0016",
+      "relatedRequirements": [
+        "moscow:APP-003",
+        "moscow:APP-004"
+      ],
+      "source": "docs/adrs/0016-roslyn-code-quality-gate.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use Roslyn Analyzers as the .NET Code-Quality Gate",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/application/architecture-diagrams.md",
+        "docs/generated/architecture/",
+        "dotnet/tools/MyApp.Architecture.Diagrams/",
+        "scripts/generate-c4-diagram-docs.py"
+      ],
+      "id": "adr:ADR-0017",
+      "relatedRequirements": [
+        "moscow:APP-006",
+        "moscow:M-005"
+      ],
+      "source": "docs/adrs/0017-c4sharp-architecture-diagrams.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use C4Sharp for C4 Architecture Diagrams from .NET Code",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/generated/spectree/",
+        "scripts/spectree-parse.py",
+        "spectree-adr related requirement: M-003",
+        "spectree-adr related requirement: S-001",
+        "spectree-adr status: accepted",
+        "spectree/"
+      ],
+      "id": "adr:ADR-0018",
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "source": "docs/adrs/0018-spectree-specification-first-ingestion.md + spectree/specs/spectree-ingestion.adr",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use SpecTree Specification-First Ingestion for the Documentation Pipeline",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/generated/traceability/",
+        "docs/traceability/metadata-contract.md",
+        "scripts/normalize-traceability-metadata.py",
+        "spectree/id-namespaces.json",
+        "spectree/schemas/"
+      ],
+      "id": "adr:ADR-0019",
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "source": "docs/adrs/0019-shared-traceability-metadata-contract.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use a Shared Traceability Metadata Contract for All Spec Sources",
+      "type": "adr"
+    },
+    {
+      "category": "Should Have — Architects",
+      "evidence": [
+        "`docs/architecture/index.md`"
+      ],
+      "id": "moscow:A-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Architecture overview with C4 Context + Container + Component Mermaid diagrams",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Architects",
+      "evidence": [
+        "`docs/architecture/index.md`"
+      ],
+      "id": "moscow:A-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Technology radar table documenting every tool's adoption ring",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Architects",
+      "evidence": [
+        "`docs/architecture/index.md`"
+      ],
+      "id": "moscow:A-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Quality attribute scenarios (ISO 25010) linked to implementation artefacts",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Architects",
+      "evidence": [
+        "`docs/adrs/0005-architecture-documentation.md`"
+      ],
+      "id": "moscow:A-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Architecture decision recorded for diagram toolchain choice",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — AI & MCP Integration",
+      "evidence": [
+        "`backstage/mcp-clients/`, `.vscode/mcp.json`, ADR-0009"
+      ],
+      "id": "moscow:AI-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The Backstage catalog must be queryable by AI agents via a standardised MCP interface without custom per-model integration code",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — AI & MCP Integration",
+      "evidence": [
+        "`catalog-info.yaml` (7 entities)"
+      ],
+      "id": "moscow:AI-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The Backstage catalog must include at least one System, one API, one Group, one User, two Components, and two Resources so AI agents have a rich, traversable entity hierarchy to explore",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — AI & MCP Integration",
+      "evidence": [
+        "`.vscode/mcp.json`"
+      ],
+      "id": "moscow:AI-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "VS Code / GitHub Copilot MCP configuration must be committed to the repository so any developer cloning the repo gets AI catalog access immediately",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`dotnet/docs/docfx.json`, `dotnet/dotnet-tools.json`"
+      ],
+      "id": "moscow:APP-001",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": ".NET API documentation must be auto-generated by DocFX; no hand-written API reference is permitted",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`dotnet/tests/MyApp.ArchitectureTests/`, `.github/workflows/docs-pipeline.yml` — `dotnet-test` job"
+      ],
+      "id": "moscow:APP-002",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": ".NET architecture policy violations must block the CI/CD pipeline before the documentation build",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`dotnet/Directory.Build.props`, `dotnet/.editorconfig`"
+      ],
+      "id": "moscow:APP-003",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "All .NET projects must enforce code-quality rules via Roslyn analyzers with `TreatWarningsAsErrors`",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`dotnet/global.json`, `dotnet/Directory.Build.props` (`Deterministic`, `ContinuousIntegrationBuild`)"
+      ],
+      "id": "moscow:APP-004",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "The .NET application must have a deterministic, reproducible build",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Application Layer (.NET)",
+      "evidence": [
+        "`dotnet/src/MyApp.Api/` (`Microsoft.AspNetCore.OpenApi`), `scripts/generate-openapi-docs.py`"
+      ],
+      "id": "moscow:APP-005",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The OpenAPI document must be generated at build time by the native ASP.NET Core toolchain (no Swashbuckle runtime reflection) and rendered in the TDS",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Application Layer (.NET)",
+      "evidence": [
+        "`dotnet/tools/MyApp.Architecture.Diagrams/`, `scripts/generate-c4-diagram-docs.py`"
+      ],
+      "id": "moscow:APP-006",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Architecture diagrams must be generated from code via C4Sharp — the C4 model as code, rendered to Mermaid",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Application Layer (.NET)",
+      "evidence": [
+        "`dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs`, `scripts/generate-dotnet-policy-docs.py`"
+      ],
+      "id": "moscow:APP-007",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": ".NET architecture policies must include self-describing metadata (`Policy.Define`) so compliance reports are human-readable",
+      "type": "requirement"
+    },
+    {
+      "category": "Could Have",
+      "evidence": [
+        "Deferred — revisit when a consumer needs a typed client"
+      ],
+      "id": "moscow:APP-008",
+      "moscow": "could",
+      "source": "docs/requirements/moscow.md",
+      "title": "Client SDK generation from the build-time OpenAPI document (NSwag)",
+      "type": "requirement"
+    },
+    {
+      "category": "Could Have",
+      "evidence": [
+        "Requires VS Code extension or standalone CLI"
+      ],
+      "id": "moscow:C-001",
+      "moscow": "could",
+      "source": "docs/requirements/moscow.md",
+      "title": "Auto-generate C4-model architecture diagrams from `.tfstate` using Infragram",
+      "type": "requirement"
+    },
+    {
+      "category": "Could Have",
+      "evidence": [
+        "Requires Grafana Cloud or self-hosted Grafana"
+      ],
+      "id": "moscow:C-002",
+      "moscow": "could",
+      "source": "docs/requirements/moscow.md",
+      "title": "Grafana SLO resources defined in Terraform (`grafana_slo`) to feed the observability chapter",
+      "type": "requirement"
+    },
+    {
+      "category": "Could Have",
+      "evidence": [
+        "Requires paid IriusRisk licence"
+      ],
+      "id": "moscow:C-003",
+      "moscow": "could",
+      "source": "docs/requirements/moscow.md",
+      "title": "Threat model auto-generated via IriusRisk API from Terraform templates",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Cybersecurity",
+      "evidence": [
+        "`docs/architecture/index.md`"
+      ],
+      "id": "moscow:CYB-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Architecture overview page with C4-style diagrams (C4Context, C4Container, C4Component) and technology radar",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Cybersecurity",
+      "evidence": [
+        "`policies/terraform/deny_public_access.rego`"
+      ],
+      "id": "moscow:CYB-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy must block publicly exposed resources (S3 public ACL, security group open to 0.0.0.0/0 on sensitive ports, Azure public blob)",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Cybersecurity",
+      "evidence": [
+        "`policies/terraform/deny_public_iam.rego`"
+      ],
+      "id": "moscow:CYB-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy must block overly permissive IAM (wildcard principals, wildcard actions on sensitive services)",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Cybersecurity",
+      "evidence": [
+        "`policies/terraform/deny_unrestricted_network.rego`"
+      ],
+      "id": "moscow:CYB-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy must block unrestricted network egress and non-RFC-1918 subnet CIDRs",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Cybersecurity",
+      "evidence": [
+        "`docs/security/index.md`"
+      ],
+      "id": "moscow:CYB-005",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Security controls matrix must map every OPA policy to CIS benchmark, NIST 800-53, and SOC 2 CC controls",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Documentation Governance",
+      "evidence": [
+        "`scripts/check-doc-coverage.sh`, `.github/workflows/docs-pipeline.yml` → `doc-coverage` job"
+      ],
+      "id": "moscow:D-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "A CI gate must fail the build when infrastructure or policy code is changed without a corresponding documentation update",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Documentation Governance",
+      "evidence": [
+        "`scripts/check-doc-coverage.sh`"
+      ],
+      "id": "moscow:D-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Documentation coverage rules must be version-controlled alongside the source code they govern",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Developer Experience",
+      "evidence": [
+        "`docs/onboarding/index.md`"
+      ],
+      "id": "moscow:DEV-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "A developer onboarding guide must enable a new team member to run the full local pipeline in under 15 minutes with no host tool installation",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Developer Experience",
+      "evidence": [
+        "`docs/versioning/index.md`"
+      ],
+      "id": "moscow:DEV-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Commit message format (Conventional Commits) must be documented alongside the versioning strategy",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Developer Experience",
+      "evidence": [
+        "`docs/onboarding/index.md`"
+      ],
+      "id": "moscow:DEV-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The repository map in the onboarding guide must be a Mermaid diagram generated from the actual directory structure",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.5–6",
+        "`docs/adrs/`, `docs/requirements/moscow.md`, `docs/compliance/dora.md`"
+      ],
+      "id": "moscow:DORA-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "An ICT risk management framework must exist and be version-controlled; every significant ICT risk-management decision must be recorded as an ADR traceable to requirements",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.9, Art.10",
+        "`policies/terraform/deny_dora_ict_risk.rego` (DORA-ICT-001)"
+      ],
+      "id": "moscow:DORA-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "CloudTrail audit trails must have log-file integrity validation enabled; OPA must block deployments without this setting",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.10, Art.12",
+        "`policies/terraform/deny_dora_ict_risk.rego` (DORA-ICT-001)"
+      ],
+      "id": "moscow:DORA-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "CloudWatch log groups must define an explicit non-zero retention period; S3 backup buckets must have versioning enabled",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.17–20",
+        "`docs/runbook/index.md`"
+      ],
+      "id": "moscow:DORA-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "ICT incident handling procedures must be documented, classified, and include DORA-compliant notification timelines (initial 4h, intermediate 72h, final 1 month)",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.24–25",
+        "`policies/terraform/*_test.rego` + `policies/kubernetes/*_test.rego` (90 OPA unit tests), `dsc/tests/*.Tests.ps1`"
+      ],
+      "id": "moscow:DORA-005",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "A digital operational resilience testing programme must exist; automated policy tests must maintain 100% rule coverage",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DORA Compliance (EU 2022/2554)",
+      "evidence": [
+        "Art.28–30",
+        "[W-001](../requirements/moscow.md#wont-have) — local provider demo; contractual provisions for real deployments"
+      ],
+      "id": "moscow:DORA-006",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "ICT third-party risk must be acknowledged; cloud provider relationships must be scoped in the requirements document",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — FinOps",
+      "evidence": [
+        "`docs/finops/index.md`"
+      ],
+      "id": "moscow:FIN-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "FinOps persona page must document tag policy, the OPA enforcement gate, and a resource cost-centre mapping table",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — FinOps",
+      "evidence": [
+        "`policies/kubernetes/deny_missing_labels.rego` (K8S-003)"
+      ],
+      "id": "moscow:FIN-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "All Kubernetes workloads must carry the same four cost-allocation labels enforced on Terraform resources",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — FinOps",
+      "evidence": [
+        "`docs/finops/index.md`"
+      ],
+      "id": "moscow:FIN-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "A cost-anomaly runbook section must document how to detect and remediate tag violations in CI and in production",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Kubernetes",
+      "evidence": [
+        "`kubernetes/`, `helm/`"
+      ],
+      "id": "moscow:K-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Kubernetes manifests must be provided as both raw YAML and a Helm chart",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Kubernetes",
+      "evidence": [
+        "`policies/kubernetes/deny_missing_resource_limits.rego` (K8S-002)"
+      ],
+      "id": "moscow:K-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy must block Kubernetes containers that do not declare CPU and memory limits",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Kubernetes",
+      "evidence": [
+        "`policies/kubernetes/deny_privileged_containers.rego` (K8S-001)"
+      ],
+      "id": "moscow:K-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy must block Kubernetes containers that run as privileged or allow privilege escalation",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`terraform/main.tf`"
+      ],
+      "id": "moscow:M-001",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "Infrastructure must be defined as code (Terraform HCL)",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`policies/terraform/deny_missing_tags.rego`"
+      ],
+      "id": "moscow:M-002",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "Every resource must carry the four mandatory FinOps cost-allocation tags (`environment`, `app_name`, `owner`, `cost_center`)",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`.github/workflows/docs-pipeline.yml` — OPA gate step"
+      ],
+      "id": "moscow:M-003",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy violations must block the CI/CD pipeline before `terraform apply`",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`scripts/generate-docs.sh`"
+      ],
+      "id": "moscow:M-004",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "Terraform documentation must be auto-generated by `terraform-docs`; no hand-written input/output tables are permitted",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`docs/adrs/0001-*.md`, `docs/adrs/0002-*.md`, `docs/adrs/0003-*.md`"
+      ],
+      "id": "moscow:M-005",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "All significant architectural decisions must be recorded as ADRs in `docs/adrs/`",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "`Dockerfile`"
+      ],
+      "id": "moscow:M-006",
+      "moscow": "must",
+      "source": "docs/requirements/moscow.md",
+      "title": "The complete documentation site must be buildable from a single Docker image with no host dependencies",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(a)",
+        "`docs/requirements/moscow.md`, `docs/adrs/`, `docs/compliance/nis2.md`"
+      ],
+      "id": "moscow:NIS2-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Evidence of security risk analysis and information system security policies must be version-controlled and traceable to implementation artefacts",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(h)",
+        "`policies/terraform/deny_unencrypted_storage.rego` (SEC-001), `policies/terraform/deny_deprecated_tls.rego` (SEC-006), `policies/terraform/deny_nis2_crypto.rego` (NIS2-CRYPTO-001)"
+      ],
+      "id": "moscow:NIS2-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Cryptography policy must prohibit weak algorithms and require key rotation; enforcement must be automated in the CI/CD pipeline",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(c)",
+        "`terraform/storage.tf` (backup bucket + replication), `terraform/monitoring.tf` (backup alarms), `docs/runbook/index.md`"
+      ],
+      "id": "moscow:NIS2-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Business continuity, backup and disaster-recovery capability must be documented and its configuration managed as code",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(i)",
+        "`policies/terraform/deny_public_iam.rego` (SEC-003), `terraform/iam.tf`"
+      ],
+      "id": "moscow:NIS2-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Access control must enforce least-privilege; no wildcard IAM principals or actions on sensitive services",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(b)",
+        "`docs/runbook/index.md`"
+      ],
+      "id": "moscow:NIS2-005",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Incident handling procedures must be documented, including detection, response, and recovery steps",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(f)",
+        "`policies/terraform/*_test.rego` (63 OPA unit tests), `scripts/check-doc-coverage.sh`, `.github/workflows/docs-pipeline.yml`"
+      ],
+      "id": "moscow:NIS2-006",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The effectiveness of all security risk-management measures must be measurable and regularly assessed; automated test coverage must be maintained",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — NIS2 Compliance (EU 2022/2555)",
+      "evidence": [
+        "Art.21(2)(d)",
+        "`policies/terraform/deny_nis2_supply_chain.rego` (SC-001), `policies/kubernetes/deny_unpinned_image_tag.rego` (K8S-004)"
+      ],
+      "id": "moscow:NIS2-007",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Supply chain security must be enforced in CI/CD: Terraform providers and modules must be pinned to immutable, verified versions; container images must not use mutable tags (`:latest` or untagged)",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DevOps Operational",
+      "evidence": [
+        "`docs/runbook/index.md`"
+      ],
+      "id": "moscow:OPS-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Operational runbook with incident response flowchart and escalation matrix",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DevOps Operational",
+      "evidence": [
+        "`terraform/network.tf`, `docs/network/index.md`"
+      ],
+      "id": "moscow:OPS-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Network topology documented as code with subnet allocation, NSG rules, and DNS records",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DevOps Operational",
+      "evidence": [
+        "`terraform/network.tf` → `docs/generated/network-topology.md`"
+      ],
+      "id": "moscow:OPS-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Network topology auto-generated as Markdown during `terraform plan`",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`policies/terraform/*.rego`"
+      ],
+      "id": "moscow:S-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policies must include self-describing `__rego__metadoc__` blocks so compliance reports are human-readable",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`policies/terraform/*_test.rego`"
+      ],
+      "id": "moscow:S-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "OPA policy unit tests must achieve 100 % rule coverage",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`ansible/playbook.yml`, `ansible/templates/host-report.md.j2`"
+      ],
+      "id": "moscow:S-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Ansible playbook must use `setup` module to gather live host facts and render them via Jinja2 templates",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`mkdocs.yml` nav section"
+      ],
+      "id": "moscow:S-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "MkDocs site must include a searchable ADR index and a compliance chapter",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`.github/workflows/docs-pipeline.yml` — deploy step"
+      ],
+      "id": "moscow:S-005",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The CI/CD pipeline must publish the MkDocs site to GitHub Pages on every merge to `main`",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`__rego__metadoc__` `related_adr`/`related_requirements` fields; ADR front-matter; `docs/traceability/index.md`"
+      ],
+      "id": "moscow:S-006",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Full traceability chain (OPA policy → ADR → MoSCoW requirement) must be machine-readable and rendered as diagrams",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`catalog-info.yaml`, `backstage/app-config.yaml`, `Dockerfile.backstage`"
+      ],
+      "id": "moscow:S-007",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Backstage `catalog-info.yaml` must be present so the component is discoverable in any Backstage developer portal",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`dsc/resources/DTDS_FileContent/`, `dsc/build.ps1`, `docs/generated/dsc-resources.md`"
+      ],
+      "id": "moscow:S-008",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "PowerShell DSC resources must be implemented as class-based modules with comment-based help, and documentation auto-generated by `DscResource.DocGenerator`",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "`dsc/tests/DTDS_FileContent.Tests.ps1`"
+      ],
+      "id": "moscow:S-009",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "DSC resource unit tests must validate Get/Test/Set idempotency contract using Pester 5",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Versioning & Changelog",
+      "evidence": [
+        "`version.txt`"
+      ],
+      "id": "moscow:V-001",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The repository must use a single source-of-truth version file (`version.txt`) read by CI, Docker builds, and the MkDocs footer",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Versioning & Changelog",
+      "evidence": [
+        "`.github/workflows/docs-pipeline.yml` → `release` job"
+      ],
+      "id": "moscow:V-002",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The CI pipeline must tag git commits with `v<version>` on every version bump and create a corresponding GitHub Release",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — Versioning & Changelog",
+      "evidence": [
+        "`cliff.toml`, `.github/workflows/docs-pipeline.yml` → `release` job"
+      ],
+      "id": "moscow:V-003",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "A machine-generated `CHANGELOG.md` must be produced from conventional-commit history using `git-cliff`; no hand-written release notes are permitted",
+      "type": "requirement"
+    },
+    {
+      "category": "Won't Have (in this iteration)",
+      "evidence": [
+        "This example uses the `local` provider to avoid credential management"
+      ],
+      "id": "moscow:W-001",
+      "moscow": "wont",
+      "source": "docs/requirements/moscow.md",
+      "title": "Real cloud resource provisioning (AWS, Azure, GCP)",
+      "type": "requirement"
+    },
+    {
+      "category": "Won't Have (in this iteration)",
+      "evidence": [
+        "Single-team scope; revisit when Backstage is adopted (C-002)"
+      ],
+      "id": "moscow:W-002",
+      "moscow": "wont",
+      "source": "docs/requirements/moscow.md",
+      "title": "Multi-tenancy or RBAC for the developer portal",
+      "type": "requirement"
+    },
+    {
+      "category": "Won't Have (in this iteration)",
+      "evidence": [
+        "Example uses static inventory; live targets require SSH access"
+      ],
+      "id": "moscow:W-003",
+      "moscow": "wont",
+      "source": "docs/requirements/moscow.md",
+      "title": "Runtime configuration management via Ansible against live hosts",
+      "type": "requirement"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:ARCH-001",
+      "package": "architecture.validate",
+      "relatedAdr": [
+        "adr:ADR-0012"
+      ],
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005",
+        "moscow:D-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/architecture/validate.rego",
+      "title": "ADR Catalog Validation",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:ARCH-002",
+      "package": "architecture.chain",
+      "relatedAdr": [
+        "adr:ADR-0012"
+      ],
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "severity": "HIGH",
+      "source": "policies/architecture/chain.rego",
+      "title": "Supersede-Chain Traversal",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:ARCH-003",
+      "package": "architecture.gate",
+      "relatedAdr": [
+        "adr:ADR-0012"
+      ],
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005",
+        "moscow:D-001"
+      ],
+      "severity": "CRITICAL",
+      "source": "policies/architecture/gate.rego",
+      "title": "Boundary Gate for Pull Requests",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9",
+            "Art.10",
+            "Art.12"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "AU-2",
+            "AU-9",
+            "CP-9",
+            "SI-12"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC7.2",
+            "A1.2"
+          ]
+        }
+      ],
+      "id": "policy:DORA-ICT-001",
+      "package": "terraform.dora",
+      "relatedAdr": [
+        "adr:ADR-0011",
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:DORA-002",
+        "moscow:DORA-003",
+        "moscow:M-003",
+        "moscow:S-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_dora_ict_risk.rego",
+      "title": "DORA Chapter II — ICT Risk Management: Logging, Retention, and Backup",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.8"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(i)"
+          ]
+        }
+      ],
+      "id": "policy:FINOPS-001",
+      "package": "terraform.finops",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-002",
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:S-002"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_missing_tags.rego",
+      "title": "Mandatory FinOps Cost-Allocation Tags",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:K8S-001",
+      "package": "kubernetes.security",
+      "relatedAdr": [
+        "adr:ADR-0008"
+      ],
+      "relatedRequirements": [
+        "moscow:K-001",
+        "moscow:CYB-002"
+      ],
+      "severity": "CRITICAL",
+      "source": "policies/kubernetes/deny_privileged_containers.rego",
+      "title": "No Privileged Containers",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:K8S-002",
+      "package": "kubernetes.resources",
+      "relatedAdr": [
+        "adr:ADR-0008"
+      ],
+      "relatedRequirements": [
+        "moscow:K-002",
+        "moscow:FIN-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/kubernetes/deny_missing_resource_limits.rego",
+      "title": "CPU and Memory Limits Required",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:K8S-003",
+      "package": "kubernetes.finops",
+      "relatedAdr": [
+        "adr:ADR-0008"
+      ],
+      "relatedRequirements": [
+        "moscow:K-003",
+        "moscow:FIN-001",
+        "moscow:M-002"
+      ],
+      "severity": "HIGH",
+      "source": "policies/kubernetes/deny_missing_labels.rego",
+      "title": "Required FinOps Labels on All Workloads",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(d)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SA-12",
+            "CM-11"
+          ]
+        }
+      ],
+      "id": "policy:K8S-004",
+      "package": "kubernetes.supply_chain",
+      "relatedAdr": [
+        "adr:ADR-0010",
+        "adr:ADR-0008"
+      ],
+      "relatedRequirements": [
+        "moscow:NIS2-007",
+        "moscow:K-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/kubernetes/deny_unpinned_image_tag.rego",
+      "title": "No Unpinned Container Image Tags",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "GDPR",
+          "refs": [
+            "Art.32"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(h)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SC-12",
+            "SC-28",
+            "SC-13"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.1",
+            "CC6.7"
+          ]
+        }
+      ],
+      "id": "policy:NIS2-CRYPTO-001",
+      "package": "terraform.nis2",
+      "relatedAdr": [
+        "adr:ADR-0010",
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:NIS2-002",
+        "moscow:M-003",
+        "moscow:S-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_nis2_crypto.rego",
+      "title": "NIS2 Art.21(2)(h) — Cryptography and Key Management",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(d)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SA-12",
+            "SA-15"
+          ]
+        }
+      ],
+      "id": "policy:SC-001",
+      "package": "terraform.supply_chain",
+      "relatedAdr": [
+        "adr:ADR-0010",
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:NIS2-007",
+        "moscow:M-003",
+        "moscow:S-001"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_nis2_supply_chain.rego",
+      "title": "NIS2 Art.21(2)(d) — IaC Dependency Pinning",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(h)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SC-28",
+            "CP-9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.1"
+          ]
+        }
+      ],
+      "id": "policy:SEC-001",
+      "package": "terraform.security",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001"
+      ],
+      "severity": "CRITICAL",
+      "source": "policies/terraform/deny_unencrypted_storage.rego",
+      "title": "Storage Encryption Required",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "CIS_AWS",
+          "refs": [
+            "2.1.2",
+            "5.2"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(e)",
+            "Art.21(2)(j)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "AC-3",
+            "SC-7"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.1",
+            "CC6.6"
+          ]
+        }
+      ],
+      "id": "policy:SEC-002",
+      "package": "terraform.security",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-002"
+      ],
+      "severity": "CRITICAL",
+      "source": "policies/terraform/deny_public_access.rego",
+      "title": "Deny Publicly Exposed Resources",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "CIS_AWS",
+          "refs": [
+            "1.16",
+            "1.22"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(i)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "AC-2",
+            "AC-6",
+            "IA-2"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.3"
+          ]
+        }
+      ],
+      "id": "policy:SEC-003",
+      "package": "terraform.iam",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-003"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_public_iam.rego",
+      "title": "Deny Overly Permissive IAM",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "CIS_AWS",
+          "refs": [
+            "5.3",
+            "5.4"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(e)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SC-7",
+            "CA-3"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.6",
+            "CC6.7"
+          ]
+        }
+      ],
+      "id": "policy:SEC-004",
+      "package": "terraform.network",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-004"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_unrestricted_network.rego",
+      "title": "Deny Unrestricted Network Egress",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "CIS_AWS",
+          "refs": [
+            "8.2"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(h)",
+            "Art.21(2)(j)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SC-8",
+            "SC-23"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.7"
+          ]
+        }
+      ],
+      "id": "policy:SEC-005",
+      "package": "terraform.https",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-002"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_missing_https_redirect.rego",
+      "title": "HTTPS Enforcement — HTTP Must Redirect to HTTPS",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [
+        {
+          "description": null,
+          "framework": "CIS_AWS",
+          "refs": [
+            "2.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "CIS_AZURE",
+          "refs": [
+            "9.3"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "DORA",
+          "refs": [
+            "Art.9"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIS2",
+          "refs": [
+            "Art.21(2)(h)"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "NIST_800_53",
+          "refs": [
+            "SC-8",
+            "SC-23",
+            "IA-7"
+          ]
+        },
+        {
+          "description": null,
+          "framework": "SOC2_CC",
+          "refs": [
+            "CC6.7",
+            "CC6.8"
+          ]
+        }
+      ],
+      "id": "policy:SEC-006",
+      "package": "terraform.tls",
+      "relatedAdr": [
+        "adr:ADR-0002"
+      ],
+      "relatedRequirements": [
+        "moscow:M-003",
+        "moscow:S-001",
+        "moscow:CYB-002"
+      ],
+      "severity": "HIGH",
+      "source": "policies/terraform/deny_deprecated_tls.rego",
+      "title": "Prohibit Deprecated TLS Versions (TLS 1.0 / 1.1)",
+      "type": "policy"
+    },
+    {
+      "category": "Could Have",
+      "evidence": [
+        "docs/application/code-quality.md"
+      ],
+      "id": "spec:C-001",
+      "moscow": "could",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Render API reference documentation from compiled assemblies",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "dotnet/src/MyApp.Application/TodoService.cs",
+        "dotnet/src/MyApp.Domain/TodoItem.cs"
+      ],
+      "id": "spec:M-001",
+      "moscow": "must",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Store todo items with a title and a completion flag",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "dotnet/src/MyApp.Api/Controllers/TodosController.cs"
+      ],
+      "id": "spec:M-002",
+      "moscow": "must",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Expose todo items over a REST API",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs"
+      ],
+      "id": "spec:M-003",
+      "moscow": "must",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Enforce layering so that controllers never depend on repository implementations",
+      "type": "requirement"
+    },
+    {
+      "category": "Must Have",
+      "evidence": [
+        "dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs"
+      ],
+      "id": "spec:M-004",
+      "moscow": "must",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Keep the domain layer free of infrastructure dependencies",
+      "type": "requirement"
+    },
+    {
+      "appliesTo": [
+        "solution"
+      ],
+      "compliesWith": [
+        {
+          "description": "the example pipeline links ADRs, requirements and artefacts as evidence",
+          "framework": "NIS2",
+          "refs": []
+        },
+        {
+          "description": "the example stores no personal data",
+          "framework": "GDPR",
+          "refs": []
+        }
+      ],
+      "id": "spec:MyApp",
+      "source": "spectree/specs/myapp.ns",
+      "title": "Non-functional requirements for MyApp",
+      "type": "system"
+    },
+    {
+      "bound": {
+        "comparator": "<=",
+        "unit": "ms",
+        "value": 200
+      },
+      "id": "spec:PERF-1",
+      "kind": "latency",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "p95 read latency for GET /api/todos",
+      "type": "nfr"
+    },
+    {
+      "bound": {
+        "comparator": "<=",
+        "unit": "MB",
+        "value": 512
+      },
+      "id": "spec:PERF-2",
+      "kind": "memory",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "steady-state working set",
+      "type": "nfr"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "dotnet/src/MyApp.Api/MyApp.Api.csproj"
+      ],
+      "id": "spec:S-001",
+      "moscow": "should",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Publish an OpenAPI document at build time",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have",
+      "evidence": [
+        "dotnet/src/MyApp.Application/TodoService.cs"
+      ],
+      "id": "spec:S-002",
+      "moscow": "should",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Guard public APIs against null arguments",
+      "type": "requirement"
+    },
+    {
+      "bound": {
+        "comparator": ">=",
+        "unit": "rps",
+        "value": 100
+      },
+      "id": "spec:SCAL-1",
+      "kind": "rps",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "minimum sustained request rate",
+      "type": "nfr"
+    },
+    {
+      "bound": {
+        "comparator": ">=",
+        "unit": "%",
+        "value": 99.9
+      },
+      "id": "spec:SCAL-2",
+      "kind": "uptime",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "example documentation site availability",
+      "type": "nfr"
+    },
+    {
+      "bound": {},
+      "id": "spec:SEC-1",
+      "kind": "security-classification",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "SEC-1 control: classification = internal",
+      "type": "nfr"
+    },
+    {
+      "bound": {},
+      "id": "spec:SEC-2",
+      "kind": "security-authz",
+      "relatedAdr": [],
+      "source": "spectree/specs/myapp.ns",
+      "title": "SEC-2 control: authz = TodoOwner",
+      "type": "nfr"
+    },
+    {
+      "dependencies": [
+        "TodoService"
+      ],
+      "evidence": [
+        "declared requirement (REQ-1): Route HTTP requests to the todo service without exposing domain entities",
+        "must requirement (implicit): respond with ProblemDetails on invalid input",
+        "should requirement (implicit): validate routes before delegating to the service"
+      ],
+      "id": "spec:TodoApi",
+      "namespace": "MyApp.Api.Controllers",
+      "relatedAdr": [
+        "adr:ADR-0015"
+      ],
+      "satisfies": [
+        "spec:M-002"
+      ],
+      "source": "spectree/specs/todoapi.ai",
+      "title": "REST controller component exposing todo item CRUD over HTTP",
+      "type": "component",
+      "version": "1.0.0"
+    },
+    {
+      "dependencies": [
+        "TodoRepository"
+      ],
+      "evidence": [
+        "declared requirement (REQ-2): Create, read, update and delete todo items through the repository abstraction",
+        "must requirement (implicit): guard against null requests"
+      ],
+      "id": "spec:TodoService",
+      "namespace": "MyApp.Application",
+      "relatedAdr": [
+        "adr:ADR-0014"
+      ],
+      "satisfies": [
+        "spec:M-001"
+      ],
+      "source": "spectree/specs/todoservice.ai",
+      "title": "Application service implementing the todo item use cases",
+      "type": "component",
+      "version": "1.0.0"
+    },
+    {
+      "covers": [
+        "spec:M-001",
+        "spec:REQ-2"
+      ],
+      "id": "spec:TodoService.tests",
+      "source": "spectree/specs/todoservice.test",
+      "target": "MyApp.Application.TodoService.cs",
+      "title": "Test specification for TodoService",
+      "type": "test-suite"
+    },
+    {
+      "category": "Won't Have",
+      "evidence": [],
+      "id": "spec:W-001",
+      "moscow": "wont",
+      "source": "spectree/specs/myapp.srs",
+      "title": "Multi-tenant user accounts are out of scope for the example pipeline",
+      "type": "requirement"
+    }
+  ],
+  "schema": "traceability-metadata",
+  "schemaVersion": 1
+}
