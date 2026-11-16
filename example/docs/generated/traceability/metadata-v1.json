@@ -361,6 +361,16 @@
       "type": "references"
     },
     {
+      "from": "adr:ADR-0021",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0021",
+      "to": "moscow:S-006",
+      "type": "references"
+    },
+    {
       "from": "policy:ARCH-001",
       "to": "adr:ADR-0012",
       "type": "implements"
@@ -752,14 +762,14 @@
     }
   ],
   "generated": {
-    "edgeCount": 150,
+    "edgeCount": 152,
     "namespaces": {
-      "adr": 20,
+      "adr": 21,
       "moscow": 71,
       "policy": 18,
       "spec": 18
     },
-    "nodeCount": 127,
+    "nodeCount": 128,
     "normalizer": "normalize-traceability-metadata.py",
     "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
   },
@@ -1185,6 +1195,27 @@
       "status": "Accepted",
       "supersedes": [],
       "title": "Use an OPA Validation Gate over the SpecTree Metadata Contract",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/generated/tds/",
+        "docs/traceability/tds-composition.md",
+        "scripts/generate-tds-composition.py",
+        "spectree/schemas/tds-manifest-v1.schema.json",
+        "spectree/tds/"
+      ],
+      "id": "adr:ADR-0021",
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "source": "docs/adrs/0021-tds-composition-manifest-grammar.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "SpecTree Line Grammar for the TDS Composition Manifest",
       "type": "adr"
     },
     {

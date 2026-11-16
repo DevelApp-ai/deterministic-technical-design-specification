@@ -1,0 +1,92 @@
+// TDS composition manifest — MyApp solution
+// ==========================================================================
+// SpecTree TDS composition manifest, grammar version 1 (ADR-0021).
+// Declares which sources assemble into the MyApp Technical Design
+// Specification, in which order, under which inclusion/exclusion rules, and
+// for which rendering targets.  Parsed by scripts/generate-tds-composition.py;
+// the parsed shape is published as
+// spectree/schemas/tds-manifest-v1.schema.json.
+//
+// Line grammar:
+//   // comment
+//   # TDS: <title>                      — required, exactly one
+//   ## Solution: <manifest-file-name>   — required; spectree/specs/<name>
+//   ## Version: <semver>                — required; TDS document version
+//   ## Target: <kind> (key: value, ...) — repeatable; kinds: mkdocs,
+//                                         techdocs, standalone
+//   ### Section: <title>                — repeatable, ordered, unique
+//   - Source: <glob>                    — repeatable; paths relative to
+//                                         the pipeline root (example/)
+//   - Source: <glob> (generated)        — pipeline-generated artefact;
+//                                         never blob-bound (its integrity
+//                                         derives from the deterministic
+//                                         build, ADR-0013/0015)
+//   - Selector: <artefact>#<node-type>  — AST node selector over a
+//                                         generated JSON artefact
+//   - Rule: <phrase>                    — inclusion/exclusion rule from
+//                                         the fixed vocabulary
+// ==========================================================================
+
+# TDS: MyApp Technical Design Specification
+## Solution: myapp.manifest
+## Version: 1.0.0
+
+## Target: mkdocs (nav: Traceability)
+## Target: techdocs (publisher: docs)
+## Target: standalone (path: docs/generated/tds)
+
+### Section: Home
+- Source: docs/index.md
+
+### Section: Requirements
+- Source: docs/requirements/*.md
+- Rule: summarize wont requirements
+
+### Section: Architecture
+- Source: docs/architecture/*.md
+- Selector: docs/generated/traceability/metadata-v1.json#component
+
+### Section: Infrastructure
+- Source: docs/infrastructure/*.md
+- Source: docs/network/*.md
+- Source: docs/kubernetes/*.md
+- Source: docs/configuration/*.md
+- Source: docs/dsc/*.md
+- Source: docs/generated/*.md
+
+### Section: Application
+- Source: docs/application/*.md
+- Source: docs/generated/dotnet-api/*.md (generated)
+- Source: docs/generated/openapi.json (generated)
+- Rule: detail public api
+- Rule: exclude test projects
+- Selector: docs/generated/traceability/metadata-v1.json#test-suite
+
+### Section: Compliance
+- Source: docs/compliance/*.md
+- Source: docs/security/*.md
+
+### Section: FinOps
+- Source: docs/finops/*.md
+
+### Section: Architecture Decisions
+- Source: docs/adrs/*.md
+- Rule: appendix superseded adrs
+- Rule: exclude deprecated adrs
+- Selector: docs/generated/traceability/metadata-v1.json#adr
+
+### Section: Traceability
+- Source: docs/traceability/*.md
+- Selector: docs/generated/traceability/metadata-v1.json#requirement
+- Selector: docs/generated/traceability/metadata-v1.json#policy
+
+### Section: Backstage
+- Source: docs/backstage/*.md
+
+### Section: Operations
+- Source: docs/runbook/*.md
+
+### Section: Developer Guide
+- Source: docs/onboarding/*.md
+- Source: docs/doc-review/*.md
+- Source: docs/versioning/*.md

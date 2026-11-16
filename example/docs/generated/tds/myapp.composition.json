@@ -1,0 +1,522 @@
+{
+  "schema": "tds-composition-v1",
+  "manifest": "spectree/tds/myapp.tds",
+  "solution": "myapp.manifest",
+  "version": "1.0.0",
+  "targets": [
+    {
+      "kind": "mkdocs",
+      "params": {
+        "nav": "Traceability"
+      }
+    },
+    {
+      "kind": "techdocs",
+      "params": {
+        "publisher": "docs"
+      }
+    },
+    {
+      "kind": "standalone",
+      "params": {
+        "path": "docs/generated/tds"
+      }
+    }
+  ],
+  "sections": [
+    {
+      "title": "Home",
+      "order": 1,
+      "sources": [
+        {
+          "pattern": "docs/index.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/index.md",
+              "blob": "23eaad951ef759ff1e6eb5d2874649f0e09c85cb"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "Requirements",
+      "order": 2,
+      "sources": [
+        {
+          "pattern": "docs/requirements/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/requirements/moscow.md",
+              "blob": "2d58eac24fa8af3b9135594645325a0210e82d39"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": [
+        "summarize wont requirements"
+      ]
+    },
+    {
+      "title": "Architecture",
+      "order": 3,
+      "sources": [
+        {
+          "pattern": "docs/architecture/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/architecture/index.md",
+              "blob": "c377a292db03e65a1dacb121504a36938b41fa49"
+            }
+          ]
+        }
+      ],
+      "selectors": [
+        {
+          "artifact": "docs/generated/traceability/metadata-v1.json",
+          "nodeType": "component",
+          "count": 2
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Infrastructure",
+      "order": 4,
+      "sources": [
+        {
+          "pattern": "docs/infrastructure/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/infrastructure/terraform.md",
+              "blob": "fa050130f404df1be746375dbb291e513b196aec"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/network/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/network/index.md",
+              "blob": "2602d2459290f4aee922ce0f11d540d3ee784cda"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/kubernetes/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/kubernetes/index.md",
+              "blob": "601174545be733b110c0e9e6ff0f81aeafb9ae45"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/configuration/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/configuration/ansible.md",
+              "blob": "69271acce3c9dc66bbcd55f664e987e542a31b04"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/dsc/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/dsc/index.md",
+              "blob": "d60bcb4de5e876b6aaeccdee740812f97475490b"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/generated/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/generated/compute-summary.md",
+              "blob": "c3bd4869e957fab99be82df7a5f05b5660d61777"
+            },
+            {
+              "path": "docs/generated/dsc-resources.md",
+              "blob": "d480ca046a422033d9a8aa70606204e4dfd24804"
+            },
+            {
+              "path": "docs/generated/kms-summary.md",
+              "blob": "9b0274a9a1aeb55e014693563228bd411543f9d4"
+            },
+            {
+              "path": "docs/generated/logging-summary.md",
+              "blob": "d06892c1e9557bc25b702e8f503c88e015fc586a"
+            },
+            {
+              "path": "docs/generated/network-topology.md",
+              "blob": "8976ee827b8c6d11d6fbd9b557161fd2dc6d7911"
+            },
+            {
+              "path": "docs/generated/terraform-readme.md",
+              "blob": "bdf4455f785ff7692cdc92a32c6760afcb8561f4"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "Application",
+      "order": 5,
+      "sources": [
+        {
+          "pattern": "docs/application/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/application/api-reference.md",
+              "blob": "35038a6c71e93a1bf32ab60b2dc529bf9bca3756"
+            },
+            {
+              "path": "docs/application/architecture-diagrams.md",
+              "blob": "0c9888b609cc73bf84ffce13c827e074c6dccbbf"
+            },
+            {
+              "path": "docs/application/architecture-policies.md",
+              "blob": "cbaf3e9753e023a9e4ff9494733c9c3a059c4792"
+            },
+            {
+              "path": "docs/application/code-quality.md",
+              "blob": "8e39582d0ec434444e161f95f42794fab167c1fb"
+            },
+            {
+              "path": "docs/application/index.md",
+              "blob": "457ed35694149d292802f9354b1e8eaca6054fbc"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/generated/dotnet-api/*.md",
+          "generated": true,
+          "files": []
+        },
+        {
+          "pattern": "docs/generated/openapi.json",
+          "generated": true,
+          "files": []
+        }
+      ],
+      "selectors": [
+        {
+          "artifact": "docs/generated/traceability/metadata-v1.json",
+          "nodeType": "test-suite",
+          "count": 1
+        }
+      ],
+      "rules": [
+        "detail public api",
+        "exclude test projects"
+      ]
+    },
+    {
+      "title": "Compliance",
+      "order": 6,
+      "sources": [
+        {
+          "pattern": "docs/compliance/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/compliance/dora.md",
+              "blob": "ddec34f223506695dcc47becc97fd8c035a5140a"
+            },
+            {
+              "path": "docs/compliance/nis2.md",
+              "blob": "ab91e7a892f4ae72a7c56c3cb65a06e6497d7a71"
+            },
+            {
+              "path": "docs/compliance/opa-policies.md",
+              "blob": "877ab4904abdbb8b735dc7babd209e16837b5df6"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/security/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/security/index.md",
+              "blob": "6f2fd11670deab7538b635a574434b05645d8fe0"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "FinOps",
+      "order": 7,
+      "sources": [
+        {
+          "pattern": "docs/finops/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/finops/index.md",
+              "blob": "52ba1d64ea6054bca00845c292ceba235f731bc3"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "Architecture Decisions",
+      "order": 8,
+      "sources": [
+        {
+          "pattern": "docs/adrs/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/adrs/0001-use-terraform-for-iac.md",
+              "blob": "70c5c956cff39e8692c9ac0c6178eca03d2b3f5d"
+            },
+            {
+              "path": "docs/adrs/0002-use-opa-for-policy.md",
+              "blob": "8c15d68f8bae905c27340bfbbf8002b8efe61c6d"
+            },
+            {
+              "path": "docs/adrs/0003-use-mkdocs-for-publishing.md",
+              "blob": "fe8b80142952df7e1b3b5a8283070a7d76c1d1fb"
+            },
+            {
+              "path": "docs/adrs/0004-use-dsc-for-windows-config.md",
+              "blob": "c77ad473e236e275b70acc4117909f1331f2d467"
+            },
+            {
+              "path": "docs/adrs/0005-architecture-documentation.md",
+              "blob": "8f2a2faf4f33f830dcb1a681cdb571982ec1ec54"
+            },
+            {
+              "path": "docs/adrs/0006-enforce-doc-coverage-gate.md",
+              "blob": "7dcfbbfea1fd55040b6cd281d1e176666f5d4fed"
+            },
+            {
+              "path": "docs/adrs/0007-semantic-versioning-and-changelog.md",
+              "blob": "296704a53b9ab0547aab347663c379267ec3ef52"
+            },
+            {
+              "path": "docs/adrs/0008-kubernetes-manifests-and-helm-chart.md",
+              "blob": "6998eee5b658ca8a7c06b5ea071aea4f7cab2e9c"
+            },
+            {
+              "path": "docs/adrs/0009-backstage-mcp-server.md",
+              "blob": "7d33ba30865b5520b8f7a3a9693a9b2c970b7c4d"
+            },
+            {
+              "path": "docs/adrs/0010-nis2-compliance.md",
+              "blob": "687dd86fa243105454bada4f60694e66b409c8f4"
+            },
+            {
+              "path": "docs/adrs/0011-dora-compliance.md",
+              "blob": "f3ad359d9cbcf43a64fe13794fc7ceab1adb74c7"
+            },
+            {
+              "path": "docs/adrs/0012-machine-readable-adr-traceability.md",
+              "blob": "c5fcae34ee657b9483818e4d0c4c087449136b41"
+            },
+            {
+              "path": "docs/adrs/0013-docfx-dotnet-api-reference.md",
+              "blob": "3c986d5b6c5ef4114106118f7d6d0c1c2156726c"
+            },
+            {
+              "path": "docs/adrs/0014-netarchtest-architecture-policies.md",
+              "blob": "1790b66c501eb1a06ea489e5cbbd9fb108112266"
+            },
+            {
+              "path": "docs/adrs/0015-native-dotnet-openapi.md",
+              "blob": "f3244a5e72fd5b312645e3cc6656544b68364e42"
+            },
+            {
+              "path": "docs/adrs/0016-roslyn-code-quality-gate.md",
+              "blob": "9b824bc998003c8eab35f9b62a8cb39a07263391"
+            },
+            {
+              "path": "docs/adrs/0017-c4sharp-architecture-diagrams.md",
+              "blob": "2f36a93b4459c84126ea52b66d8bce14b7caba60"
+            },
+            {
+              "path": "docs/adrs/0018-spectree-specification-first-ingestion.md",
+              "blob": "24578335f0870a2d48fa8bcc33ec4f300e51876b"
+            },
+            {
+              "path": "docs/adrs/0019-shared-traceability-metadata-contract.md",
+              "blob": "bcf26d82a460b5228dba4355e1904a486d10eadd"
+            },
+            {
+              "path": "docs/adrs/0020-spectree-validation-gate.md",
+              "blob": "05aac3f82de409fcb943fa9fd2f948801d408da3"
+            },
+            {
+              "path": "docs/adrs/0021-tds-composition-manifest-grammar.md",
+              "blob": "ded74fe90815f4a8e2bf61656439e0d47499d575"
+            }
+          ]
+        }
+      ],
+      "selectors": [
+        {
+          "artifact": "docs/generated/traceability/metadata-v1.json",
+          "nodeType": "adr",
+          "count": 21
+        }
+      ],
+      "rules": [
+        "appendix superseded adrs",
+        "exclude deprecated adrs"
+      ]
+    },
+    {
+      "title": "Traceability",
+      "order": 9,
+      "sources": [
+        {
+          "pattern": "docs/traceability/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/traceability/index.md",
+              "blob": "65f5895dfe0548352041102fad64b9259c394a94"
+            },
+            {
+              "path": "docs/traceability/metadata-contract.md",
+              "blob": "f5a63c9486fcae54faeabdf123af5e16f874dc8b"
+            },
+            {
+              "path": "docs/traceability/tds-composition.md",
+              "blob": "c3835704c1e68a3208f8446b75a02b53bbe33f43"
+            }
+          ]
+        }
+      ],
+      "selectors": [
+        {
+          "artifact": "docs/generated/traceability/metadata-v1.json",
+          "nodeType": "requirement",
+          "count": 79
+        },
+        {
+          "artifact": "docs/generated/traceability/metadata-v1.json",
+          "nodeType": "policy",
+          "count": 18
+        }
+      ],
+      "rules": []
+    },
+    {
+      "title": "Backstage",
+      "order": 10,
+      "sources": [
+        {
+          "pattern": "docs/backstage/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/backstage/index.md",
+              "blob": "d97a0d0b34584bb347413e8c8fcd71a0c8612559"
+            },
+            {
+              "path": "docs/backstage/mcp.md",
+              "blob": "5cfac542d2db740e4a9e772b42475f163e35043d"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "Operations",
+      "order": 11,
+      "sources": [
+        {
+          "pattern": "docs/runbook/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/runbook/index.md",
+              "blob": "48c4e4587fa7d0bcc8d7e71024c30565c2d134a4"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    },
+    {
+      "title": "Developer Guide",
+      "order": 12,
+      "sources": [
+        {
+          "pattern": "docs/onboarding/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/onboarding/index.md",
+              "blob": "f13f9bf04909a37a98b1857497a9f463a98cb803"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/doc-review/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/doc-review/index.md",
+              "blob": "b9ab7b04132d4f4fd98573df6bd293f90e917c29"
+            }
+          ]
+        },
+        {
+          "pattern": "docs/versioning/*.md",
+          "generated": false,
+          "files": [
+            {
+              "path": "docs/versioning/CHANGELOG.md",
+              "blob": "84d03e30933e9555f799e356943cdaccc90ebf72"
+            },
+            {
+              "path": "docs/versioning/index.md",
+              "blob": "6190b4a4739195f52aff2008f6197b080a8f5601"
+            }
+          ]
+        }
+      ],
+      "selectors": [],
+      "rules": []
+    }
+  ],
+  "totals": {
+    "sources": 20,
+    "files": 55,
+    "generated": 2,
+    "selectors": 5,
+    "rules": 5
+  },
+  "integrity": {
+    "missingSources": [],
+    "invalidTargets": []
+  }
+}
