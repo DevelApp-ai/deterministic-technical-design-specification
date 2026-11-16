@@ -48,6 +48,7 @@ public sealed class TodoService
     /// <exception cref="ArgumentException">Thrown when the request title is empty.</exception>
     public TodoDto Create(CreateTodoRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
         var item = MyApp.Domain.TodoItem.Create(request.Title);
         _repository.Add(item);
         return ToDto(item);

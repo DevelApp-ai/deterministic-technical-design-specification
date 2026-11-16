@@ -1,8 +1,14 @@
 # .editorconfig — root for the example .NET application layer.
-# Code-quality analyzer severities are configured in a follow-up issue
-# (Roslyn analyzers static-analysis gate); this file establishes the
-# repository's baseline style rules so the build behaves identically
-# on every machine.
+#
+# Style baseline + the Roslyn analyzers severity gate:
+#   - Security-critical rules are escalated to `error` (fail the build).
+#   - Code-quality rules stay at `warning` (fail the build via
+#     TreatWarningsAsErrors) and style preferences at `suggestion`.
+#
+# Analyzer packages (referenced in Directory.Build.props):
+#   Microsoft.CodeAnalysis.NetAnalyzers, Roslynator.Analyzers,
+#   SonarAnalyzer.CSharp. The full enforced-rule catalogue is documented in
+#   docs/application/code-quality.md.
 
 root = true
 
@@ -15,6 +21,49 @@ trim_trailing_whitespace = true
 [*.cs]
 indent_style = space
 indent_size = 4
+
+# ── Security-critical rules — build-failing errors ──────────────────────────
+# Microsoft.CodeAnalysis.NetAnalyzers security review rules
+dotnet_diagnostic.CA3001.severity = error  # Review SQL queries for security vulnerabilities
+dotnet_diagnostic.CA3002.severity = error  # Review code for DoS vulnerabilities
+dotnet_diagnostic.CA3003.severity = error  # Review code for path traversal vulnerabilities
+dotnet_diagnostic.CA3006.severity = error  # Review code for process command injection
+dotnet_diagnostic.CA3008.severity = error  # Review code for XSS vulnerabilities
+dotnet_diagnostic.CA3009.severity = error  # Review code for XML injection vulnerabilities
+dotnet_diagnostic.CA3011.severity = error  # Review code for XPath injection vulnerabilities
+dotnet_diagnostic.CA3075.severity = error  # Insecure DllImport / native code exposure
+dotnet_diagnostic.CA5359.severity = error  # Do not disable certificate validation
+dotnet_diagnostic.CA5364.severity = error  # Do not use deprecated security protocols
+
+# SonarAnalyzer.CSharp security rules
+dotnet_diagnostic.S2077.severity = error  # SQL injection
+dotnet_diagnostic.S2068.severity = error  # Hard-coded credentials
+dotnet_diagnostic.S2257.severity = error  # Hard-coded passwords in config/strings
+dotnet_diagnostic.S4830.severity = error  # Server certificate validation disabled
+dotnet_diagnostic.S5332.severity = error  # Outdated TLS version
+dotnet_diagnostic.S5766.severity = error  # Auth cookie security misconfiguration
+
+# ── Code quality — warnings (fail build via TreatWarningsAsErrors) ─────────
+# Severity explicitly pinned so analyzer-package upgrades cannot silently
+# soften the gate.
+dotnet_diagnostic.CA1031.severity = warning # Do not catch general exceptions
+dotnet_diagnostic.CA1062.severity = warning # Validate arguments of public methods
+dotnet_diagnostic.CA1303.severity = warning # Pass IFormatProvider / use invariant
+dotnet_diagnostic.CA2000.severity = warning # Dispose objects before losing scope
+dotnet_diagnostic.S1066.severity = warning # Collapsible if statements (Sonar)
+dotnet_diagnostic.S109.severity    = warning # Magic numbers (Sonar)
+dotnet_diagnostic.RCS1062.severity = warning # Simplify logical negation (Roslynator)
+dotnet_diagnostic.RCS1032.severity = warning # Remove redundant parentheses
+dotnet_diagnostic.RCS1124.severity = warning # Inline local variable
+
+# ── Style preferences — suggestions (IDE/editor experience) ───────────────
+dotnet_diagnostic.RCS1001.severity = suggestion  # Add braces (single-line)
+dotnet_diagnostic.RCS1214.severity = suggestion  # Unnecessary interpolated string
+dotnet_diagnostic.RCS1194.severity = suggestion  # Use exception parameter
+# S1135 (track uses of "TODO" markers) fires on the domain vocabulary of
+# this example app — "todo item" — not on task markers. Kept as a
+# suggestion so real TODO markers still surface without breaking builds.
+dotnet_diagnostic.S1135.severity = suggestion
 
 # .NET code style
 dotnet_sort_system_directives_first = true
