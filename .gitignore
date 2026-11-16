@@ -50,6 +50,12 @@ example/docs/generated/spectree/
 example/docs/generated/tds/dotnet-api/
 example/docs/generated/tds/dotnet-spec-mapping.json
 
+# Drift check (ADR-0024) — incident snapshots and backend secrets, never committed
+example/docs/generated/drift-report.md
+example/terraform/tfplan*
+example/terraform/backend-config.hcl
+example/terraform/plan.log
+
 # .NET build artefacts (example application layer)
 **/bin/
 **/obj/

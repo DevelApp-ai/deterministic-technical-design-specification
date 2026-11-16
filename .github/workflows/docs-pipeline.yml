@@ -23,6 +23,8 @@
 #                       (DocFX, OpenAPI, C4Sharp) + MkDocs site build
 #   9. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
 #  10. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
+#  11. drift-check    — infrastructure drift detection via terraform plan
+#                       -detailed-exitcode (nightly + manual dispatch, ADR-0024)
 
 name: Deterministic Documentation Pipeline
 
@@ -38,6 +40,11 @@ on:
       - "example/**" # includes example/dotnet/** (application layer)
       - ".github/workflows/docs-pipeline.yml"
   workflow_dispatch:
+  schedule:
+    # Nightly infrastructure drift detection (ADR-0024): runs the full
+    # deterministic pipeline plus the drift-check job against the remote
+    # state backend.
+    - cron: "0 3 * * *"
 
 # Allow the GITHUB_TOKEN to write to GitHub Pages
 permissions:
@@ -124,6 +131,10 @@ jobs:
         run: |
           python3 example/scripts/generate-tds-composition.py --selftest
           python3 example/scripts/generate-tds-composition.py --all
+
+      - name: Drift report renderer selftest (ADR-0024)
+        run: |
+          python3 example/scripts/generate-drift-report.py --selftest
 
       - name: Generated architecture artefacts are committed and current
         run: |
@@ -637,4 +648,98 @@ jobs:
           git commit -m "chore(release): update CHANGELOG for ${VERSION}" || true
           git tag -a "${VERSION}" -m "Release ${VERSION}"
           git push origin HEAD --tags
+
+# ---------------------------------------------------------------------------
+# Job 11 — Infrastructure drift check (nightly + manual dispatch, ADR-0024)
+#
+# Compares the deployed state (remote backend) against the configuration in
+# version control with `terraform plan -detailed-exitcode`.  Drift fails the
+# pipeline and renders a human-readable report (workflow artefact + run
+# summary) — the report is an incident snapshot and is never committed.
+# The example uses the `local` provider without a remote backend, so the
+# job skips gracefully until the TERRAFORM_BACKEND_CONFIG secret exists.
+# ---------------------------------------------------------------------------
+  drift-check:
+    name: Infrastructure Drift Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Detect remote state backend configuration (ADR-0024)
+        id: backend
+        env:
+          BACKEND_CONFIG: ${{ secrets.TERRAFORM_BACKEND_CONFIG }}
+        run: |
+          if [ -z "${BACKEND_CONFIG}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No TERRAFORM_BACKEND_CONFIG secret — the example uses the local provider without a remote state backend (ADR-0024), so there is no deployed state to compare against. Drift check skipped."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+            echo "Remote state backend configured — running drift detection."
+          fi
+
+      - name: Terraform Init (remote backend)
+        if: steps.backend.outputs.configured == 'true'
+        working-directory: example/terraform
+        env:
+          BACKEND_CONFIG: ${{ secrets.TERRAFORM_BACKEND_CONFIG }}
+        run: |
+          printf '%s' "${BACKEND_CONFIG}" > backend-config.hcl
+          terraform init -input=false -no-color -backend-config=backend-config.hcl
+
+      - name: Terraform Plan (drift detection, ADR-0024)
+        if: steps.backend.outputs.configured == 'true'
+        id: drift
+        working-directory: example/terraform
+        run: |
+          cp terraform.tfvars.example terraform.tfvars
+          set +e
+          terraform plan -detailed-exitcode -input=false -lock=false -no-color -out=tfplan > plan.log 2>&1
+          code=$?
+          set -e
+          echo "terraform plan exit code: ${code}"
+          if [ "${code}" -eq 0 ]; then
+            echo "::notice::No infrastructure drift — deployed state matches the configuration."
+            exit 0
+          fi
+          if [ "${code}" -eq 1 ]; then
+            echo "::error::terraform plan failed (exit 1) — the drift check could not evaluate the deployed state."
+            cat plan.log
+            exit 1
+          fi
+          if [ "${code}" -ne 2 ]; then
+            echo "::error::Unexpected terraform plan exit code ${code}."
+            cat plan.log
+            exit 1
+          fi
+          echo "::error::Infrastructure drift detected (terraform plan exit 2) — deployed state differs from the configuration."
+          echo "drift=true" >> "$GITHUB_OUTPUT"
+          terraform show -json tfplan > tfplan.json
+          python3 ../scripts/generate-drift-report.py \
+            --plan tfplan.json \
+            --output ../docs/generated/drift-report.md
+          cat ../docs/generated/drift-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload drift report artefact
+        if: steps.drift.outputs.drift == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: drift-report
+          path: example/docs/generated/drift-report.md
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Fail the pipeline on drift (ADR-0024)
+        if: steps.drift.outputs.drift == 'true'
+        run: |
+          echo "::error::Infrastructure drift blocks the pipeline — see the drift-report artefact and the run summary for the human-readable diff (ADR-0024)."
+          exit 1
 

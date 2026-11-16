@@ -84,6 +84,7 @@ if omitted from the current iteration.
 | OPS-001 | Operational runbook with incident response flowchart and escalation matrix | `docs/runbook/index.md` |
 | OPS-002 | Network topology documented as code with subnet allocation, NSG rules, and DNS records | `terraform/network.tf`, `docs/network/index.md` |
 | OPS-003 | Network topology auto-generated as Markdown during `terraform plan` | `terraform/network.tf` → `docs/generated/network-topology.md` |
+| OPS-004 | Infrastructure drift detection: scheduled `terraform plan -detailed-exitcode` comparison between deployed state and code, failing the pipeline with a human-readable diff | `scripts/generate-drift-report.py`, `drift-check` job in `.github/workflows/docs-pipeline.yml` |
 
 ---
 

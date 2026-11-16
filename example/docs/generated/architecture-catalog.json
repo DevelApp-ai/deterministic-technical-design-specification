@@ -616,6 +616,29 @@
         "spectree/specs/"
       ],
       "file": "docs/adrs/0023-spectree-ingestion-first-class-sources.md"
+    },
+    {
+      "id": "ADR-0024",
+      "title": "Infrastructure Drift Detection",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "drift",
+        "terraform",
+        "operations",
+        "ci",
+        "determinism",
+        "scheduled-pipeline"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "OPS-004"
+      ],
+      "governs": [
+        "scripts/generate-drift-report.py"
+      ],
+      "file": "docs/adrs/0024-infrastructure-drift-detection.md"
     }
   ],
   "policies": [
@@ -1060,6 +1083,9 @@
       "id": "OPS-003"
     },
     {
+      "id": "OPS-004"
+    },
+    {
       "id": "S-001"
     },
     {
@@ -1108,8 +1134,8 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 23,
+    "adr_count": 24,
     "policy_count": 18,
-    "requirement_count": 71
+    "requirement_count": 72
   }
 }

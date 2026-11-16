@@ -73,6 +73,9 @@
         <mxCell id="adr-ADR-0023" value="ADR-0023 — SpecTree Ingestion as First-Class TDS Sources" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="440" y="1140" width="320" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="adr-ADR-0024" value="ADR-0024 — Infrastructure Drift Detection" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1190" width="320" height="30" as="geometry" />
+        </mxCell>
         <mxCell id="impl-.github/workflows/docs-pipeline.yml" value=".github/workflows/docs-pipeline.yml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="40" width="320" height="30" as="geometry" />
         </mxCell>
@@ -226,50 +229,53 @@
         <mxCell id="impl-scripts/generate-dotnet-policy-docs.py" value="scripts/generate-dotnet-policy-docs.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2540" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/generate-openapi-docs.py" value="scripts/generate-openapi-docs.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/generate-drift-report.py" value="scripts/generate-drift-report.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2590" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/generate-tds-composition.py" value="scripts/generate-tds-composition.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/generate-openapi-docs.py" value="scripts/generate-openapi-docs.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2640" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/generate-traceability.py" value="scripts/generate-traceability.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/generate-tds-composition.py" value="scripts/generate-tds-composition.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2690" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/normalize-traceability-metadata.py" value="scripts/normalize-traceability-metadata.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/generate-traceability.py" value="scripts/generate-traceability.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2740" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/scan-architecture.py" value="scripts/scan-architecture.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/normalize-traceability-metadata.py" value="scripts/normalize-traceability-metadata.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2790" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/spectree-gate.sh" value="scripts/spectree-gate.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/scan-architecture.py" value="scripts/scan-architecture.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2840" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-scripts/spectree-parse.py" value="scripts/spectree-parse.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/spectree-gate.sh" value="scripts/spectree-gate.sh" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2890" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/" value="spectree/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-scripts/spectree-parse.py" value="scripts/spectree-parse.py" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2940" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/id-namespaces.json" value="spectree/id-namespaces.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/" value="spectree/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="2990" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/schemas/" value="spectree/schemas/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/id-namespaces.json" value="spectree/id-namespaces.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3040" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/schemas/tds-manifest-v1.schema.json" value="spectree/schemas/tds-manifest-v1.schema.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/schemas/" value="spectree/schemas/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3090" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/specs/" value="spectree/specs/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/schemas/tds-manifest-v1.schema.json" value="spectree/schemas/tds-manifest-v1.schema.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3140" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/tds/" value="spectree/tds/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/specs/" value="spectree/specs/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3190" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-terraform/" value="terraform/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/tds/" value="spectree/tds/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3240" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-version.txt" value="version.txt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-terraform/" value="terraform/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3290" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-version.txt" value="version.txt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="3340" width="320" height="30" as="geometry" />
         </mxCell>
         <mxCell id="pol-ARCH-001" value="ARCH-001 — ADR Catalog Validation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
           <mxGeometry x="840" y="40" width="320" height="30" as="geometry" />
@@ -493,50 +499,53 @@
         <mxCell id="req-OPS-003" value="OPS-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="2790" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-001" value="S-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-OPS-004" value="OPS-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="2840" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-002" value="S-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-001" value="S-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="2890" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-003" value="S-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-002" value="S-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="2940" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-004" value="S-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-003" value="S-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="2990" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-005" value="S-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-004" value="S-004" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3040" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-006" value="S-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-005" value="S-005" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3090" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-007" value="S-007" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-006" value="S-006" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3140" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-008" value="S-008" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-007" value="S-007" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3190" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-S-009" value="S-009" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-008" value="S-008" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3240" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-V-001" value="V-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-S-009" value="S-009" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3290" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-V-002" value="V-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-V-001" value="V-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3340" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-V-003" value="V-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-V-002" value="V-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3390" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-W-001" value="W-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-V-003" value="V-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3440" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-W-002" value="W-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-W-001" value="W-001" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3490" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="req-W-003" value="W-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="req-W-002" value="W-002" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="40" y="3540" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="req-W-003" value="W-003" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="3590" width="320" height="30" as="geometry" />
         </mxCell>
         <mxCell id="e-adr-ADR-0001-impl-Dockerfile" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0001" target="impl-Dockerfile">
           <mxGeometry relative="1" as="geometry" />
@@ -802,6 +811,9 @@
         <mxCell id="e-adr-ADR-0023-impl-spectree/specs/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0023" target="impl-spectree/specs/">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="e-adr-ADR-0024-impl-scripts/generate-drift-report.py" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0024" target="impl-scripts/generate-drift-report.py">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="e-req-A-001-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-A-001" target="adr-ADR-0005">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -989,6 +1001,9 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-NIS2-006-adr-ADR-0010" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-NIS2-006" target="adr-ADR-0010">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-OPS-004-adr-ADR-0024" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-OPS-004" target="adr-ADR-0024">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-S-001-adr-ADR-0002" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-001" target="adr-ADR-0002">

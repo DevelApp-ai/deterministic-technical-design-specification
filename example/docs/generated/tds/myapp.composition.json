@@ -52,7 +52,7 @@
           "files": [
             {
               "path": "docs/requirements/moscow.md",
-              "blob": "2d58eac24fa8af3b9135594645325a0210e82d39"
+              "blob": "8f7f5e5d1189cbfcd6bd3b15bc1c067c045a36ff"
             }
           ]
         }
@@ -385,6 +385,10 @@
             {
               "path": "docs/adrs/0023-spectree-ingestion-first-class-sources.md",
               "blob": "4c0225464e509505cf1ada6e2ff35f09097d2b16"
+            },
+            {
+              "path": "docs/adrs/0024-infrastructure-drift-detection.md",
+              "blob": "e95dda488119098166c99062198ae14032c41641"
             }
           ]
         }
@@ -393,7 +397,7 @@
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
           "nodeType": "adr",
-          "count": 23
+          "count": 24
         }
       ],
       "rules": [
@@ -428,7 +432,7 @@
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
           "nodeType": "requirement",
-          "count": 79
+          "count": 80
         },
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
@@ -470,7 +474,7 @@
           "files": [
             {
               "path": "docs/runbook/index.md",
-              "blob": "48c4e4587fa7d0bcc8d7e71024c30565c2d134a4"
+              "blob": "512ddf88e37754d98315d0c6d7f761c4f480535e"
             }
           ]
         }
@@ -523,7 +527,7 @@
   ],
   "totals": {
     "sources": 20,
-    "files": 57,
+    "files": 58,
     "generated": 3,
     "selectors": 5,
     "rules": 5
