@@ -5,7 +5,9 @@ This page provides a **complete, bidirectional traceability map** between:
 - 📋 **MoSCoW Requirements** — the business intent captured in `docs/requirements/moscow.md`
 - 📖 **Architectural Decision Records** — the *why* captured in `docs/adrs/`
 - 🔒 **OPA Policies** — the automated enforcement in `policies/terraform/`
+- 🔒 **.NET Architecture Policies** — the automated enforcement in `dotnet/tests/MyApp.ArchitectureTests/`
 - ⚙️ **Infrastructure Code** — the actual implementation in `terraform/`, `dsc/`
+- ⚙️ **Application Code** — the .NET example application in `dotnet/`
 
 Every artefact in the repository carries machine-readable metadata (`related_requirements`,
 `related_adr`, `__rego__metadoc__`) so that this matrix can be generated
@@ -31,10 +33,12 @@ The boundary gate (`scripts/architecture-gate.sh`) additionally fails a pull
 request that changes a path governed by an Accepted ADR without citing that
 ADR (id `ADR-####`) in the PR description.
 
-!!! note "The hand-drawn diagram below is historical"
-    The mermaid graph in the next section predates ADR-0010 and ADR-0011 and
-    is retained for reading convenience.  The authoritative traceability view
-    is the generated catalog and drawio diagram above.
+!!! note "The hand-drawn diagrams below are reading aids"
+    The infrastructure graph in the next section predates ADR-0010 and
+    ADR-0011 and is retained for reading convenience.  The application-layer
+    graph further down mirrors the generated catalog for the .NET ADR series
+    (ADR-0013 – ADR-0017).  The authoritative traceability view remains the
+    generated catalog and drawio diagram above.
 
 ---
 
@@ -218,6 +222,109 @@ graph TB
 
 ---
 
+## Application Layer Traceability (.NET)
+
+The diagram below extends the chain to the .NET application layer introduced
+by the ADR series ADR-0013 – ADR-0017.  It is a hand-drawn reading aid that
+mirrors the authoritative generated catalog; every edge below is backed by
+machine-readable metadata (`related_requirements` in the ADR front-matter,
+`Policy.Define` metadata in the NetArchTest suite).
+
+```mermaid
+graph TB
+    subgraph AppReqs["📋 Application Requirements (MoSCoW)"]
+        direction TB
+        APP001["<b>APP-001</b><br/>DocFX API Reference<br/><i>Must Have</i>"]
+        APP002["<b>APP-002</b><br/>Architecture Tests Block CI<br/><i>Must Have</i>"]
+        APP003["<b>APP-003</b><br/>Roslyn Analyzers Gate<br/><i>Must Have</i>"]
+        APP004["<b>APP-004</b><br/>Deterministic Build<br/><i>Must Have</i>"]
+        APP005["<b>APP-005</b><br/>Native OpenAPI at Build Time<br/><i>Should Have</i>"]
+        APP006["<b>APP-006</b><br/>C4 Diagrams from Code<br/><i>Should Have</i>"]
+        APP007["<b>APP-007</b><br/>Self-Describing Policy Metadata<br/><i>Should Have</i>"]
+        APP008["<b>APP-008</b><br/>Client SDK Generation<br/><i>Could Have — deferred</i>"]
+    end
+
+    subgraph AppADRs["📖 .NET ADRs"]
+        direction TB
+        ADR013["<b>ADR-0013</b><br/>DocFX for .NET API Reference<br/><i>related: APP-001, M-004</i>"]
+        ADR014["<b>ADR-0014</b><br/>NetArchTest Architecture Policies<br/><i>related: APP-002, APP-007, M-003</i>"]
+        ADR015["<b>ADR-0015</b><br/>Native .NET OpenAPI Generation<br/><i>related: APP-005, APP-008</i>"]
+        ADR016["<b>ADR-0016</b><br/>Roslyn Code-Quality Gate<br/><i>related: APP-003, APP-004</i>"]
+        ADR017["<b>ADR-0017</b><br/>C4Sharp Architecture Diagrams<br/><i>related: APP-006, M-005</i>"]
+    end
+
+    subgraph AppPolicies["🔒 NetArchTest Policies"]
+        direction TB
+        APPARCH001["<b>APP-ARCH-001</b><br/>Controllers no Repo Depend<br/><i>HIGH severity</i>"]
+        APPARCH002["<b>APP-ARCH-002</b><br/>Domain Purity<br/><i>HIGH severity</i>"]
+        APPSEC001["<b>APP-SEC-001</b><br/>No Domain Entities in API<br/><i>CRITICAL severity</i>"]
+        APPARCH003["<b>APP-ARCH-003</b><br/>Public Members Documented<br/><i>HIGH severity</i>"]
+    end
+
+    subgraph AppImpl["⚙️ .NET Implementation"]
+        direction TB
+        DOTNETAPI["dotnet/src/MyApp.Api<br/><i>controllers + build-time OpenAPI</i>"]
+        DOTNETAPP["dotnet/src/MyApp.Application<br/><i>application services + DTOs</i>"]
+        DOTNETDOM["dotnet/src/MyApp.Domain<br/><i>domain entities</i>"]
+        ARCHTESTS["dotnet/tests/<br/><i>MyApp.ArchitectureTests + UnitTests</i>"]
+        OPENAPI["docs/generated/openapi.json<br/><i>OpenAPI 3.1 contract</i>"]
+        DOTNETDOCS["docs/generated/dotnet-api/<br/><i>DocFX Markdown export</i>"]
+        C4DOCS["docs/generated/architecture/<br/><i>C4 Mermaid diagrams</i>"]
+        BUILDPROPS["dotnet/Directory.Build.props<br/><i>+ .editorconfig + global.json</i>"]
+    end
+
+    APP001 --> ADR013
+    APP002 --> ADR014
+    APP007 --> ADR014
+    APP005 --> ADR015
+    APP008 --> ADR015
+    APP003 --> ADR016
+    APP004 --> ADR016
+    APP006 --> ADR017
+
+    ADR013 --> DOTNETDOCS
+    ADR014 --> ARCHTESTS
+    ADR015 --> OPENAPI
+    ADR016 --> BUILDPROPS
+    ADR017 --> C4DOCS
+
+    ADR014 --> APPARCH001
+    ADR014 --> APPARCH002
+    ADR014 --> APPSEC001
+    ADR014 --> APPARCH003
+
+    APPARCH001 -.->|"guards Api to Application"| DOTNETAPI
+    APPARCH002 -.->|"guards Domain purity"| DOTNETDOM
+    APPSEC001 -.->|"guards API contracts"| DOTNETAPI
+    APPARCH003 -.->|"verifies XML docs"| DOTNETAPP
+    ARCHTESTS -.->|"enforces APP-002"| DOTNETAPI
+    OPENAPI -.->|"rendered from"| DOTNETAPI
+    DOTNETDOCS -.->|"rendered from"| DOTNETDOM
+    C4DOCS -.->|"declares model of"| DOTNETAPI
+```
+
+### Application layer coverage notes
+
+- **APP-001** (DocFX) is satisfied by ADR-0013; the DocFX Markdown export is
+  generated into `docs/generated/dotnet-api/` and published under
+  *Application → .NET API Reference*.
+- **APP-002** (architecture tests block CI) is satisfied by ADR-0014; the four
+  NetArchTest policies (APP-ARCH-001/002/003, APP-SEC-001) run in the solution
+  test suite.
+- **APP-003 / APP-004** (Roslyn gate, deterministic build) are satisfied by
+  ADR-0016 via `Directory.Build.props`, `.editorconfig`, and `global.json`.
+- **APP-005** (native build-time OpenAPI) is satisfied by ADR-0015; the
+  generated `docs/generated/openapi.json` is a traceable pipeline artefact
+  rendered into the [API Reference](../application/api-reference.md) page.
+- **APP-006** (C4 diagrams from code) is satisfied by ADR-0017 via C4Sharp.
+- **APP-007** (self-describing policy metadata) is satisfied by ADR-0014; the
+  `Policy.Define` literals drive `scripts/generate-dotnet-policy-docs.py`.
+- **APP-008** (client SDK generation) is a *Could Have*; the build-time OpenAPI
+  document that would feed NSwag already exists (ADR-0015), so the decision is
+  deferred, not blocked.
+
+---
+
 ## Policy → Requirement → ADR Matrix
 
 | OPA Policy | Severity | MoSCoW Requirements | Architectural Decision |
@@ -232,6 +339,15 @@ graph TB
 | K8S-003 (deny_missing_labels) | HIGH | [K-003](../requirements/moscow.md#should-have--kubernetes), [FIN-001](../requirements/moscow.md#should-have--finops) | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
 | [SC-001](../compliance/opa-policies.md#sc-001--nis2-supply-chain-iac-dependency-pinning) | HIGH | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555) | [ADR-0010](../adrs/0010-nis2-compliance.md) |
 | [K8S-004](../compliance/opa-policies.md#k8s-004--no-unpinned-container-image-tags) | HIGH | [NIS2-007](../requirements/moscow.md#should-have--nis2-compliance-eu-20222555), [K-001](../requirements/moscow.md#should-have--kubernetes) | [ADR-0010](../adrs/0010-nis2-compliance.md), [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) |
+
+### .NET Architecture Policies (NetArchTest)
+
+| .NET Policy | Severity | MoSCoW Requirements | Architectural Decision |
+|-------------|---------|-------------------|----------------------|
+| [APP-ARCH-001](../application/architecture-policies.md#app-arch-001--controllers-must-not-depend-on-repositories) — controllers must not depend on repositories | HIGH | [APP-002](../requirements/moscow.md#must-have), [APP-007](../requirements/moscow.md#should-have--application-layer-net) | [ADR-0014](../adrs/0014-netarchtest-architecture-policies.md) |
+| [APP-ARCH-002](../application/architecture-policies.md#app-arch-002--domain-must-not-reference-upper-layers) — domain must not reference upper layers | HIGH | [APP-002](../requirements/moscow.md#must-have), [APP-007](../requirements/moscow.md#should-have--application-layer-net) | [ADR-0014](../adrs/0014-netarchtest-architecture-policies.md) |
+| [APP-SEC-001](../application/architecture-policies.md#app-sec-001--controllers-must-not-expose-domain-entities) — controllers must not expose domain entities | CRITICAL | [APP-002](../requirements/moscow.md#must-have), [APP-007](../requirements/moscow.md#should-have--application-layer-net) | [ADR-0014](../adrs/0014-netarchtest-architecture-policies.md) |
+| [APP-ARCH-003](../application/architecture-policies.md#app-arch-003--all-public-members-are-documented) — all public members are documented | HIGH | [APP-001](../requirements/moscow.md#must-have), [APP-007](../requirements/moscow.md#should-have--application-layer-net) | [ADR-0014](../adrs/0014-netarchtest-architecture-policies.md) |
 
 ---
 
@@ -248,6 +364,14 @@ graph TB
 | [ADR-0007](../adrs/0007-semantic-versioning-and-changelog.md) — Semantic Versioning | [V-001](../requirements/moscow.md#should-have--versioning--changelog), [V-002](../requirements/moscow.md#should-have--versioning--changelog), [V-003](../requirements/moscow.md#should-have--versioning--changelog) | `version.txt`, `cliff.toml`, CI `release` job |
 | [ADR-0008](../adrs/0008-kubernetes-manifests-and-helm-chart.md) — Kubernetes & Helm | [K-001](../requirements/moscow.md#should-have--kubernetes), [K-002](../requirements/moscow.md#should-have--kubernetes), [K-003](../requirements/moscow.md#should-have--kubernetes) | `kubernetes/`, `helm/`, `policies/kubernetes/` |
 | [ADR-0009](../adrs/0009-backstage-mcp-server.md) — Backstage MCP Server | [AI-001](../requirements/moscow.md#should-have--ai--mcp-integration), [AI-002](../requirements/moscow.md#should-have--ai--mcp-integration), [AI-003](../requirements/moscow.md#should-have--ai--mcp-integration) | `catalog-info.yaml`, `backstage/app-config.yaml`, `.vscode/mcp.json`, `backstage/mcp-clients/` |
+| [ADR-0010](../adrs/0010-nis2-compliance.md) — NIS2 Compliance | NIS2-001 – NIS2-007, [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), CYB-002 – CYB-004 | `docs/compliance/nis2.md`, `policies/terraform/deny_nis2_crypto.rego`, `policies/terraform/deny_nis2_supply_chain.rego` |
+| [ADR-0011](../adrs/0011-dora-compliance.md) — DORA Compliance | DORA-001 – DORA-006, [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have) | `docs/compliance/dora.md`, `policies/terraform/deny_dora_ict_risk.rego` |
+| [ADR-0012](../adrs/0012-machine-readable-adr-traceability.md) — ADR Traceability Kit | [S-006](../requirements/moscow.md#should-have), [M-005](../requirements/moscow.md#must-have), [D-001](../requirements/moscow.md#should-have--documentation-governance) | `scripts/scan-architecture.py`, `scripts/generate-traceability.py`, `scripts/architecture-gate.sh`, `policies/architecture/`, `docs/generated/architecture-catalog.json` |
+| [ADR-0013](../adrs/0013-docfx-dotnet-api-reference.md) — DocFX for .NET API Reference | [APP-001](../requirements/moscow.md#must-have), [M-004](../requirements/moscow.md#must-have) | `dotnet/docs/docfx.json`, `dotnet/dotnet-tools.json`, `docs/generated/dotnet-api/` |
+| [ADR-0014](../adrs/0014-netarchtest-architecture-policies.md) — NetArchTest Architecture Policies | [APP-002](../requirements/moscow.md#must-have), [APP-007](../requirements/moscow.md#should-have--application-layer-net), [M-003](../requirements/moscow.md#must-have) | `dotnet/tests/MyApp.ArchitectureTests/`, `scripts/generate-dotnet-policy-docs.py`, `docs/application/architecture-policies.md` |
+| [ADR-0015](../adrs/0015-native-dotnet-openapi.md) — Native .NET OpenAPI Generation | [APP-005](../requirements/moscow.md#should-have--application-layer-net), [APP-008](../requirements/moscow.md#could-have) | `dotnet/src/MyApp.Api/MyApp.Api.csproj`, `scripts/generate-openapi-docs.py`, `docs/generated/openapi.json`, `docs/application/api-reference.md` |
+| [ADR-0016](../adrs/0016-roslyn-code-quality-gate.md) — Roslyn Code-Quality Gate | [APP-003](../requirements/moscow.md#must-have), [APP-004](../requirements/moscow.md#must-have) | `dotnet/Directory.Build.props`, `dotnet/.editorconfig` |
+| [ADR-0017](../adrs/0017-c4sharp-architecture-diagrams.md) — C4Sharp Architecture Diagrams | [APP-006](../requirements/moscow.md#should-have--application-layer-net), [M-005](../requirements/moscow.md#must-have) | `dotnet/tools/MyApp.Architecture.Diagrams/`, `scripts/generate-c4-diagram-docs.py`, `docs/generated/architecture/`, `docs/application/architecture-diagrams.md` |
 
 ---
 
@@ -302,17 +426,18 @@ sequenceDiagram
 
 ```mermaid
 pie title MoSCoW Requirement Coverage by Category
-    "Must Have (implemented)" : 6
-    "Should Have (implemented)" : 33
-    "Could Have (deferred)" : 3
+    "Must Have (implemented)" : 10
+    "Should Have (implemented)" : 54
+    "Could Have (deferred)" : 4
     "Won't Have (out of scope)" : 3
 ```
 
 !!! success "All Must-Have and Should-Have requirements are covered"
-    Every M-xxx, S-xxx, D-xxx, V-xxx, FIN-xxx, K-xxx, DEV-xxx, and AI-xxx
-    requirement in the MoSCoW document has at least one ADR, OPA policy, or
-    implementation artefact that satisfies it.  The traceability metadata in
-    each source file makes this verifiable automatically.
+    Every M-xxx, S-xxx, D-xxx, V-xxx, FIN-xxx, K-xxx, DEV-xxx, AI-xxx,
+    NIS2-xxx, DORA-xxx, and APP-xxx requirement in the MoSCoW document has at
+    least one ADR, OPA policy, or implementation artefact that satisfies it.
+    The traceability metadata in each source file makes this verifiable
+    automatically.
 
 ---
 
@@ -341,6 +466,14 @@ related_requirements: [M-005, S-008, S-009]
 ---
 ```
 
-Both formats are machine-readable: the CI/CD pipeline or a custom script can
-parse them to regenerate this traceability page automatically whenever policies
-or ADRs change.
+### In .NET architecture policies (`Policy.Define`)
+
+```csharp
+Policy.Define("APP-ARCH-001",
+    "Controllers must not depend on repository contracts directly")
+```
+
+Both infrastructure formats plus the .NET `Policy.Define` metadata are
+machine-readable: the CI/CD pipeline or a custom script can parse them to
+regenerate this traceability page automatically whenever policies or ADRs
+change.
