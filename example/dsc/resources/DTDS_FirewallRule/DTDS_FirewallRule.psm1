@@ -156,13 +156,13 @@ class DTDS_FirewallRule {
         } else {
             Write-Verbose "DTDS_FirewallRule: Creating/updating rule '$($this.RuleName)'"
             $dir    = $this.Direction.ToString().ToLower()
-            $action = $this.Action.ToString().ToLower()
+            $actionValue = $this.Action.ToString().ToLower()
             $proto  = $this.Protocol.ToLower()
             $port   = $this.LocalPort
             # Delete any existing rule with this name first (idempotent update pattern:
             # netsh has no "update" command; delete+add is the standard approach)
             netsh advfirewall firewall delete rule name="$($this.RuleName)" 2>&1 | Out-Null
-            $cmd = "netsh advfirewall firewall add rule name=`"$($this.RuleName)`" dir=$dir action=$action protocol=$proto localport=$port enable=yes"
+            $cmd = "netsh advfirewall firewall add rule name=`"$($this.RuleName)`" dir=$dir action=$actionValue protocol=$proto localport=$port enable=yes"
             if ($this.Description) { $cmd += " description=`"$($this.Description)`"" }
             Invoke-Expression $cmd | Out-Null
             if ($LASTEXITCODE -ne 0) {
@@ -212,7 +212,8 @@ class DTDS_FirewallRule {
     # ------------------------------------------------------------------
 
     hidden [bool] _IsWindows() {
-        return ($PSVersionTable.Platform -eq 'Win32NT' -or $IsWindows -eq $true -or $env:OS -eq 'Windows_NT')
+        return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+            [System.Runtime.InteropServices.OSPlatform]::Windows)
     }
 
     hidden [bool] _RuleExists() {

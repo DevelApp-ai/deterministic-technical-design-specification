@@ -6,10 +6,11 @@
 # Tests use cross-platform stubs — no Windows system call is made on Linux/macOS.
 # Related requirements: DORA-002, NIS2-004, S-008
 
-BeforeAll {
-    $resourcePath = Join-Path $PSScriptRoot '../resources/DTDS_AuditPolicy/DTDS_AuditPolicy.psm1'
-    Import-Module $resourcePath -Force
-}
+# NOTE: the module is imported at file scope (not in BeforeAll) because
+# InModuleScope below executes during Pester 5's discovery phase, before
+# BeforeAll runs — the module must already be loaded by then.
+$resourcePath = Join-Path $PSScriptRoot '../resources/DTDS_AuditPolicy/DTDS_AuditPolicy.psm1'
+Import-Module $resourcePath -Force
 
 InModuleScope DTDS_AuditPolicy {
 

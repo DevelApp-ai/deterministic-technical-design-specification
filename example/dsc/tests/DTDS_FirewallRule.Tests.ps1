@@ -6,10 +6,11 @@
 # Tests use cross-platform stubs — netsh is not called on Linux/macOS.
 # Related requirements: CYB-004, SEC-004, DORA-001
 
-BeforeAll {
-    $resourcePath = Join-Path $PSScriptRoot '../resources/DTDS_FirewallRule/DTDS_FirewallRule.psm1'
-    Import-Module $resourcePath -Force
-}
+# NOTE: the module is imported at file scope (not in BeforeAll) because
+# InModuleScope below executes during Pester 5's discovery phase, before
+# BeforeAll runs — the module must already be loaded by then.
+$resourcePath = Join-Path $PSScriptRoot '../resources/DTDS_FirewallRule/DTDS_FirewallRule.psm1'
+Import-Module $resourcePath -Force
 
 InModuleScope DTDS_FirewallRule {
 
