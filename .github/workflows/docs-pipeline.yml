@@ -471,6 +471,11 @@ jobs:
           python3 example/scripts/generate-openapi-docs.py
           python3 example/scripts/generate-c4-diagram-docs.py
 
+      - name: SpecTree — parse specification files to JSON ASTs
+        run: |
+          python3 example/scripts/spectree-parse.py --selftest
+          python3 example/scripts/spectree-parse.py --all
+
       - name: Generate CHANGELOG (git-cliff)
         run: |
           cd example
@@ -576,3 +581,4 @@ jobs:
           git commit -m "chore(release): update CHANGELOG for ${VERSION}" || true
           git tag -a "${VERSION}" -m "Release ${VERSION}"
           git push origin HEAD --tags
+

@@ -46,9 +46,11 @@ example/docs/generated/plan.bin
 example/docs/generated/openapi.json
 example/docs/generated/dotnet-api/
 example/docs/generated/architecture/
+example/docs/generated/spectree/
 
 # .NET build artefacts (example application layer)
 **/bin/
 **/obj/
 *.user
 example/dotnet/**/TestResults/
+
