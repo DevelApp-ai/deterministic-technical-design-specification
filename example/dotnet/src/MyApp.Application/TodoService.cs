@@ -3,6 +3,8 @@ namespace MyApp.Application;
 /// <summary>
 /// Use-case service for todo items: the only surface the API layer talks to.
 /// </summary>
+/// <spec>moscow:M-001</spec>
+/// <spec>moscow:S-002</spec>
 /// <remarks>
 /// The service depends on the domain repository contract
 /// (<see cref="MyApp.Domain.ITodoRepository"/>) and never exposes domain

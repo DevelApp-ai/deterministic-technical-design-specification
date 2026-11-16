@@ -371,6 +371,26 @@
       "type": "references"
     },
     {
+      "from": "adr:ADR-0022",
+      "to": "moscow:APP-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0022",
+      "to": "moscow:M-001",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0022",
+      "to": "moscow:M-002",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0022",
+      "to": "moscow:S-002",
+      "type": "references"
+    },
+    {
       "from": "policy:ARCH-001",
       "to": "adr:ADR-0012",
       "type": "implements"
@@ -762,14 +782,14 @@
     }
   ],
   "generated": {
-    "edgeCount": 152,
+    "edgeCount": 156,
     "namespaces": {
-      "adr": 21,
+      "adr": 22,
       "moscow": 71,
       "policy": 18,
       "spec": 18
     },
-    "nodeCount": 128,
+    "nodeCount": 129,
     "normalizer": "normalize-traceability-metadata.py",
     "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
   },
@@ -1216,6 +1236,27 @@
       "status": "Accepted",
       "supersedes": [],
       "title": "SpecTree Line Grammar for the TDS Composition Manifest",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/generated/tds/dotnet-api/",
+        "docs/generated/tds/dotnet-spec-mapping.json",
+        "scripts/generate-dotnet-doc-export.py"
+      ],
+      "id": "adr:ADR-0022",
+      "relatedRequirements": [
+        "moscow:APP-001",
+        "moscow:M-001",
+        "moscow:M-002",
+        "moscow:S-002"
+      ],
+      "source": "docs/adrs/0022-xml-doc-filtered-api-export.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Filtered .NET API Export from Build-Time XML Doc Comments",
       "type": "adr"
     },
     {

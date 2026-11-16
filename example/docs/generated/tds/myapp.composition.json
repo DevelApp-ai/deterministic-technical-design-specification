@@ -200,12 +200,17 @@
             },
             {
               "path": "docs/application/index.md",
-              "blob": "457ed35694149d292802f9354b1e8eaca6054fbc"
+              "blob": "bf6fe426b4401898d30feb181de77d66d19350f8"
             }
           ]
         },
         {
           "pattern": "docs/generated/dotnet-api/*.md",
+          "generated": true,
+          "files": []
+        },
+        {
+          "pattern": "docs/generated/tds/dotnet-api/*.md",
           "generated": true,
           "files": []
         },
@@ -372,6 +377,10 @@
             {
               "path": "docs/adrs/0021-tds-composition-manifest-grammar.md",
               "blob": "ded74fe90815f4a8e2bf61656439e0d47499d575"
+            },
+            {
+              "path": "docs/adrs/0022-xml-doc-filtered-api-export.md",
+              "blob": "9c65d73365a7cefc54913b40ed17961abd14e081"
             }
           ]
         }
@@ -380,7 +389,7 @@
         {
           "artifact": "docs/generated/traceability/metadata-v1.json",
           "nodeType": "adr",
-          "count": 21
+          "count": 22
         }
       ],
       "rules": [
@@ -406,7 +415,7 @@
             },
             {
               "path": "docs/traceability/tds-composition.md",
-              "blob": "c3835704c1e68a3208f8446b75a02b53bbe33f43"
+              "blob": "e3492304655fdcc0deaf638e85d6dc371f7b5a85"
             }
           ]
         }
@@ -510,8 +519,8 @@
   ],
   "totals": {
     "sources": 20,
-    "files": 55,
-    "generated": 2,
+    "files": 56,
+    "generated": 3,
     "selectors": 5,
     "rules": 5
   },

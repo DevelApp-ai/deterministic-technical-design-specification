@@ -6,6 +6,7 @@ namespace MyApp.Api.Controllers;
 /// <summary>
 /// CRUD endpoints for todo items.
 /// </summary>
+/// <spec>moscow:M-002</spec>
 /// <remarks>
 /// The controller talks only to <see cref="TodoService"/> and only through
 /// DTOs — it never touches domain entities or the repository directly.

@@ -15,6 +15,7 @@ to Terraform, OPA, and DSC.
 | [Architecture Diagrams](architecture-diagrams.md) | C4 Context / Container / Component diagrams | `dotnet/tools/MyApp.Architecture.Diagrams` (C4Sharp) + `scripts/generate-c4-diagram-docs.py` |
 | [API Reference (OpenAPI)](api-reference.md) | The HTTP API contract | `dotnet build` (native `Microsoft.AspNetCore.OpenApi`) + `scripts/generate-openapi-docs.py` |
 | [.NET API Reference (DocFX)](../generated/dotnet-api/MyApp.Domain.md) | The C# API reference, per assembly | DocFX (`dotnet/docs/docfx.json`) |
+| [TDS API Export (Filtered)](../generated/tds/dotnet-api/MyApp.Domain.md) | The public API surface filtered for TDS composition, with `<spec>` requirement traces | `scripts/generate-dotnet-doc-export.py` (from build-time XML doc files) |
 
 ## Requirements and Decisions
 
@@ -29,6 +30,18 @@ and the .NET ADR series:
 | [ADR-0015](../adrs/0015-native-dotnet-openapi.md) | Native build-time OpenAPI generation (no Swashbuckle) |
 | [ADR-0016](../adrs/0016-roslyn-code-quality-gate.md) | Roslyn analyzers as the code-quality gate |
 | [ADR-0017](../adrs/0017-c4sharp-architecture-diagrams.md) | C4Sharp for code-declared C4 diagrams |
+| [ADR-0022](../adrs/0022-xml-doc-filtered-api-export.md) | Filtered .NET API export from build-time XML doc comments |
+
+### Code-to-requirement traceability
+
+Since [ADR-0022](../adrs/0022-xml-doc-filtered-api-export.md), application
+types and members declare the requirements they implement with
+`<spec>` XML doc tags (for example `<spec>moscow:M-001</spec>` on
+`TodoService`). The export tool verifies every tag against the
+[traceability metadata contract](../traceability/metadata-contract.md),
+so application code and specification cannot drift apart silently —
+and the filtered [TDS API export](../traceability/tds-composition.md)
+carries the traces into the composed document.
 
 The full requirement → ADR → policy → implementation chain is documented in
 the [Traceability Matrix](../traceability/index.md#application-layer-traceability-net).

@@ -509,6 +509,11 @@ jobs:
           python3 example/scripts/generate-tds-composition.py --selftest
           python3 example/scripts/generate-tds-composition.py --all
 
+      - name: Filtered .NET API export (ADR-0022)
+        run: |
+          python3 example/scripts/generate-dotnet-doc-export.py --selftest
+          python3 example/scripts/generate-dotnet-doc-export.py --all
+
       - name: Generate CHANGELOG (git-cliff)
         run: |
           cd example

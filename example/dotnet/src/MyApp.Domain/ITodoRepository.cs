@@ -3,6 +3,7 @@ namespace MyApp.Domain;
 /// <summary>
 /// Persistence contract for todo items.
 /// </summary>
+/// <spec>moscow:M-001</spec>
 /// <remarks>
 /// The contract lives in the domain layer so that application services can
 /// depend on it without referencing any concrete infrastructure.
