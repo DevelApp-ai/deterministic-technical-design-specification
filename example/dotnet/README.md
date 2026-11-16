@@ -101,6 +101,17 @@ The pipeline (`scripts/generate-docs.sh`, Step 5) runs `dotnet build` before
 DocFX, so the deterministic gate — warnings-as-errors, analyzers, and the
 architecture policies above — must pass before documentation is generated.
 
+## OpenAPI document (build-time generation)
+
+`MyApp.Api` uses the **native** `Microsoft.AspNetCore.OpenApi` OpenAPI
+generation (no Swashbuckle): `AddOpenApi()` registers the document and the
+`Microsoft.Extensions.ApiDescription.Server` build target makes `dotnet build`
+emit it at build time — `docs/generated/openapi.json`, OpenAPI 3.1,
+regenerated on every build (git-ignored). `scripts/generate-openapi-docs.py`
+renders it into the human-readable `docs/application/api-reference.md` page
+(endpoints, parameters, request/response schemas, and the XML-comment
+summaries).
+
 ## Endpoints
 
 | Method | Route | Description |

@@ -2,7 +2,28 @@
 
   <PropertyGroup>
     <Description>ASP.NET Core API layer of the example .NET application: controllers and composition root.</Description>
+    <!--
+      Build-time OpenAPI document generation (Microsoft.AspNetCore.OpenApi,
+      native since .NET 9, no Swashbuckle reflection). The document is
+      emitted by `dotnet build` itself into the shared docs/generated/
+      directory as a pipeline artefact. OpenApiDocumentsDirectory resolves
+      relative to this project file (src/MyApp.Api -> example/docs/generated/)
+      and the file-name option emits docs/generated/openapi.json.
+      The JSON is git-ignored and regenerated on every build/pipeline run.
+    -->
+    <OpenApiDocumentsDirectory>../../../docs/generated</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocumentsOptions>--file-name openapi</OpenApiGenerateDocumentsOptions>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.15" />
+    <!-- Enables the GetDocument build target: `dotnet build` emits the
+         OpenAPI document itself, no runtime reflection needed. -->
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="10.0.15">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyApp.Application\MyApp.Application.csproj" />
