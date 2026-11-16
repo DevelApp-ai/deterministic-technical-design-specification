@@ -71,6 +71,10 @@ nav:
   - Application:
       - Code Quality Gate: application/code-quality.md
       - Architecture Policies: application/architecture-policies.md
+      - .NET API Reference (DocFX):
+          - MyApp.Domain: generated/dotnet-api/MyApp.Domain.md
+          - MyApp.Application: generated/dotnet-api/MyApp.Application.md
+          - MyApp.Api.Controllers: generated/dotnet-api/MyApp.Api.Controllers.md
   - Compliance:
       - OPA Policy Summary: compliance/opa-policies.md
       - NIS2 Article 21 Evidence: compliance/nis2.md

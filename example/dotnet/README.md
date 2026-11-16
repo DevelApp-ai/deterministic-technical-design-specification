@@ -17,6 +17,8 @@ dotnet/
 ├── tests/
 │   ├── MyApp.ArchitectureTests/ # NetArchTest architecture policies
 │   └── MyApp.UnitTests/        # xUnit unit tests
+├── docs/                       # DocFX configuration (API reference generation)
+├── dotnet-tools.json           # Pinned local tools (DocFX)
 ├── MyApp.slnx                   # Solution entry point for build/test
 ├── Directory.Build.props       # Shared deterministic-build properties
 ├── global.json                 # Pinned .NET SDK version
@@ -78,6 +80,26 @@ NetArchTest.Rules:
 The policy catalogue is published to `docs/application/architecture-policies.md`,
 generated from the policy metadata literals embedded in the test source by
 `scripts/generate-dotnet-policy-docs.py` (run from the `example/` directory).
+
+## API reference generation (DocFX)
+
+`docs/docfx.json` configures **DocFX** (pinned to 2.81.0 via the local tool
+manifest `dotnet-tools.json`) to generate the API reference from the compiled
+assemblies' XML documentation using DocFX's experimental Markdown output
+format. The output lands in `example/docs/generated/dotnet-api/` (git-ignored,
+regenerated on every pipeline run) and is published under the Application
+section of the MkDocs site. `docs/filter.yml` keeps the entry-point class out
+of the generated surface.
+
+```bash
+cd example/dotnet
+dotnet tool restore
+dotnet docfx metadata docs/docfx.json
+```
+
+The pipeline (`scripts/generate-docs.sh`, Step 5) runs `dotnet build` before
+DocFX, so the deterministic gate — warnings-as-errors, analyzers, and the
+architecture policies above — must pass before documentation is generated.
 
 ## Endpoints
 

@@ -9,9 +9,10 @@
 #   2. terraform plan (JSON output) — used by OPA
 #   3. OPA policy evaluation — gate: non-zero violations abort the pipeline
 #   4. terraform-docs — update docs/generated/terraform-readme.md
-#   5. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
-#   6. Ansible playbook — gather host facts, render Jinja2 host report
-#   7. mkdocs build — assemble the full static site into site/
+#   5. .NET build + DocFX — API reference markdown → docs/generated/dotnet-api/
+#   6. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
+#   7. Ansible playbook — gather host facts, render Jinja2 host report
+#   8. mkdocs build — assemble the full static site into site/
 #
 # Usage (from repo root):
 #   bash example/scripts/generate-docs.sh
@@ -27,6 +28,7 @@ POLICY_DIR="${REPO_ROOT}/policies/terraform"
 DOCS_GENERATED_DIR="${REPO_ROOT}/docs/generated"
 DSC_DIR="${REPO_ROOT}/dsc"
 MKDOCS_CFG="${REPO_ROOT}/mkdocs.yml"
+DOTNET_API_DIR="${REPO_ROOT}/docs/generated/dotnet-api"
 
 # Colour helpers
 RED='\033[0;31m'
@@ -118,9 +120,42 @@ terraform-docs markdown table \
 success "terraform-docs written to docs/generated/terraform-readme.md"
 
 # ---------------------------------------------------------------------------
-# Step 5 — DSC resource documentation
+# Step 5 — .NET build gate + DocFX API reference (markdown)
 # ---------------------------------------------------------------------------
-info "Step 5/7 — DSC resource documentation (DscResource.DocGenerator)"
+info "Step 5/8 — .NET build gate + DocFX API reference (markdown)"
+
+DOTNET_DIR="${REPO_ROOT}/dotnet"
+
+if command -v dotnet &> /dev/null; then
+  pushd "${DOTNET_DIR}" > /dev/null
+
+  # Build first: the deterministic .NET build gate (warnings-as-errors +
+  # Roslyn analyzers) must pass before any documentation is generated from
+  # the compiled assemblies. The NetArchTest architecture policies run as a
+  # separate test job in CI before the docs-build stage.
+  dotnet build MyApp.slnx -c Release
+  success ".NET solution built (Release, zero warnings required)."
+
+  # DocFX is pinned via the local tool manifest
+  # (dotnet/dotnet-tools.json, currently docfx 2.81.0). docfx metadata
+  # with outputFormat "markdown" renders the API reference straight to
+  # MkDocs-consumable markdown.
+  dotnet docfx metadata docs/docfx.json
+  success "DocFX API reference written to docs/generated/dotnet-api/"
+
+  popd > /dev/null
+else
+  warn "dotnet not found — skipping .NET API reference generation."
+  warn "Install the .NET SDK (see dotnet/global.json for the pinned version)"
+  warn "and run 'dotnet tool restore' in dotnet/ to enable this step."
+  # Ensure the output directory exists so MkDocs can still build
+  mkdir -p "${DOTNET_API_DIR}"
+fi
+
+# ---------------------------------------------------------------------------
+# Step 6 — DSC resource documentation
+# ---------------------------------------------------------------------------
+info "Step 6/8 — DSC resource documentation (DscResource.DocGenerator)"
 
 if command -v pwsh &> /dev/null; then
   pwsh -NonInteractive -File "${DSC_DIR}/build.ps1" \
@@ -134,9 +169,9 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 6 — Ansible fact-gather
+# Step 7 — Ansible fact-gather
 # ---------------------------------------------------------------------------
-info "Step 6/7 — Ansible host fact-gathering"
+info "Step 7/8 — Ansible host fact-gathering"
 
 ansible-playbook \
   -i "${REPO_ROOT}/ansible/inventory.yml" \
@@ -147,9 +182,9 @@ ansible-playbook \
 success "Ansible host report written to docs/generated/"
 
 # ---------------------------------------------------------------------------
-# Step 7 — MkDocs build
+# Step 8 — MkDocs build
 # ---------------------------------------------------------------------------
-info "Step 7/7 — MkDocs build"
+info "Step 8/8 — MkDocs build"
 
 mkdocs build --config-file "${MKDOCS_CFG}" --strict
 

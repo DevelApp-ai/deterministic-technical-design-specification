@@ -1,0 +1,25 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/v2.0/docfx.json",
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "src/MyApp.Api/MyApp.Api.csproj",
+            "src/MyApp.Application/MyApp.Application.csproj",
+            "src/MyApp.Domain/MyApp.Domain.csproj"
+          ],
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**"
+          ],
+          "src": "../"
+        }
+      ],
+      "outputFormat": "markdown",
+      "dest": "../../docs/generated/dotnet-api",
+      "filter": "filter.yml",
+      "shouldSkipMarkup": false
+    }
+  ]
+}
