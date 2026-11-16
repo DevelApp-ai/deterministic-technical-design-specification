@@ -49,15 +49,23 @@ example/dsc/
 │   ├── DTDS_AuditPolicy/             # Windows audit policy (DORA Art.10)
 │   │   ├── DTDS_AuditPolicy.psm1
 │   │   └── DTDS_AuditPolicy.psd1
-│   └── DTDS_FirewallRule/            # Windows Firewall rules (SEC-004, CYB-004)
-│       ├── DTDS_FirewallRule.psm1
-│       └── DTDS_FirewallRule.psd1
+│   ├── DTDS_FirewallRule/            # Windows Firewall rules (SEC-004, CYB-004)
+│   │   ├── DTDS_FirewallRule.psm1
+│   │   └── DTDS_FirewallRule.psd1
+│   ├── DTDS_LocalUser/               # Local user lifecycle (NIS2 Art.10)
+│   │   ├── DTDS_LocalUser.psm1
+│   │   └── DTDS_LocalUser.psd1
+│   └── DTDS_TlsConfiguration/        # Schannel TLS protocol hardening (SEC-006)
+│       ├── DTDS_TlsConfiguration.psm1
+│       └── DTDS_TlsConfiguration.psd1
 └── tests/
     ├── DTDS_FileContent.Tests.ps1    # 11 Pester tests
     ├── DTDS_RegistryEntry.Tests.ps1  # Pester tests
     ├── DTDS_ServiceConfig.Tests.ps1  # Pester tests
     ├── DTDS_AuditPolicy.Tests.ps1    # 12 Pester tests (DORA/NIS2)
-    └── DTDS_FirewallRule.Tests.ps1   # 11 Pester tests (SEC-004, CYB-004)
+    ├── DTDS_FirewallRule.Tests.ps1   # 11 Pester tests (SEC-004, CYB-004)
+    ├── DTDS_LocalUser.Tests.ps1      # 16 Pester tests (mocked Windows lifecycle)
+    └── DTDS_TlsConfiguration.Tests.ps1 # Pester tests (mocked registry paths)
 ```
 
 ---
@@ -272,3 +280,37 @@ Class-based DSC resources written for PowerShell Core 7.2+ work
 This means the full CI pipeline — including documentation generation and
 unit testing — runs on the existing Ubuntu runners without needing a
 Windows runner.
+
+---
+
+## Testable Seams for Cross-Platform Mocking
+
+Pester **cannot mock PowerShell class methods**, and automatic variables
+(`$IsWindows`, `$PSVersionTable`, `$env:OS`) are not visible inside class
+method bodies. To keep the Windows-specific code paths unit-testable on
+Linux CI, the resources expose **module-scope seam functions** that the
+class methods delegate to:
+
+| Seam function | Resource | Purpose |
+|---------------|----------|---------|
+| `Test-DtdsIsWindows` | `DTDS_LocalUser`, `DTDS_TlsConfiguration` | Platform check — tests mock it to simulate Windows |
+| `Get-DtdsLocalUserByName` | `DTDS_LocalUser` | Wraps `Get-LocalUser` (not available on Linux) |
+| `New-DtdsLocalUser` / `Set-DtdsLocalUser` | `DTDS_LocalUser` | Wrap `New-LocalUser` / `Set-LocalUser` |
+| `Enable-DtdsLocalUser` / `Disable-DtdsLocalUser` / `Remove-DtdsLocalUser` | `DTDS_LocalUser` | Wrap the corresponding `*-LocalUser` cmdlets |
+| `Set-DtdsRegistryValue` | `DTDS_TlsConfiguration` | Wraps `Set-ItemProperty` — the `-Type DWord` parameter is a registry-provider dynamic parameter that exists only on Windows |
+
+Tests mock the seam functions with `Mock ... -ModuleName DTDS_*`, which
+keeps the Windows lifecycle logic fully exercised on Ubuntu runners. Two
+further Pester 5 constraints shape the test files:
+
+1. `InModuleScope` executes during **discovery**, so the resource module is
+   imported at file scope — not inside `BeforeAll`, which runs later.
+2. Mock bodies must accept the parameters the resource passes (seam
+   functions declare explicit parameter sets for this reason).
+
+```mermaid
+flowchart LR
+    M["DTDS_LocalUser.psm1\nclass method\n_GetLocalUser()"] --> S["Get-DtdsLocalUserByName\n(module-scope seam)"]
+    S --> C["Get-LocalUser\n(Windows-only cmdlet)"]
+    T["Pester test\nMock Get-DtdsLocalUserByName"] -.intercepts.-> S
+```

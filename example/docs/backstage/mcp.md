@@ -236,5 +236,5 @@ graph TD
 | `.vscode/mcp.json` | VS Code / GitHub Copilot MCP config (committed, works out of the box) |
 | `backstage/mcp-clients/claude-desktop.json` | Claude Desktop MCP config snippet |
 | `backstage/mcp-clients/cursor-mcp.json` | Cursor MCP config snippet |
-| ADR | [ADR-0009](../../adrs/0009-backstage-mcp-server.md) |
-| Requirements | [AI-001, AI-002, AI-003](../../requirements/moscow.md#should-have--ai--mcp-integration) |
+| ADR | [ADR-0009](../adrs/0009-backstage-mcp-server.md) |
+| Requirements | [AI-001, AI-002, AI-003](../requirements/moscow.md#should-have--ai--mcp-integration) |

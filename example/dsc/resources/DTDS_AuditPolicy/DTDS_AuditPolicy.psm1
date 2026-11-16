@@ -128,7 +128,8 @@ class DTDS_AuditPolicy {
     # ------------------------------------------------------------------
 
     hidden [bool] _IsWindows() {
-        return ($PSVersionTable.Platform -eq 'Win32NT' -or $IsWindows -eq $true -or $env:OS -eq 'Windows_NT')
+        return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+            [System.Runtime.InteropServices.OSPlatform]::Windows)
     }
 
     hidden [AuditTracking] _GetCurrentAuditFlag() {

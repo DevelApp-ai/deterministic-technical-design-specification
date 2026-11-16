@@ -417,14 +417,19 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module -Name PlatyPS                 -RequiredVersion 2.0.6  -Force
+          # PlatyPS: 0.14.2 is the newest stable gallery version. The 2.x
+          # line only exists as 2.0.0-preview1; pinning "2.0.6" fails to
+          # resolve and aborts this job.
+          Install-Module -Name PlatyPS                 -RequiredVersion 0.14.2 -Force
           Install-Module -Name DscResource.DocGenerator -RequiredVersion 0.12.2 -Force
 
       - name: Run terraform-docs
         run: |
           mkdir -p example/docs/generated
+          # terraform-docs v0.19 resolves --output-file relative to the module
+          # root (example/terraform/), not the working directory.
           terraform-docs markdown table \
-            --output-file example/docs/generated/terraform-readme.md \
+            --output-file ../docs/generated/terraform-readme.md \
             --output-mode replace \
             example/terraform/
 
@@ -477,7 +482,25 @@ jobs:
           git cliff --config cliff.toml --output docs/versioning/CHANGELOG.md || true
 
       - name: Build MkDocs site
-        run: mkdocs build --config-file example/mkdocs.yml --strict
+        # mkdocs resolves config paths (docs_dir, site_dir) against the working
+        # directory, not the config file's location — run from example/.
+        working-directory: example
+        run: |
+          set +e
+          mkdocs build --config-file mkdocs.yml --strict 2> /tmp/mkdocs.err
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            # Surface the warning/error lines as individual job annotations so
+            # failures are diagnosable without downloading the raw log.
+            n=0
+            while IFS= read -r line; do
+              echo "::error title=mkdocs $((n+1))::$(printf '%s' "$line" | head -c 240)"
+              n=$((n+1))
+              [ "$n" -ge 10 ] && break
+            done < <(grep -E 'ERROR|WARNING' /tmp/mkdocs.err | head -c 100000)
+            echo "mkdocs build failed with exit code $code (total problem lines: $(grep -cE 'ERROR|WARNING' /tmp/mkdocs.err))" >&2
+            exit "$code"
+          fi
 
       - name: Upload site artefact
         uses: actions/upload-artifact@v4

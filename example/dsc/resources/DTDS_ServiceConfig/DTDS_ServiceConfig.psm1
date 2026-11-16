@@ -123,9 +123,9 @@ class DTDS_ServiceConfig {
     [bool] Test() {
         if (-not $this._IsWindows()) { return $true }
 
-        $state = $this.Get()
-        return ($state.State -eq $this.State) -and
-               ($state.StartupType -eq $this.StartupType)
+        $current = $this.Get()
+        return ($current.State -eq $this.State) -and
+               ($current.StartupType -eq $this.StartupType)
     }
 
     # -----------------------------------------------------------------------
@@ -154,6 +154,7 @@ class DTDS_ServiceConfig {
     # Helper — returns $true when running on Windows
     # -----------------------------------------------------------------------
     hidden [bool] _IsWindows() {
-        return $IsWindows -or ($PSVersionTable.PSEdition -eq 'Desktop')
+        return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+            [System.Runtime.InteropServices.OSPlatform]::Windows)
     }
 }

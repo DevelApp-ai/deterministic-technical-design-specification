@@ -19,9 +19,11 @@
 | **Related Requirements** | [M-002](../requirements/moscow.md#must-have), [M-003](../requirements/moscow.md#must-have), [S-001](../requirements/moscow.md#should-have), [S-002](../requirements/moscow.md#should-have) |
 
 **Description:**  
-All Terraform resources must carry the four mandatory cost-allocation tags
-(`environment`, `app_name`, `owner`, `cost_center`) so that cloud expenditure
-can be attributed to the correct team and project.
+All cloud Terraform resources must carry the four mandatory cost-allocation
+tags (`environment`, `app_name`, `owner`, `cost_center`) so that cloud
+expenditure can be attributed to the correct team and project. Resource types
+whose provider schema has no `tags` support (e.g. the local-provider demo's
+`local_file`) are exempt.
 
 **Remediation:**  
 Add a `tags` block to the offending resource that includes all four required keys.
