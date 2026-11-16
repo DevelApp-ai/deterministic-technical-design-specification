@@ -45,6 +45,25 @@ ASTs are **generated artefacts**: they are git-ignored under
 contract is the committed JSON Schema `schemas/spectree-ast-v1.schema.json`
 (versioned independently of the grammars).
 
+## Determinism and gates
+
+The parser holds the same bar as the rest of the generated estate
+(`docs/generated/`):
+
+- **Byte-deterministic output** — repeated `--all` runs produce identical
+  ASTs (verifiable with `md5sum docs/generated/spectree/*.ast.json` across
+  runs); no timestamps, no unordered iteration.
+- **Schema-gated emission** — every AST is validated against the committed
+  schema *before* it is written; an unparseable or unvalidatable spec fails
+  the run with a `file:line` diagnostic, never silently.
+- **Selftest as a CI gate** — `scripts/generate-docs.sh` (Step 5) runs
+  `--selftest` before `--all`, so a broken parser or a broken spec fails the
+  docs build:
+  ```
+  spectree-parse selftest: 120 checks passed, 0 failed
+  spectree-parse: 9 AST(s) written to docs/generated/spectree
+  ```
+
 ## Grammar provenance
 
 The grammar files under `grammars/` are byte-identical copies of
