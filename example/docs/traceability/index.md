@@ -325,6 +325,45 @@ graph TB
 
 ---
 
+## SpecTree Chain: requirement → decision → component → test → code
+
+Since [ADR-0023](../adrs/0023-spectree-ingestion-first-class-sources.md),
+SpecTree files are first-class TDS sources, closing the traceability chain
+across both layers (see [ADR-0018](../adrs/0018-spectree-specification-first-ingestion.md)
+for the parsers and the [metadata contract](metadata-contract.md) for the
+normalized graph):
+
+```mermaid
+graph LR
+    SRS[".srs — requirements<br/>(spec:M-001…)"]
+    ADRS[".adr + docs/adrs/<br/>decisions (adr:ADR-00xx)"]
+    AI[".ai — components<br/>(spec:TodoService…)"]
+    TEST[".test — suites<br/>(spec:TodoService.tests)"]
+    NET[".NET members<br/>(<spec> tags, ADR-0022)"]
+    MOSCOW["moscow.md<br/>(moscow:M-001…)"]
+
+    SRS --> ADRS
+    ADRS --> AI
+    AI --> TEST
+    AI --> NET
+    NET -->|"<spec> verified"| MOSCOW
+    SRS -.->|"normalized onto one contract"| MOSCOW
+```
+
+- **Formats** — `.srs/.adr/.ai/.test/.model/.api/.ns` plus the solution
+  manifest live in-tree under `spectree/specs/` (ADR-0023, decision 3),
+  parsed to JSON ASTs and normalized onto the shared metadata contract
+  (ADR-0019) with namespace-qualified ids.
+- **Verification** — the OPA gate (`SPEC-001`, ADR-0020) enforces the
+  Minotaur-Grammars validation rules over the graph in CI.
+- **Composition** — the TDS composition manifest (ADR-0021) declares
+  which sources assemble into the published document.
+- **Application code** — `<spec>` XML doc tags (ADR-0022) trace .NET
+  members back to requirements, verified against the same contract in
+  the docs job.
+
+---
+
 ## Policy → Requirement → ADR Matrix
 
 | OPA Policy | Severity | MoSCoW Requirements | Architectural Decision |

@@ -112,6 +112,7 @@ nav:
       - ADR-0020 SpecTree Validation Gate: adrs/0020-spectree-validation-gate.md
       - ADR-0021 TDS Composition Manifest Grammar: adrs/0021-tds-composition-manifest-grammar.md
       - ADR-0022 Filtered .NET API Export: adrs/0022-xml-doc-filtered-api-export.md
+      - ADR-0023 SpecTree Ingestion as First-Class Sources: adrs/0023-spectree-ingestion-first-class-sources.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
       - Metadata Contract: traceability/metadata-contract.md

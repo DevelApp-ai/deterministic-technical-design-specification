@@ -70,6 +70,9 @@
         <mxCell id="adr-ADR-0022" value="ADR-0022 — Filtered .NET API Export from Build-Time XML Doc Comments" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
           <mxGeometry x="440" y="1090" width="320" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="adr-ADR-0023" value="ADR-0023 — SpecTree Ingestion as First-Class TDS Sources" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1140" width="320" height="30" as="geometry" />
+        </mxCell>
         <mxCell id="impl-.github/workflows/docs-pipeline.yml" value=".github/workflows/docs-pipeline.yml" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="40" width="320" height="30" as="geometry" />
         </mxCell>
@@ -256,14 +259,17 @@
         <mxCell id="impl-spectree/schemas/tds-manifest-v1.schema.json" value="spectree/schemas/tds-manifest-v1.schema.json" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3090" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-spectree/tds/" value="spectree/tds/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/specs/" value="spectree/specs/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3140" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-terraform/" value="terraform/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-spectree/tds/" value="spectree/tds/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3190" width="320" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="impl-version.txt" value="version.txt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+        <mxCell id="impl-terraform/" value="terraform/" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
           <mxGeometry x="1240" y="3240" width="320" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="impl-version.txt" value="version.txt" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="3290" width="320" height="30" as="geometry" />
         </mxCell>
         <mxCell id="pol-ARCH-001" value="ARCH-001 — ADR Catalog Validation" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
           <mxGeometry x="840" y="40" width="320" height="30" as="geometry" />
@@ -793,6 +799,9 @@
         <mxCell id="e-adr-ADR-0022-impl-scripts/generate-dotnet-doc-export.py" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0022" target="impl-scripts/generate-dotnet-doc-export.py">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="e-adr-ADR-0023-impl-spectree/specs/" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="adr-ADR-0023" target="impl-spectree/specs/">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="e-req-A-001-adr-ADR-0005" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-A-001" target="adr-ADR-0005">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -815,6 +824,9 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-APP-001-adr-ADR-0022" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-APP-001" target="adr-ADR-0022">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-APP-001-adr-ADR-0023" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-APP-001" target="adr-ADR-0023">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-APP-002-adr-ADR-0014" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-APP-002" target="adr-ADR-0014">
@@ -949,6 +961,9 @@
         <mxCell id="e-req-M-005-adr-ADR-0021" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0021">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="e-req-M-005-adr-ADR-0023" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-005" target="adr-ADR-0023">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="e-req-M-006-adr-ADR-0001" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-M-006" target="adr-ADR-0001">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
@@ -1010,6 +1025,9 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-S-006-adr-ADR-0021" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-006" target="adr-ADR-0021">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-req-S-006-adr-ADR-0023" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-006" target="adr-ADR-0023">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e-req-S-008-adr-ADR-0004" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#666666;" edge="1" parent="1" source="req-S-008" target="adr-ADR-0004">
