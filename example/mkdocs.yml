@@ -70,6 +70,7 @@ nav:
       - DSC Resources: dsc/index.md
   - Application:
       - Code Quality Gate: application/code-quality.md
+      - Architecture Policies: application/architecture-policies.md
   - Compliance:
       - OPA Policy Summary: compliance/opa-policies.md
       - NIS2 Article 21 Evidence: compliance/nis2.md

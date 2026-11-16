@@ -15,6 +15,7 @@ dotnet/
 │   ├── MyApp.Application/      # Use cases and DTOs
 │   └── MyApp.Domain/           # Entities and repository contracts
 ├── tests/
+│   ├── MyApp.ArchitectureTests/ # NetArchTest architecture policies
 │   └── MyApp.UnitTests/        # xUnit unit tests
 ├── MyApp.slnx                   # Solution entry point for build/test
 ├── Directory.Build.props       # Shared deterministic-build properties
@@ -61,6 +62,22 @@ Severities are configured in `.editorconfig`: security-critical rules are
 `error`, code-quality rules are `warning` (fail the build via
 `TreatWarningsAsErrors`), style preferences are `suggestion`. The enforced
 rule catalogue is documented in `docs/application/code-quality.md`.
+
+## Architecture policy gate
+
+`tests/MyApp.ArchitectureTests` enforces named architecture policies using
+NetArchTest.Rules:
+
+| Policy | Enforces |
+|--------|-----------|
+| `APP-ARCH-001` | Controllers depend only on the application service layer, never on repository contracts |
+| `APP-ARCH-002` | The domain layer references nothing above it (dependencies flow `Api → Application → Domain` only) |
+| `APP-SEC-001` | Controllers expose DTOs, never domain entities |
+| `APP-ARCH-003` | Every public member has an XML documentation entry (reflection-verified, custom check) |
+
+The policy catalogue is published to `docs/application/architecture-policies.md`,
+generated from the policy metadata literals embedded in the test source by
+`scripts/generate-dotnet-policy-docs.py` (run from the `example/` directory).
 
 ## Endpoints
 
