@@ -147,6 +147,7 @@ Context Protocol (MCP).
 | AI-001 | The Backstage catalog must be queryable by AI agents via a standardised MCP interface without custom per-model integration code | `backstage/mcp-clients/`, `.vscode/mcp.json`, ADR-0009 |
 | AI-002 | The Backstage catalog must include at least one System, one API, one Group, one User, two Components, and two Resources so AI agents have a rich, traversable entity hierarchy to explore | `catalog-info.yaml` (7 entities) |
 | AI-003 | VS Code / GitHub Copilot MCP configuration must be committed to the repository so any developer cloning the repo gets AI catalog access immediately | `.vscode/mcp.json` |
+| AI-004 | The TDS determinism boundary is documented: deterministic-generated vs human-authored vs AI-assisted content classes with guardrails, and AI as a read-only consumer via MCP | `docs/architecture/ai-boundary.md`, ADR-0025 |
 
 ---
 

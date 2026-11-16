@@ -238,3 +238,8 @@ graph TD
 | `backstage/mcp-clients/cursor-mcp.json` | Cursor MCP config snippet |
 | ADR | [ADR-0009](../adrs/0009-backstage-mcp-server.md) |
 | Requirements | [AI-001, AI-002, AI-003](../requirements/moscow.md#should-have--ai--mcp-integration) |
+
+The MCP surface is **read-only consumption**: AI agents query the catalog;
+they never produce spec content.  The line between deterministic
+generation and AI assistance is documented in the
+[AI/LLM Boundary](../architecture/ai-boundary.md) (ADR-0025).

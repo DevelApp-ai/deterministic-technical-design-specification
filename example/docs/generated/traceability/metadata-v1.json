@@ -411,6 +411,11 @@
       "type": "references"
     },
     {
+      "from": "adr:ADR-0025",
+      "to": "moscow:AI-004",
+      "type": "references"
+    },
+    {
       "from": "policy:ARCH-001",
       "to": "adr:ADR-0012",
       "type": "implements"
@@ -802,14 +807,14 @@
     }
   ],
   "generated": {
-    "edgeCount": 160,
+    "edgeCount": 161,
     "namespaces": {
-      "adr": 24,
-      "moscow": 72,
+      "adr": 25,
+      "moscow": 73,
       "policy": 18,
       "spec": 18
     },
-    "nodeCount": 132,
+    "nodeCount": 134,
     "normalizer": "normalize-traceability-metadata.py",
     "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
   },
@@ -1314,6 +1319,22 @@
       "type": "adr"
     },
     {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "docs/architecture/ai-boundary.md"
+      ],
+      "id": "adr:ADR-0025",
+      "relatedRequirements": [
+        "moscow:AI-004"
+      ],
+      "source": "docs/adrs/0025-ai-consumer-not-producer.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "AI as Consumer, Not Producer of TDS Content",
+      "type": "adr"
+    },
+    {
       "category": "Should Have — Architects",
       "evidence": [
         "`docs/architecture/index.md`"
@@ -1388,6 +1409,17 @@
       "moscow": "should",
       "source": "docs/requirements/moscow.md",
       "title": "VS Code / GitHub Copilot MCP configuration must be committed to the repository so any developer cloning the repo gets AI catalog access immediately",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — AI & MCP Integration",
+      "evidence": [
+        "`docs/architecture/ai-boundary.md`, ADR-0025"
+      ],
+      "id": "moscow:AI-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "The TDS determinism boundary is documented: deterministic-generated vs human-authored vs AI-assisted content classes with guardrails, and AI as a read-only consumer via MCP",
       "type": "requirement"
     },
     {
