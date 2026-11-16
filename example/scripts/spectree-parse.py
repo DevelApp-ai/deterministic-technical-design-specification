@@ -39,6 +39,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 
 SCHEMA_NAME = "spectree-ast"
 SCHEMA_VERSION = 1
@@ -1474,3 +1475,178 @@ def run_selftest(root):
           {"comparator": "<=", "value": 200, "unit": "ms"})
     check("ns/note", p1["note"] == "p95 read latency for GET /api/todos")
     check("ns/bound-ge", ns["scalability"][0]["bound"] ==
+          {"comparator": ">=", "value": 100, "unit": "rps"})
+    check("ns/bound-float", ns["scalability"][1]["bound"] ==
+          {"comparator": ">=", "value": 99.9, "unit": "%"})
+    check("ns/sec-ids",
+          [s["id"] for s in ns["security"]] == ["SEC-1", "SEC-2"])
+    check("ns/classification",
+          ns["security"][0]["control"] ==
+          {"kind": "classification", "value": "internal"})
+    check("ns/authz",
+          ns["security"][1]["control"] == {"kind": "authz", "value": "TodoOwner"})
+    check("ns/compliance",
+          [c["framework"] for c in ns["compliance"]] == ["NIS2", "GDPR"],
+          repr(ns["compliance"]))
+    ns2 = parse_ns("# NFR: X\n\n### Performance\n"
+                   "- PERF-9 (memory): between 1 and 2 GB\n"
+                   "- PERF-1 (latency): <= 200 ms adr: ADR-0015\n")
+    check("ns/between", ns2["performance"][0]["bound"] ==
+          {"comparator": "between", "min": 1, "max": 2, "unit": "GB"})
+    check("ns/adr-link",
+          ns2["performance"][1]["adr"] == "ADR-0015" and
+          ns2["performance"][1]["note"] is None)
+    expect_error("ns/bad-unit", ".ns",
+                 "# NFR: X\n\n### Performance\n- PERF-1 (latency): <= 200 furlongs\n")
+    expect_error("ns/bad-kind", ".ns",
+                 "# NFR: X\n\n### Performance\n- PERF-1 (speed): <= 200 ms\n")
+    expect_error("ns/bad-classification", ".ns",
+                 "# NFR: X\n\n### Security\n- SEC-1: classification: top-secret\n")
+    expect_error("ns/unknown-section", ".ns", "# NFR: X\n\n### Reliability\n")
+    expect_error("ns/entry-outside-section", ".ns",
+                 "# NFR: X\n- PERF-1 (latency): <= 200 ms\n")
+
+    # ---- AdrSpec ---------------------------------------------------------
+    adr = parse_adr(specs["spectree-ingestion.adr"])
+    check("adr/id", adr["id"] == "ADR-0018")
+    check("adr/front-title", adr["title"] == "SpecTree specification-first ingestion")
+    check("adr/status", adr["status"] == "accepted")
+    check("adr/status-section", adr["statusSection"] == "accepted")
+    check("adr/date", adr["date"] == "2026-11-16")
+    check("adr/author", adr["author"] == "larsbuch")
+    check("adr/supersedes-empty", adr["supersedes"] == [])
+    check("adr/related", adr["relatedRequirements"] == ["M-003", "S-001"])
+    check("adr/header-title", adr["headerTitle"] == adr["title"])
+    check("adr/context",
+          len(adr["context"]) == 6 and
+          all(isinstance(line, str) and line for line in adr["context"]))
+    check("adr/decision", len(adr["decision"]) == 7)
+    check("adr/consequence-kinds",
+          [c["kind"] for c in adr["consequences"]] ==
+          ["positive", "positive", "negative", "neutral"])
+    check("adr/consequence-text",
+          adr["consequences"][0]["text"] ==
+          "requirement, component and NFR data become queryable pipeline inputs")
+    check("adr/alternatives",
+          adr["alternatives"] ==
+          ["ANTLR-generated parsers from the grammar suite",
+           "A .NET CLI tool distributed as a NuGet package"])
+    check("adr/compliance",
+          adr["compliance"] == ["spectree_parse", "generate_docs"])
+
+    adr_base = ("---\nid: ADR-0001\ntitle: T\nstatus: accepted\n"
+                "date: 2026-01-01\nauthor: larsbuch\n%s---\n\n"
+                "# ADR-%s T\n\n## Status\naccepted\n")
+    supersedes_adr = parse_adr(
+        adr_base % ("supersedes: [ADR-0009, ADR-0010]\n", "0001"))
+    check("adr/supersedes-list",
+          supersedes_adr["supersedes"] == ["ADR-0009", "ADR-0010"])
+    expect_error("adr/missing-front-matter", ".adr", "not an adr\n")
+    expect_error("adr/status-mismatch", ".adr",
+                 "---\nid: ADR-0001\ntitle: T\nstatus: accepted\n"
+                 "date: 2026-01-01\nauthor: larsbuch\n---\n\n"
+                 "# ADR-0001 T\n\n## Status\nproposed\n")
+    expect_error("adr/id-mismatch", ".adr",
+                 "---\nid: ADR-0001\ntitle: T\nstatus: accepted\n"
+                 "date: 2026-01-01\nauthor: larsbuch\n---\n\n"
+                 "# ADR-0002 T\n")
+
+    # ---- SolutionManifest ------------------------------------------------
+    man = parse_manifest(specs["myapp.manifest"])
+    check("man/solution", man["solution"] == "MyApp")
+    check("man/projects",
+          [p["name"] for p in man["projects"]] ==
+          ["MyApp.Domain", "MyApp.Application", "MyApp.Api"])
+    check("man/project-tfm",
+          man["projects"][0] ==
+          {"name": "MyApp.Domain",
+           "path": "dotnet/src/MyApp.Domain/MyApp.Domain.csproj",
+           "tfm": "net10.0"})
+    check("man/specs-count", len(man["specs"]) == 8, repr(len(man["specs"])))
+    check("man/spec-entry",
+          man["specs"][1] == {"path": "spectree/specs/todoapi.ai",
+                              "project": "MyApp.Api"})
+    check("man/generations", len(man["generations"]) == 7)
+    check("man/gen-spec-types",
+          [g["specType"] for g in man["generations"]] ==
+          ["srs", "ai", "api", "model", "test", "ns", "adr"])
+    check("man/exclusions",
+          man["exclusions"] ==
+          [{"path": "dotnet/src/MyApp.Api/Program.cs",
+            "reason": "composition root with hand-written host bootstrap"}])
+    expect_error("man/bad-header", ".manifest", "Solution MyApp\n")
+    expect_error("man/bad-generation", ".manifest",
+                 "Solution: X\nGenerate: gen for cobra -> out\n")
+    expect_error("man/bad-project", ".manifest",
+                 "Solution: X\nProject: 1abc -> path\n")
+
+    # ---- AST envelope, schema and determinism -----------------------------
+    api_path = os.path.join(specs_dir, "todoapi.api")
+    doc = parse_file(api_path, root)
+    check("env/head",
+          doc["schema"] == "spectree-ast" and doc["schemaVersion"] == 1 and
+          doc["astType"] == "api")
+    check("env/source",
+          doc["source"] ==
+          {"path": "spectree/specs/todoapi.api", "grammar": "ApiSpec",
+           "grammarCommit": GRAMMAR_COMMIT})
+    unknown_ext_ok = False
+    try:
+        build_ast("x.txt", "x.txt", "irrelevant")
+    except ParseError:
+        unknown_ext_ok = True
+    except Exception:  # noqa: BLE001 — selftest reports all failures
+        pass
+    check("env/unknown-ext", unknown_ext_ok)
+
+    payload = ast_to_json(doc)
+    check("json/deterministic",
+          payload == ast_to_json(parse_file(api_path, root)))
+    check("json/roundtrip", json.loads(payload) == doc)
+    check("json/newline", payload.endswith("\n") and "\r" not in payload)
+
+    schema = load_schema()
+    check("schema/valid", schema_errors(doc, schema, schema) == [])
+    bad_version = {k: v for k, v in doc.items() if k != "schemaVersion"}
+    bad_version["schemaVersion"] = 99
+    check("schema/rejects-mutation",
+          schema_errors(bad_version, schema, schema) != [])
+    bad_missing = {k: v for k, v in doc.items() if k != "astType"}
+    check("schema/rejects-missing",
+          schema_errors(bad_missing, schema, schema) != [])
+
+    out1 = tempfile.mkdtemp(prefix="spectree-selftest-1-")
+    out2 = tempfile.mkdtemp(prefix="spectree-selftest-2-")
+    try:
+        count1 = parse_all(root, out1)
+        count2 = parse_all(root, out2)
+        check("all/count", count1 == 9 and count2 == 9, repr((count1, count2)))
+        names1 = sorted(os.listdir(out1))
+        check("all/filenames",
+              names1 == [name + ".ast.json" for name in sorted(specs)],
+              repr(names1))
+        check("all/deterministic",
+              all(open(os.path.join(out1, name), "rb").read() ==
+                  open(os.path.join(out2, name), "rb").read()
+                  for name in names1))
+        with open(os.path.join(out1, "myapp.manifest.ast.json"),
+                  "r", encoding="utf-8") as handle:
+            written = json.load(handle)
+        check("all/ast-equality",
+              written == parse_file(os.path.join(specs_dir, "myapp.manifest"),
+                                    root))
+    finally:
+        for out_dir in (out1, out2):
+            for name in os.listdir(out_dir):
+                os.remove(os.path.join(out_dir, name))
+            os.rmdir(out_dir)
+
+    print("spectree-parse selftest: %d checks passed, %d failed"
+          % (passed, len(failures)))
+    for failure in failures:
+        print("  FAIL %s" % failure, file=sys.stderr)
+    return 1 if failures else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
