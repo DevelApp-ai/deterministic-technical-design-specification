@@ -69,6 +69,7 @@ nav:
       - Ansible Host Report: configuration/ansible.md
       - DSC Resources: dsc/index.md
   - Application:
+      - Overview: application/index.md
       - Code Quality Gate: application/code-quality.md
       - Architecture Policies: application/architecture-policies.md
       - Architecture Diagrams: application/architecture-diagrams.md
@@ -122,3 +123,4 @@ nav:
       - Compute: generated/compute-summary.md
       - Logging & Audit: generated/logging-summary.md
       - DSC Resources Overview: generated/dsc-resources.md
+      - OpenAPI Spec (.NET): generated/openapi.json
