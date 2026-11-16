@@ -43,6 +43,7 @@ example/site/
 example/docs/generated/host-report-*.md
 example/docs/generated/plan.json
 example/docs/generated/plan.bin
+example/docs/generated/openapi.json
 example/docs/generated/dotnet-api/
 
 # .NET build artefacts (example application layer)

@@ -120,21 +120,35 @@ terraform-docs markdown table \
 success "terraform-docs written to docs/generated/terraform-readme.md"
 
 # ---------------------------------------------------------------------------
-# Step 5 — .NET build gate + DocFX API reference (markdown)
+# Step 5 — .NET build gate + DocFX API reference + OpenAPI rendering
 # ---------------------------------------------------------------------------
-info "Step 5/8 — .NET build gate + DocFX API reference (markdown)"
+info "Step 5/8 — .NET build gate + DocFX API reference + OpenAPI rendering"
 
 DOTNET_DIR="${REPO_ROOT}/dotnet"
 
 if command -v dotnet &> /dev/null; then
   pushd "${DOTNET_DIR}" > /dev/null
 
+  # Remove the stale OpenAPI document so the build-time GetDocument target
+  # always re-emits it (MSBuild skips up-to-date targets otherwise).
+  rm -f "${DOCS_GENERATED_DIR}/openapi.json"
+
   # Build first: the deterministic .NET build gate (warnings-as-errors +
   # Roslyn analyzers) must pass before any documentation is generated from
-  # the compiled assemblies. The NetArchTest architecture policies run as a
-  # separate test job in CI before the docs-build stage.
+  # the compiled assemblies. The build also emits the native OpenAPI
+  # document (Microsoft.AspNetCore.OpenApi build-time generation) to
+  # docs/generated/openapi.json. The NetArchTest architecture policies run
+  # as a separate test job in CI before the docs-build stage.
   dotnet build MyApp.slnx -c Release
   success ".NET solution built (Release, zero warnings required)."
+  success "OpenAPI document emitted to docs/generated/openapi.json"
+
+  if command -v python3 &> /dev/null; then
+    python3 "${REPO_ROOT}/scripts/generate-openapi-docs.py"
+    success "OpenAPI reference rendered to docs/application/api-reference.md"
+  else
+    warn "python3 not found — skipping OpenAPI reference rendering."
+  fi
 
   # DocFX is pinned via the local tool manifest
   # (dotnet/dotnet-tools.json, currently docfx 2.81.0). docfx metadata

@@ -71,6 +71,7 @@ nav:
   - Application:
       - Code Quality Gate: application/code-quality.md
       - Architecture Policies: application/architecture-policies.md
+      - API Reference (OpenAPI): application/api-reference.md
       - .NET API Reference (DocFX):
           - MyApp.Domain: generated/dotnet-api/MyApp.Domain.md
           - MyApp.Application: generated/dotnet-api/MyApp.Application.md
