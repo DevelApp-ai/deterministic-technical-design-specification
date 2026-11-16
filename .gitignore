@@ -45,6 +45,7 @@ example/docs/generated/plan.json
 example/docs/generated/plan.bin
 example/docs/generated/openapi.json
 example/docs/generated/dotnet-api/
+example/docs/generated/architecture/
 
 # .NET build artefacts (example application layer)
 **/bin/
