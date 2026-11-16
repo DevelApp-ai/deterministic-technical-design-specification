@@ -5,7 +5,8 @@ A fully working demonstration of the principles described in
 
 Every piece of documentation in the generated site is either:
 
-- **auto-generated** from source code (Terraform HCL, Ansible facts, OPA Rego metadata), or
+- **auto-generated** from source code (Terraform HCL, Ansible facts, OPA Rego
+  metadata, .NET assemblies), or
 - **version-controlled Markdown** co-located with the code it describes (ADRs, MoSCoW requirements).
 
 Nothing is written manually after the fact.
@@ -23,6 +24,12 @@ Nothing is written manually after the fact.
 | Auto-generated IaC docs | terraform-docs | `docs/generated/terraform-readme.md` |
 | Living configuration docs | Ansible + Jinja2 | `ansible/templates/host-report.md.j2` |
 | PowerShell DSC | Class-based DSC resource + Pester tests + DscResource.DocGenerator | `dsc/` |
+| Application as Code | ASP.NET Core API (layered: Api → Application → Domain) | `dotnet/src/` |
+| .NET API docs | DocFX (Markdown export) | `docs/generated/dotnet-api/` |
+| Architecture policy | NetArchTest + xUnit | `dotnet/tests/MyApp.ArchitectureTests/` |
+| Code quality gate | Roslyn analyzers (NetAnalyzers, Roslynator, SonarAnalyzer) + `TreatWarningsAsErrors` | `dotnet/Directory.Build.props`, `dotnet/.editorconfig` |
+| API contract docs | .NET native OpenAPI (build-time, no Swashbuckle) | `docs/generated/openapi.json` |
+| App architecture diagrams | C4Sharp → Mermaid | `docs/generated/architecture/` |
 | MoSCoW requirements | Machine-readable Markdown | `docs/requirements/moscow.md` |
 | Architectural Decision Records | Structured Markdown with front-matter | `docs/adrs/` |
 | Traceability | OPA policy → ADR → MoSCoW requirement with Mermaid diagrams | `docs/traceability/index.md` |
@@ -86,6 +93,7 @@ Install the required tools:
 | OPA | ≥ 0.60 | [openpolicyagent.org](https://www.openpolicyagent.org/docs/latest/#running-opa) |
 | Ansible | ≥ 10 | `pip install ansible` |
 | MkDocs + Material | ≥ 1.5 / 9 | `pip install mkdocs mkdocs-material pymdown-extensions` |
+| .NET SDK | 10.0.404 (pinned) | [dot.net](https://dotnet.microsoft.com/download) — see `dotnet/global.json` |
 
 Then run:
 
@@ -93,6 +101,22 @@ Then run:
 cd example
 bash scripts/generate-docs.sh
 ```
+
+### Application workload (.NET)
+
+The .NET application layer has its own build and test gates:
+
+```bash
+cd example/dotnet
+dotnet tool restore                    # restores the pinned DocFX tool
+dotnet build MyApp.slnx -c Release    # Roslyn code-quality gate + native OpenAPI export
+dotnet test MyApp.slnx --no-build     # unit tests + NetArchTest architecture policies
+```
+
+`scripts/generate-docs.sh` runs these steps automatically (Step 5) when
+`dotnet` is on the PATH and skips them with a warning otherwise — until the
+Docker toolchain image gains the .NET SDK (tracked in issue #18), run the
+application steps natively or via Option C.
 
 ---
 
@@ -105,17 +129,23 @@ automatically on every push to `main` or pull request touching `example/`.
 Pull Request
      │
      ▼
-┌─────────────┐    ┌──────────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│  OPA Tests  │───▶│  Terraform + OPA     │───▶│  Docs Build      │───▶│  GitHub Pages   │
-│  (opa test) │    │  Validate, Plan,     │    │  terraform-docs  │    │  Deploy         │
-│             │    │  OPA gate            │    │  Ansible         │    │  (main only)    │
-└─────────────┘    └──────────────────────┘    │  MkDocs build    │    └─────────────────┘
-                                               └──────────────────┘
+┌──────────────┐   ┌─────────────┐   ┌──────────────────────┐   ┌──────────────────┐   ┌─────────────────┐
+│ .NET Build + │──▶│  OPA Tests  │──▶│  Terraform + OPA     │──▶│  Docs Build      │──▶│  GitHub Pages   │
+│ Tests        │   │  (opa test) │    │  Validate, Plan,     │    │  terraform-docs  │    │  Deploy         │
+│ Roslyn gate, │   │             │    │  OPA gate            │    │  Ansible        │    │  (main only)    │
+│ NetArchTest  │   │             │    │                      │    │  .NET API docs  │    │                 │
+└──────────────┘   └─────────────┘    └──────────────────────┘    │  + MkDocs build │    └─────────────────┘
+                                                                └──────────────────┘
 ```
 
-A pull request that introduces an OPA policy violation (e.g., a resource missing
-a required FinOps tag) **cannot be merged** — the pipeline fails and the denial
-messages are surfaced as job output.
+A pull request that introduces a Roslyn analyzer violation, a NetArchTest
+architecture-policy violation, or an OPA policy violation (e.g., a resource
+missing a required FinOps tag) **cannot be merged** — the pipeline fails and
+the findings are surfaced as job output.
+
+The .NET stage (`dotnet build` + `dotnet test`) also regenerates the
+application-layer documentation: the DocFX API reference, the native OpenAPI
+document, and the C4Sharp diagrams.
 
 ---
 
@@ -153,6 +183,23 @@ example/
 │       └── docs-pipeline.yml            # GitHub Actions pipeline
 ├── backstage/
 │   └── app-config.yaml                  # Backstage application configuration
+├── dotnet/                              # .NET application workload (ADR-0013 – ADR-0017)
+│   ├── MyApp.slnx                       # Solution (.NET 10 solution file format)
+│   ├── global.json                      # Pinned .NET SDK version (10.0.404)
+│   ├── Directory.Build.props            # Analyzers, deterministic build, warnings-as-errors
+│   ├── .editorconfig                    # Roslyn analyzer severities (code-quality gate)
+│   ├── dotnet-tools.json                # Pinned local tools (DocFX)
+│   ├── src/
+│   │   ├── MyApp.Api/                   # Controllers, DTOs, build-time OpenAPI export
+│   │   ├── MyApp.Application/           # Application services + repository contracts
+│   │   └── MyApp.Domain/                # Domain entities (pure model)
+│   ├── tests/
+│   │   ├── MyApp.UnitTests/             # xUnit unit tests
+│   │   └── MyApp.ArchitectureTests/     # NetArchTest architecture policies (APP-ARCH-*, APP-SEC-*)
+│   ├── tools/
+│   │   └── MyApp.Architecture.Diagrams/ # C4Sharp → Mermaid C4 diagram generator
+│   └── docs/
+│       └── docfx.json                   # DocFX configuration (Markdown export)
 ├── terraform/
 │   ├── main.tf                          # Infrastructure resources (local provider)
 │   ├── variables.tf                     # Input variables (parsed by terraform-docs)
@@ -164,12 +211,15 @@ example/
 │   └── templates/
 │       └── host-report.md.j2            # Jinja2 → deterministic Markdown
 ├── policies/
-│   └── terraform/
-│       ├── deny_missing_tags.rego       # FINOPS-001 (with related_adr, related_requirements)
-│       ├── deny_missing_tags_test.rego  # Unit tests for FINOPS-001
-│       └── deny_unencrypted_storage.rego# SEC-001 (with related_adr, related_requirements)
+│   ├── terraform/
+│   │   ├── deny_missing_tags.rego       # FINOPS-001 (with related_adr, related_requirements)
+│   │   ├── deny_missing_tags_test.rego  # Unit tests for FINOPS-001
+│   │   └── deny_unencrypted_storage.rego# SEC-001 (with related_adr, related_requirements)
+│   └── architecture/                    # ADR-0012 traceability kit (validate, chain, gate)
 ├── docs/
 │   ├── index.md                         # Site home page
+│   ├── application/                     # Application layer chapter (overview, quality gate,
+│   │                                    # architecture policies, diagrams, API reference)
 │   ├── adrs/                            # ADRs (related_requirements in front-matter)
 │   │   ├── 0001-use-terraform-for-iac.md
 │   │   ├── 0002-use-opa-for-policy.md
@@ -187,7 +237,10 @@ example/
 │   ├── compliance/
 │   │   └── opa-policies.md              # OPA policy summary with traceability links
 │   └── generated/                       # Auto-generated artefacts (git-ignored)
-│       └── terraform-readme.md          # terraform-docs output (seeded copy)
+│       ├── terraform-readme.md          # terraform-docs output (seeded copy)
+│       ├── dotnet-api/                  # DocFX Markdown export (build-time)
+│       ├── openapi.json                 # Native build-time OpenAPI document
+│       └── architecture/                # C4Sharp Mermaid + PlantUML sources (build-time)
 └── scripts/
     └── generate-docs.sh                 # Local one-shot pipeline runner
 ```
@@ -205,12 +258,29 @@ example/
 3. Add a corresponding row to `docs/compliance/opa-policies.md`.
 4. The CI pipeline will automatically evaluate the new policy on the next push.
 
+### Adding a new .NET architecture policy
+
+1. Add the policy to
+   `dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs` — either
+   a `Policy.Define("APP-XXX-000", "description")` NetArchTest policy or a
+   custom test with a matching `("APP-XXX-000", "description")` metadata tuple.
+2. Reference the requirement id it enforces in `docs/requirements/moscow.md`
+   (APP-xxx) and, where applicable, in the ADR's `related_requirements`
+   front-matter.
+3. Regenerate the policy page:
+   `python3 scripts/generate-dotnet-policy-docs.py`.
+4. Regenerate the traceability artifacts:
+   `python3 scripts/scan-architecture.py && python3 scripts/generate-traceability.py`.
+
 ### Adding a new ADR
 
 1. Copy an existing ADR from `docs/adrs/` as a template.
 2. Increment the ADR number and update the front-matter metadata, including
    `governs:` — the paths the decision protects (required for Accepted ADRs;
-   `validate.rego` flags one without territory).
+   `validate.rego` flags one without territory). Note the numbering landscape:
+   ADR-0001 – ADR-0012 cover the infrastructure estate and the traceability
+   kit; the .NET application series runs ADR-0013 – ADR-0017, so new
+   application-layer decisions start at ADR-0018.
 3. Add the new file to the `nav` section of `mkdocs.yml`.
 4. Regenerate the artifacts and commit them:
    `python3 scripts/scan-architecture.py && python3 scripts/generate-traceability.py`
