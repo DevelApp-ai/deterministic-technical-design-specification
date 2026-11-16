@@ -1,0 +1,29 @@
+Grammar: SolutionManifest
+FormatType: EBNF
+TokenSplitter: Space
+
+# SolutionManifest - grammar for the SpecTree solution manifest.
+# Binds the specification tree to a .NET solution: project mappings,
+# generation targets and exclusion rules for hand-written code.
+
+<manifest-document> ::= <solution-header> <declaration>+ => { buildManifest($1, $2); }
+
+<solution-header> ::= "Solution:" <solution-name> => { setSolutionName($2); }
+
+<declaration> ::= <project-decl>
+               | <spec-decl>
+               | <generation-decl>
+               | <exclusion-decl>
+
+<project-decl> ::= "Project:" <identifier> "->" <file-path> ("tfm:" <tfm>)? => { mapProject($2, $4, $6); }
+<spec-decl> ::= "Spec:" <file-path> "->" <identifier> => { bindSpecToProject($2, $4); }
+<generation-decl> ::= "Generate:" <generator-name> "for" <spec-type> ("->" <file-path>)? => { addGenerationRule($2, $4, $6); }
+<exclusion-decl> ::= "Exclude:" <file-path> ("reason:" <free-text>)? => { addExclusion($2, $4); }
+
+<solution-name> ::= <identifier>
+<tfm> ::= "net8.0" | "net9.0" | "netstandard2.0" | <identifier>
+<spec-type> ::= "ai" | "test" | "api" | "model" | "srs" | "ns" | "adr"
+<generator-name> ::= <identifier>
+<file-path> ::= /[a-zA-Z0-9_.\-/]+/
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_.]*/
+<free-text> ::= /[^\n]+/

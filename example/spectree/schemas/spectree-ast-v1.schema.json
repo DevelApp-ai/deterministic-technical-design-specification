@@ -1,0 +1,685 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "spectree-ast-v1",
+  "title": "SpecTree AST envelope (version 1)",
+  "description": "Stable, versioned JSON contract for the ASTs emitted by scripts/spectree-parse.py. Versioned independently of the vendored grammars (example/spectree/grammars/, pinned at Minotaur-Grammars commit de45cd55169d).",
+  "$defs": {
+    "Source": {
+      "type": "object",
+      "required": ["path", "grammar", "grammarCommit"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "grammar": {
+          "enum": ["SrsSpec", "AiSpec", "TestSpec", "ApiSpec", "ModelSpec", "NsSpec", "AdrSpec", "SolutionManifest"]
+        },
+        "grammarCommit": {"type": "string", "pattern": "^de45cd55169d$"}
+      }
+    },
+    "SrsAst": {
+      "type": "object",
+      "required": ["project", "version", "stakeholders", "scope", "moscow", "traceability"],
+      "additionalProperties": false,
+      "properties": {
+        "project": {"type": "string", "minLength": 1},
+        "version": {"type": ["string", "null"]},
+        "stakeholders": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "scope": {"type": ["string", "null"]},
+        "moscow": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "requirements"],
+            "additionalProperties": false,
+            "properties": {
+              "category": {"enum": ["Must Have", "Should Have", "Could Have", "Won't Have"]},
+              "requirements": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "text", "acceptance", "satisfiedBy"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {"type": "string", "pattern": "^(?:REQ|M|S|C|W)-[0-9]+$"},
+                    "text": {"type": "string", "minLength": 1},
+                    "acceptance": {"type": ["string", "null"]},
+                    "satisfiedBy": {"type": "array", "items": {"type": "string", "minLength": 1}}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "traceability": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "additionalProperties": false,
+            "properties": {
+              "from": {"type": "string", "minLength": 1},
+              "to": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "AiAst": {
+      "type": "object",
+      "required": ["component", "description", "dependencies", "namespace", "version", "requirements", "endpoints", "dataModel", "compliance"],
+      "additionalProperties": false,
+      "properties": {
+        "component": {"type": "string", "minLength": 1},
+        "description": {"type": ["string", "null"]},
+        "dependencies": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "namespace": {"type": ["string", "null"]},
+        "version": {"type": ["string", "null"]},
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": ["string", "null"], "pattern": "^(?:REQ|M|S|C|W)-[0-9]+$"},
+              "kind": {"enum": ["declared", "must", "should"]},
+              "text": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["method", "route", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "method": {"enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+              "route": {"type": "string", "minLength": 1},
+              "description": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "dataModel": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["entity", "fields"],
+            "additionalProperties": false,
+            "properties": {
+              "entity": {"type": "string", "minLength": 1},
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "type": {"type": "string", "minLength": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "compliance": {
+          "type": "object",
+          "required": ["adrReferences", "requirementLinks"],
+          "additionalProperties": false,
+          "properties": {
+            "adrReferences": {"type": "array", "items": {"type": "string", "pattern": "^ADR-[0-9]+$"}},
+            "requirementLinks": {"type": "array", "items": {"type": "string", "pattern": "^(?:REQ|M|S|C|W)-[0-9]+$"}}
+          }
+        }
+      }
+    },
+    "TestAst": {
+      "type": "object",
+      "required": ["component", "target", "coverage", "scenarios", "edgeCases", "performance", "requirementCoverage"],
+      "additionalProperties": false,
+      "properties": {
+        "component": {"type": "string", "minLength": 1},
+        "target": {"type": ["string", "null"]},
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scenarioCoverage": {"type": ["integer", "number"]},
+            "requirementCoverage": {"type": ["integer", "number"]},
+            "mustLevel": {"type": "boolean"}
+          }
+        },
+        "scenarios": {"$ref": "#/$defs/ScenarioList"},
+        "edgeCases": {"$ref": "#/$defs/ScenarioList"},
+        "performance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text", "threshold"],
+            "additionalProperties": false,
+            "properties": {
+              "text": {"type": "string", "minLength": 1},
+              "threshold": {
+                "type": "object",
+                "required": ["comparator", "value", "unit"],
+                "additionalProperties": false,
+                "properties": {
+                  "comparator": {"enum": ["under", "within", "at-least", "at-most"]},
+                  "value": {"type": ["integer", "number"]},
+                  "unit": {"enum": ["ms", "s", "min", "rps", "ops", "%"]}
+                }
+              }
+            }
+          }
+        },
+        "requirementCoverage": {"type": "array", "items": {"type": "string", "pattern": "^(?:REQ|M|S|C|W)-[0-9]+$"}}
+      }
+    },
+    "ScenarioList": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["kind", "given", "when", "then"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["gwt"]},
+              "given": {"type": "string", "minLength": 1},
+              "when": {"type": "string", "minLength": 1},
+              "then": {"type": "string", "minLength": 1}
+            }
+          },
+          {
+            "type": "object",
+            "required": ["kind", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["should"]},
+              "text": {"type": "string", "minLength": 1}
+            }
+          }
+        ]
+      }
+    },
+    "ApiAst": {
+      "type": "object",
+      "required": ["interface", "version", "authentication", "baseRoute", "status", "deprecatedSince", "endpoints", "schemas", "errorContracts"],
+      "additionalProperties": false,
+      "properties": {
+        "interface": {"type": "string", "minLength": 1},
+        "version": {"type": ["string", "null"]},
+        "authentication": {"type": ["string", "null"], "enum": ["none", "bearer", "apikey", "oauth2", "mtls", null]},
+        "baseRoute": {"type": ["string", "null"]},
+        "status": {"enum": ["active", "deprecated"]},
+        "deprecatedSince": {"type": ["string", "null"]},
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["method", "route", "description", "responses"],
+            "additionalProperties": false,
+            "properties": {
+              "method": {"enum": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"]},
+              "route": {"type": "string", "minLength": 1},
+              "description": {"type": "string", "minLength": 1},
+              "responses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["statusCode", "schema"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "statusCode": {"type": "integer", "minimum": 100, "maximum": 599},
+                    "schema": {"type": "string", "minLength": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "schemas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "fields"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type", "constraints"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "type": {"type": "string", "minLength": 1},
+                    "constraints": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "required": ["kind"],
+                            "additionalProperties": false,
+                            "properties": {"kind": {"enum": ["required", "nullable", "readOnly"]}}
+                          },
+                          {
+                            "type": "object",
+                            "required": ["kind", "value"],
+                            "additionalProperties": false,
+                            "properties": {
+                              "kind": {"enum": ["min", "max"]},
+                              "value": {"type": ["integer", "number"]}
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "required": ["kind", "value"],
+                            "additionalProperties": false,
+                            "properties": {
+                              "kind": {"enum": ["pattern"]},
+                              "value": {"type": "string"}
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "errorContracts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["statusCode", "description", "code"],
+            "additionalProperties": false,
+            "properties": {
+              "statusCode": {"type": "integer", "minimum": 100, "maximum": 599},
+              "description": {"type": "string", "minLength": 1},
+              "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]+$"}
+            }
+          }
+        }
+      }
+    },
+    "ModelAst": {
+      "type": "object",
+      "required": ["model", "entities", "relationships", "invariants"],
+      "additionalProperties": false,
+      "properties": {
+        "model": {"type": "string", "minLength": 1},
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "name", "extends", "fields"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["entity", "value-object", "enum"]},
+              "name": {"type": "string", "minLength": 1},
+              "extends": {"type": ["string", "null"]},
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "type", "modifiers", "default"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "type": {"type": "string", "minLength": 1},
+                    "modifiers": {
+                      "type": "array",
+                      "items": {"enum": ["key", "required", "unique", "indexed", "immutable"]}
+                    },
+                    "default": {
+                      "oneOf": [
+                        {"type": "null"},
+                        {"type": "boolean"},
+                        {"type": ["integer", "number"]},
+                        {"type": "string"}
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "cardinality", "to", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "from": {"type": "string", "minLength": 1},
+              "cardinality": {"enum": ["1-1", "1-*", "*-1", "*-*"]},
+              "to": {"type": "string", "minLength": 1},
+              "description": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "invariants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^INV-[0-9]+$"},
+              "text": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "Bound": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["comparator", "value", "unit"],
+          "additionalProperties": false,
+          "properties": {
+            "comparator": {"enum": ["<=", ">=", "=="]},
+            "value": {"type": ["integer", "number"]},
+            "unit": {"enum": ["ms", "s", "min", "rps", "ops", "MB", "GB", "%", "cores"]}
+          }
+        },
+        {
+          "type": "object",
+          "required": ["comparator", "min", "max", "unit"],
+          "additionalProperties": false,
+          "properties": {
+            "comparator": {"enum": ["between"]},
+            "min": {"type": ["integer", "number"]},
+            "max": {"type": ["integer", "number"]},
+            "unit": {"enum": ["ms", "s", "min", "rps", "ops", "MB", "GB", "%", "cores"]}
+          }
+        }
+      ]
+    },
+    "NsAst": {
+      "type": "object",
+      "required": ["system", "appliesTo", "performance", "scalability", "security", "compliance"],
+      "additionalProperties": false,
+      "properties": {
+        "system": {"type": "string", "minLength": 1},
+        "appliesTo": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "performance": {"$ref": "#/$defs/NfrList"},
+        "scalability": {"$ref": "#/$defs/NfrList"},
+        "security": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "control"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string", "pattern": "^SEC-[0-9]+$"},
+              "control": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": ["kind", "value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {"enum": ["authn"]},
+                      "value": {"enum": ["bearer", "oauth2", "mtls", "apikey"]}
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["kind", "value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {"enum": ["authz", "encrypt"]},
+                      "value": {"type": "string", "minLength": 1}
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["kind", "value"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {"enum": ["classification"]},
+                      "value": {"enum": ["public", "internal", "confidential", "restricted"]}
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "required": ["kind", "bound"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "kind": {"enum": ["egress"]},
+                      "bound": {"$ref": "#/$defs/Bound"}
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "compliance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["framework", "description"],
+            "additionalProperties": false,
+            "properties": {
+              "framework": {"type": "string", "pattern": "^(?:NIS2|DORA|GDPR|SOC2)[A-Za-z0-9().]*$"},
+              "description": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "NfrList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "bound", "note", "adr"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^(?:PERF|SCAL|AVAIL)-[0-9]+$"},
+          "kind": {"enum": ["latency", "throughput", "rps", "memory", "cpu", "uptime", "error-rate", "recovery"]},
+          "bound": {"$ref": "#/$defs/Bound"},
+          "note": {"type": ["string", "null"]},
+          "adr": {"type": ["string", "null"], "pattern": "^ADR-[0-9]+$"}
+        }
+      }
+    },
+    "AdrAst": {
+      "type": "object",
+      "required": ["id", "title", "status", "date", "author", "supersedes", "relatedRequirements", "headerTitle", "statusSection", "context", "decision", "consequences", "alternatives", "compliance"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^ADR-[0-9]+$"},
+        "title": {"type": "string", "minLength": 1},
+        "status": {"enum": ["proposed", "accepted", "deprecated", "superseded"]},
+        "date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "author": {"type": "string", "minLength": 1},
+        "supersedes": {"type": "array", "items": {"type": "string", "pattern": "^ADR-[0-9]+$"}},
+        "relatedRequirements": {"type": "array", "items": {"type": "string", "pattern": "^(?:REQ|M|S|C|W)-[0-9]+$"}},
+        "headerTitle": {"type": "string", "minLength": 1},
+        "statusSection": {"type": ["string", "null"], "enum": ["proposed", "accepted", "deprecated", "superseded", null]},
+        "context": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "decision": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "consequences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "text"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {"enum": ["positive", "negative", "neutral"]},
+              "text": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "alternatives": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "compliance": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "ManifestAst": {
+      "type": "object",
+      "required": ["solution", "projects", "specs", "generations", "exclusions"],
+      "additionalProperties": false,
+      "properties": {
+        "solution": {"type": "string", "minLength": 1},
+        "projects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "tfm"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "path": {"type": "string", "minLength": 1},
+              "tfm": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "specs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "project"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "project": {"type": "string", "minLength": 1}
+            }
+          }
+        },
+        "generations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["generator", "specType", "target"],
+            "additionalProperties": false,
+            "properties": {
+              "generator": {"type": "string", "minLength": 1},
+              "specType": {"enum": ["ai", "test", "api", "model", "srs", "ns", "adr"]},
+              "target": {"type": ["string", "null"]}
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "reason": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["srs"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/SrsAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["ai"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/AiAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["test"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/TestAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["api"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/ApiAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["model"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/ModelAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["ns"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/NsAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["adr"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/AdrAst"}
+      }
+    },
+    {
+      "type": "object",
+      "required": ["schema", "schemaVersion", "astType", "source", "ast"],
+      "additionalProperties": false,
+      "properties": {
+        "schema": {"enum": ["spectree-ast"]},
+        "schemaVersion": {"enum": [1]},
+        "astType": {"enum": ["manifest"]},
+        "source": {"$ref": "#/$defs/Source"},
+        "ast": {"$ref": "#/$defs/ManifestAst"}
+      }
+    }
+  ]
+}

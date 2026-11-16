@@ -1,0 +1,56 @@
+Grammar: AdrSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# AdrSpec - grammar for .adr architectural design record files
+# (SpecTree). YAML front-matter with status lifecycle and requirement
+# links, followed by Context/Decision/Consequences/Alternatives and
+# component compliance declarations.
+
+<adr-document> ::= <front-matter> <adr-header> <section>+ => { buildAdr($1, $2, $3); }
+
+<front-matter> ::= "---" <front-matter-line>* "---" => { parseFrontMatter($2); }
+<front-matter-line> ::= <fm-id> | <fm-title> | <fm-status> | <fm-date>
+                     | <fm-author> | <fm-supersedes> | <fm-related>
+
+<fm-id> ::= "id:" "ADR-" /[0-9]+/ => { setAdrId($2); }
+<fm-title> ::= "title:" <free-text> => { setTitle($2); }
+<fm-status> ::= "status:" <adr-status> => { setStatus($2); }
+<fm-date> ::= "date:" <iso-date> => { setDate($2); }
+<fm-author> ::= "author:" <identifier> => { setAuthor($2); }
+<fm-supersedes> ::= "supersedes:" "[" <adr-list> "]" => { setSupersedes($3); }
+<fm-related> ::= "related_requirements:" "[" <req-list> "]" => { setRelatedRequirements($3); }
+
+<adr-status> ::= "proposed" | "accepted" | "deprecated" | "superseded"
+<adr-list> ::= "ADR-" /[0-9]+/ ("," "ADR-" /[0-9]+/)*/
+<req-list> ::= <requirement-id> ("," <requirement-id>)*
+<requirement-id> ::= ("REQ" | "M" | "S" | "C" | "W") "-" /[0-9]+/
+<iso-date> ::= /[0-9]{4}-[0-9]{2}-[0-9]{2}/
+
+<adr-header> ::= <hash1> "ADR-" /[0-9]+/ <title-text>
+<title-text> ::= /[^\n]+/
+
+<section> ::= <status-section>
+           | <context-section>
+           | <decision-section>
+           | <consequences-section>
+           | <alternatives-section>
+           | <compliance-section>
+
+<status-section> ::= <hash2> "Status" <adr-status> => { confirmStatus($3); }
+<context-section> ::= <hash2> "Context" <free-text>+ => { setContext($3); }
+<decision-section> ::= <hash2> "Decision" <free-text>+ => { setDecision($3); }
+<consequences-section> ::= <hash2> "Consequences" <consequence>+ => { collectConsequences($3); }
+<consequence> ::= "-" "**Positive:**" <free-text> => { addConsequence("positive", $3); }
+                | "-" "**Negative:**" <free-text> => { addConsequence("negative", $3); }
+                | "-" "**Neutral:**" <free-text> => { addConsequence("neutral", $3); }
+<alternatives-section> ::= <hash2> "Alternatives" <alternative>+
+<alternative> ::= "-" <free-text> => { addAlternative($2); }
+
+<compliance-section> ::= <hash2> "Compliance" <comply-entry>+ => { collectCompliance($3); }
+<comply-entry> ::= "-" "component:" <identifier> "must" "conform" => { addCompliance($3); }
+
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<hash1> ::= "#"
+<hash2> ::= "##"

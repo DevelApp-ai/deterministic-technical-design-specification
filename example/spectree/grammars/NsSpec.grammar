@@ -1,0 +1,58 @@
+Grammar: NsSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# NsSpec - grammar for .ns non-functional specification files
+# (SpecTree). Measurable performance budgets, security requirements,
+# scalability/availability SLOs and compliance constraints.
+
+<ns-document> ::= <ns-header> <metadata-block>* <section>+ => { buildNfrSpec($1, $2, $3); }
+
+<ns-header> ::= <hash1> "NFR:" <system-name> => { setSystem($3); }
+
+<metadata-block> ::= <applies-to-line>
+<applies-to-line> ::= <hash2> "AppliesTo:" <scope-list> => { setScope($3); }
+
+<section> ::= <performance-section>
+           | <security-section>
+           | <scalability-section>
+           | <compliance-section>
+
+<performance-section> ::= <hash3> "Performance" <nfr-entry>+ => { collectNfrs($3); }
+<scalability-section> ::= <hash3> "Scalability" <nfr-entry>+
+
+<nfr-entry> ::= "-" <nfr-id> "(" <nfr-kind> ")" ":" <bound> ("(" <free-text> ")")? <adr-ref>? => { addNfr($2, $4, $6, $8); }
+<nfr-id> ::= ("PERF" | "SCAL" | "AVAIL") "-" /[0-9]+/
+<nfr-kind> ::= "latency" | "throughput" | "rps" | "memory" | "cpu" | "uptime" | "error-rate" | "recovery"
+<bound> ::= "<=" <number> <unit>
+          | ">=" <number> <unit>
+          | "==" <number> <unit>
+          | "between" <number> "and" <number> <unit>
+<adr-ref> ::= "adr:" "ADR-" /[0-9]+/
+
+<security-section> ::= <hash3> "Security" <sec-entry>+ => { collectSecurityNfrs($3); }
+<sec-entry> ::= "-" <sec-id> ":" <sec-control> <adr-ref>? => { addSecurityNfr($2, $3, $4); }
+<sec-id> ::= "SEC-" /[0-9]+/
+<sec-control> ::= "authn:" <auth-scheme>
+                | "authz:" <identifier>
+                | "encrypt:" <cipher>
+                | "classification:" <classification>
+                | "egress:" <bound>
+
+<compliance-section> ::= <hash3> "Compliance" <compliance-entry>+
+<compliance-entry> ::= "-" <framework-ref> ":" <free-text>
+<framework-ref> ::= ("NIS2" | "DORA" | "GDPR" | "SOC2") /[A-Za-z0-9().]*/
+
+<system-name> ::= <identifier>
+<scope-list> ::= <scope-ref> ("," <scope-ref>)*
+<scope-ref> ::= "solution" | <identifier>
+<auth-scheme> ::= "bearer" | "oauth2" | "mtls" | "apikey"
+<cipher> ::= "AES-256-GCM" | "TLS1.3" | "TLS1.2" | <identifier>
+<classification> ::= "public" | "internal" | "confidential" | "restricted"
+<unit> ::= "ms" | "s" | "min" | "rps" | "ops" | "MB" | "GB" | "%" | "cores"
+<number> ::= /[0-9]+(\.[0-9]+)?/
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<hash1> ::= "#"
+<hash2> ::= "##"
+<hash3> ::= "###"

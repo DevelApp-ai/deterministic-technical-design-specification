@@ -1,0 +1,44 @@
+Grammar: SrsSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# SrsSpec - grammar for .srs requirements specification files
+# (SpecTree). System-level requirements with MoSCoW prioritisation,
+# stable IDs, acceptance criteria and traceability links.
+
+<srs-document> ::= <srs-header> <metadata-block>* <section>+ => { buildSrs($1, $2, $3); }
+
+<srs-header> ::= <hash1> "SRS:" <project-name> => { setProject($3); }
+
+<metadata-block> ::= <version-line> | <stakeholders-line> | <scope-line>
+<version-line> ::= <hash2> "Version:" <version-number> => { setVersion($3); }
+<stakeholders-line> ::= <hash2> "Stakeholders:" <stakeholder-list> => { setStakeholders($3); }
+<scope-line> ::= <hash2> "Scope:" <free-text> => { setScope($3); }
+
+<section> ::= <moscow-section> | <traceability-section>
+
+<moscow-section> ::= <hash3> <moscow-category> <requirement>+ => { addMoscowSection($2, $3); }
+<moscow-category> ::= "Must" "Have" | "Should" "Have" | "Could" "Have" | "Won't" "Have"
+
+<requirement> ::= "-" <requirement-id> ":" <free-text> <acceptance-criteria>? <satisfied-by>? => { addRequirement($2, $4, $5, $6); }
+<acceptance-criteria> ::= "accept:" <free-text>
+<satisfied-by> ::= "=>" <artifact-ref> ("," <artifact-ref>)*
+
+<traceability-section> ::= <hash3> "Traceability" <trace-link>+ => { buildTraceability($3); }
+<trace-link> ::= "-" <artifact-ref> "->" <artifact-ref> => { addTraceLink($2, $4); }
+
+<project-name> ::= <identifier>
+<stakeholder-list> ::= <stakeholder> ("," <stakeholder>)*
+<stakeholder> ::= <identifier>
+<requirement-id> ::= ("M" | "S" | "C" | "W") "-" /[0-9]+/
+<artifact-ref> ::= <requirement-id>
+                 | "REQ-" /[0-9]+/
+                 | "ADR-" /[0-9]+/
+                 | <file-path>
+<file-path> ::= /[a-zA-Z0-9_.\-/]+/
+<version-number> ::= /[0-9]+(\.[0-9]+)*/
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<hash1> ::= "#"
+<hash2> ::= "##"
+<hash3> ::= "###"
