@@ -43,3 +43,9 @@ example/site/
 example/docs/generated/host-report-*.md
 example/docs/generated/plan.json
 example/docs/generated/plan.bin
+
+# .NET build artefacts (example application layer)
+**/bin/
+**/obj/
+*.user
+example/dotnet/**/TestResults/
