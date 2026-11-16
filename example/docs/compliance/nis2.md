@@ -26,7 +26,7 @@ requiring manual attestation.
 | (b) | Incident handling | 📋 Documented | — | [Operational Runbook](../runbook/index.md) | Automated alerting via `monitoring.tf` |
 | (c) | Business continuity, backup, DR | ✅ + 📋 | — | [terraform/storage.tf](#art212c--business-continuity), [monitoring.tf](#monitoring) | DR RTO/RPO targets not formally documented |
 | (d) | Supply chain security | ✅ + 📋 | SC-001 (IaC hash lock) | [Art.21(2)(d) Supply Chain](#art212d--supply-chain-security), [versioning/index.md](../versioning/index.md) | Software deployment image signing needs IdP/registry integration |
-| (e) | Security in acquisition, development, and maintenance | ✅ Automated | SEC-002, SEC-004 | [CI/CD Pipeline](../.github/workflows/docs-pipeline.yml), [OPA Policies](opa-policies.md) | |
+| (e) | Security in acquisition, development, and maintenance | ✅ Automated | SEC-002, SEC-004 | [CI/CD Pipeline](https://github.com/DevelApp-ai/deterministic-technical-design-specification/blob/main/.github/workflows/docs-pipeline.yml), [OPA Policies](opa-policies.md) | |
 | (f) | Effectiveness assessment of risk-management measures | ✅ Automated | All policies (76 tests) | [Security Controls](../security/index.md), [Doc Coverage Gate](../doc-review/index.md) | |
 | (g) | Cyber hygiene and cybersecurity training | 📋 Documented | — | [Onboarding Guide](../onboarding/index.md), [Ansible hardening.yml](../configuration/ansible.md) | Formal training records outside repo scope |
 | (h) | Cryptography and encryption | ✅ Automated | SEC-001, SEC-006, NIS2-CRYPTO-001 | [Security Controls](../security/index.md) | |

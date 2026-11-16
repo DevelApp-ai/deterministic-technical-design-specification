@@ -26,8 +26,8 @@ resource_with_all_tags := {
 }
 
 resource_missing_owner := {
-	"address": "local_file.bad_resource",
-	"type": "local_file",
+	"address": "aws_instance.bad_resource",
+	"type": "aws_instance",
 	"values": {
 		"tags": {
 			"environment": "dev",
@@ -38,7 +38,16 @@ resource_missing_owner := {
 }
 
 resource_no_tags := {
-	"address": "local_file.no_tags",
+	"address": "aws_instance.no_tags",
+	"type": "aws_instance",
+	"values": {},
+}
+
+# The example pipeline's Terraform layer is a local-provider demo (ADR-0001):
+# `local_file` resources have no tags attribute in the provider schema, so
+# FINOPS-001 exempts them. They must never produce a denial.
+resource_local_file_exempt := {
+	"address": "local_file.app_config",
 	"type": "local_file",
 	"values": {},
 }
@@ -65,4 +74,9 @@ test_resource_no_tags_denied if {
 	mock_input := {"planned_values": {"root_module": {"resources": [resource_no_tags]}}}
 	msgs := finops.deny with input as mock_input
 	count(msgs) == 1
+}
+
+test_local_file_exempt_from_finops if {
+	mock_input := {"planned_values": {"root_module": {"resources": [resource_local_file_exempt]}}}
+	count(finops.deny) == 0 with input as mock_input
 }

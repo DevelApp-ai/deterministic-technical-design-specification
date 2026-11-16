@@ -165,7 +165,7 @@ class DTDS_LocalUser {
 
         if ($this.Ensure -eq [EnsureValue]::Absent) {
             if ($null -ne $user) {
-                Remove-LocalUser -Name $this.UserName
+                Remove-DtdsLocalUser -Name $this.UserName
             }
             return
         }
@@ -185,34 +185,72 @@ class DTDS_LocalUser {
             $params['UserMustChangePassword'] = $true
         }
         if ($null -eq $user) {
-            New-LocalUser @params
+            New-DtdsLocalUser -Parameters $params
         }
         else {
-            Set-LocalUser @params
+            Set-DtdsLocalUser -Parameters $params
         }
 
         # Enable / disable separately from creation
         if ($this.AccountStatus -eq [AccountStatus]::Enabled) {
-            Enable-LocalUser -Name $this.UserName
+            Enable-DtdsLocalUser -Name $this.UserName
         }
         else {
-            Disable-LocalUser -Name $this.UserName
+            Disable-DtdsLocalUser -Name $this.UserName
         }
     }
 
     # ── Private helpers ───────────────────────────────────────────────────────
 
     hidden [object] _GetLocalUser() {
-        try {
-            return Get-LocalUser -Name $this.UserName -ErrorAction Stop
-        }
-        catch [Microsoft.PowerShell.Commands.UserNotFoundException] {
-            return $null
-        }
+        return Get-DtdsLocalUserByName -UserName $this.UserName
     }
 
     hidden [bool] _IsWindows() {
-        if ($PSVersionTable.PSVersion.Major -lt 6) { return $true }
-        return $IsWindows
+        return Test-DtdsIsWindows
     }
+}
+
+# ── Module-scope seams ─────────────────────────────────────────────────────
+# Pester cannot mock PowerShell class methods, so the class delegates to
+# these module-scope functions, which unit tests mock instead.
+
+function Test-DtdsIsWindows {
+    return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+        [System.Runtime.InteropServices.OSPlatform]::Windows)
+}
+
+function Get-DtdsLocalUserByName {
+    param([string] $UserName)
+
+    # Get-LocalUser writes a non-terminating error when the user does not
+    # exist; -ErrorAction SilentlyContinue yields $null in that case. The
+    # typed UserNotFoundException catch previously used here is not
+    # resolvable at parse time, so it is avoided.
+    return Get-LocalUser -Name $UserName -ErrorAction SilentlyContinue
+}
+
+function New-DtdsLocalUser {
+    param([hashtable] $Parameters)
+    New-LocalUser @Parameters
+}
+
+function Set-DtdsLocalUser {
+    param([hashtable] $Parameters)
+    Set-LocalUser @Parameters
+}
+
+function Enable-DtdsLocalUser {
+    param([string] $Name)
+    Enable-LocalUser -Name $Name
+}
+
+function Disable-DtdsLocalUser {
+    param([string] $Name)
+    Disable-LocalUser -Name $Name
+}
+
+function Remove-DtdsLocalUser {
+    param([string] $Name)
+    Remove-LocalUser -Name $Name
 }

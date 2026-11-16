@@ -176,7 +176,7 @@ class DTDS_TlsConfiguration {
                 New-Item -Path $keyPath -Force | Out-Null
             }
             foreach ($valueName in $values.Keys) {
-                Set-ItemProperty -LiteralPath $keyPath -Name $valueName -Value $values[$valueName] -Type DWord -Force
+                Set-DtdsRegistryValue -LiteralPath $keyPath -Name $valueName -Value $values[$valueName]
             }
         }
     }
@@ -184,7 +184,7 @@ class DTDS_TlsConfiguration {
     # ── Private helpers ──────────────────────────────────────────────────────
 
     hidden [bool] _IsWindows() {
-        return $IsWindows -or ($PSVersionTable.PSEdition -eq 'Desktop')
+        return Test-DtdsIsWindows
     }
 
     hidden [string[]] _RolesFromEnum([TlsProtocolRole] $role) {
@@ -195,4 +195,22 @@ class DTDS_TlsConfiguration {
         }
         return @('Client', 'Server')
     }
+}
+
+# ── Module-scope seams ─────────────────────────────────────────────────────
+# Pester cannot mock PowerShell class methods, so the class delegates to
+# this module-scope function, which unit tests mock instead.
+
+function Test-DtdsIsWindows {
+    return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+        [System.Runtime.InteropServices.OSPlatform]::Windows)
+}
+
+function Set-DtdsRegistryValue {
+    param([string] $LiteralPath, [string] $Name, [int] $Value)
+
+    # The -Type DWord parameter is a registry-provider dynamic parameter that
+    # exists only on Windows; centralising the call in this seam keeps the
+    # class testable cross-platform (Pester mocks this function directly).
+    Set-ItemProperty -LiteralPath $LiteralPath -Name $Name -Value $Value -Type DWord -Force
 }

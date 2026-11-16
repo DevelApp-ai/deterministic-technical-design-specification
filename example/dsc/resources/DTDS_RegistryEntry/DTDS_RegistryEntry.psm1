@@ -190,6 +190,7 @@ class DTDS_RegistryEntry {
     # Helper — returns $true when running on Windows
     # -----------------------------------------------------------------------
     hidden [bool] _IsWindows() {
-        return $IsWindows -or ($PSVersionTable.PSEdition -eq 'Desktop')
+        return [System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform(
+            [System.Runtime.InteropServices.OSPlatform]::Windows)
     }
 }

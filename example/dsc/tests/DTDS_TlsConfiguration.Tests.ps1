@@ -15,10 +15,11 @@
     OPA:  SEC-006 — deny_deprecated_tls
 #>
 
-BeforeAll {
-    $modulePath = Join-Path $PSScriptRoot '../resources/DTDS_TlsConfiguration/DTDS_TlsConfiguration.psm1'
-    Import-Module $modulePath -Force
-}
+# NOTE: the module is imported at file scope (not in BeforeAll) because
+# InModuleScope below executes during Pester 5's discovery phase, before
+# BeforeAll runs — the module must already be loaded by then.
+$modulePath = Join-Path $PSScriptRoot '../resources/DTDS_TlsConfiguration/DTDS_TlsConfiguration.psm1'
+Import-Module $modulePath -Force
 
 InModuleScope DTDS_TlsConfiguration {
 
@@ -28,7 +29,7 @@ InModuleScope DTDS_TlsConfiguration {
     Describe 'DTDS_TlsConfiguration — non-Windows (cross-platform) behaviour' {
 
         BeforeEach {
-            Mock _IsWindows { return $false } -ModuleName DTDS_TlsConfiguration
+            Mock Test-DtdsIsWindows { return $false } -ModuleName DTDS_TlsConfiguration
             $resource          = [DTDS_TlsConfiguration]::new()
             $resource.Protocol = [TlsProtocolVersion]::TLS_1_0
             $resource.Role     = [TlsProtocolRole]::Both
@@ -92,7 +93,7 @@ InModuleScope DTDS_TlsConfiguration {
     Describe 'DTDS_TlsConfiguration — Windows: Get() with registry key absent' {
 
         BeforeEach {
-            Mock _IsWindows { return $true } -ModuleName DTDS_TlsConfiguration
+            Mock Test-DtdsIsWindows { return $true } -ModuleName DTDS_TlsConfiguration
             # Simulate absent registry key (returns $null)
             Mock Get-Item { return $null } -ModuleName DTDS_TlsConfiguration
         }
@@ -124,10 +125,10 @@ InModuleScope DTDS_TlsConfiguration {
     Describe 'DTDS_TlsConfiguration — Windows: Set() disables a deprecated protocol' {
 
         BeforeEach {
-            Mock _IsWindows { return $true } -ModuleName DTDS_TlsConfiguration
+            Mock Test-DtdsIsWindows { return $true } -ModuleName DTDS_TlsConfiguration
             Mock Test-Path  { return $false } -ModuleName DTDS_TlsConfiguration
             Mock New-Item   { } -ModuleName DTDS_TlsConfiguration
-            Mock Set-ItemProperty { } -ModuleName DTDS_TlsConfiguration
+            Mock Set-DtdsRegistryValue { param($LiteralPath, $Name, $Value) } -ModuleName DTDS_TlsConfiguration
         }
 
         It 'Set() calls New-Item when registry key does not exist' {
@@ -147,7 +148,7 @@ InModuleScope DTDS_TlsConfiguration {
             $resource.State    = [TlsProtocolState]::Disabled
 
             { $resource.Set() } | Should -Not -Throw
-            Should -Invoke Set-ItemProperty -ModuleName DTDS_TlsConfiguration -Times 2
+            Should -Invoke Set-DtdsRegistryValue -ModuleName DTDS_TlsConfiguration -Times 2
         }
     }
 
@@ -157,9 +158,9 @@ InModuleScope DTDS_TlsConfiguration {
     Describe 'DTDS_TlsConfiguration — Windows: Set() enables TLS 1.2' {
 
         BeforeEach {
-            Mock _IsWindows { return $true } -ModuleName DTDS_TlsConfiguration
+            Mock Test-DtdsIsWindows { return $true } -ModuleName DTDS_TlsConfiguration
             Mock Test-Path  { return $true } -ModuleName DTDS_TlsConfiguration
-            Mock Set-ItemProperty { } -ModuleName DTDS_TlsConfiguration
+            Mock Set-DtdsRegistryValue { param($LiteralPath, $Name, $Value) } -ModuleName DTDS_TlsConfiguration
         }
 
         It 'Set() does not call New-Item when key already exists' {
@@ -181,7 +182,7 @@ InModuleScope DTDS_TlsConfiguration {
             $resource.State    = [TlsProtocolState]::Enabled
 
             { $resource.Set() } | Should -Not -Throw
-            Should -Invoke Set-ItemProperty -ModuleName DTDS_TlsConfiguration -Times 4
+            Should -Invoke Set-DtdsRegistryValue -ModuleName DTDS_TlsConfiguration -Times 4
         }
     }
 
