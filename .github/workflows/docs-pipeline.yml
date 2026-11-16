@@ -6,16 +6,23 @@
 # Orchestrates the full pipeline on every push to `main` and on every
 # pull request that touches files under `example/`.
 #
+# NOTE: this file lives at the repository root because GitHub Actions only
+# reads workflows from `<repo-root>/.github/workflows/`. The historical copy
+# under `example/.github/workflows/` was never executed by GitHub Actions.
+#
 # Jobs:
 #   1. opa-tests      — unit-test all OPA/Rego policies (Terraform + Kubernetes)
 #   2. architecture   — ADR traceability kit (ADR-0012): catalog scan, validation,
 #                       end-to-end demo, traceability diagram staleness, PR gate
 #   3. dsc-tests      — Pester unit tests for all DSC resources
-#   4. doc-coverage   — PR documentation coverage gate (ADR-0006)
-#   5. terraform      — validate Terraform + run OPA compliance gate
-#   6. docs-build     — run terraform-docs + DSC doc-gen + Ansible + build MkDocs site
-#   7. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
-#   8. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
+#   4. dotnet-build   — .NET solution build with the Roslyn code-quality gate (ADR-0016)
+#   5. dotnet-test    — xUnit unit tests + NetArchTest architecture policies (ADR-0014)
+#   6. doc-coverage   — PR documentation coverage gate (ADR-0006)
+#   7. terraform      — validate Terraform + run OPA compliance gate
+#   8. docs-build     — terraform-docs + DSC doc-gen + Ansible + .NET doc-gen
+#                       (DocFX, OpenAPI, C4Sharp) + MkDocs site build
+#   9. docs-publish   — deploy MkDocs site to GitHub Pages (main only)
+#  10. release        — tag + generate CHANGELOG via git-cliff (main only, version.txt changed)
 
 name: Deterministic Documentation Pipeline
 
@@ -23,12 +30,12 @@ on:
   push:
     branches: [main]
     paths:
-      - "example/**"
+      - "example/**" # includes example/dotnet/** (application layer)
       - ".github/workflows/docs-pipeline.yml"
   pull_request:
     branches: [main]
     paths:
-      - "example/**"
+      - "example/**" # includes example/dotnet/** (application layer)
       - ".github/workflows/docs-pipeline.yml"
   workflow_dispatch:
 
@@ -49,6 +56,8 @@ env:
   OPA_VERSION: "0.69.0"
   PYTHON_VERSION: "3.12"
   GIT_CLIFF_VERSION: "2.4.0"
+  DOTNET_VERSION: "10.0.404" # pinned to example/dotnet/global.json
+  DOCFX_VERSION: "2.81.0"    # pinned to example/dotnet/dotnet-tools.json
 
 # ---------------------------------------------------------------------------
 # Job 1 — OPA policy unit tests (Terraform + Kubernetes)
@@ -158,7 +167,64 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 4 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
+# Job 4 — .NET solution build: the deterministic build gate (ADR-0016).
+# Roslyn analyzers run with TreatWarningsAsErrors; any analyzer violation
+# (security rules included) fails the pipeline.
+# ---------------------------------------------------------------------------
+  dotnet-build:
+    name: .NET Build (Roslyn Gate)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build solution (Release, zero warnings required)
+        working-directory: example/dotnet
+        run: |
+          dotnet --version
+          dotnet build MyApp.slnx -c Release
+
+# ---------------------------------------------------------------------------
+# Job 5 — .NET tests: xUnit unit tests + NetArchTest architecture policies
+# (ADR-0014). Any architecture policy violation (APP-ARCH-*, APP-SEC-*)
+# fails the pipeline.
+# ---------------------------------------------------------------------------
+  dotnet-test:
+    name: .NET Tests (xUnit + NetArchTest)
+    runs-on: ubuntu-latest
+    needs: dotnet-build
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Run unit + architecture policy tests
+        working-directory: example/dotnet
+        run: |
+          dotnet test MyApp.slnx -c Release \
+            --logger trx --results-directory TestResults
+
+      - name: Upload .NET test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-test-results
+          path: example/dotnet/**/TestResults/*.trx
+          retention-days: 7
+
+# ---------------------------------------------------------------------------
+# Job 6 — Documentation coverage gate (ADR-0006, requirements D-001/D-002)
 # Runs on PRs only; skipped on direct pushes to main.
 # ---------------------------------------------------------------------------
   doc-coverage:
@@ -179,7 +245,7 @@ jobs:
             bash example/scripts/check-doc-coverage.sh
 
 # ---------------------------------------------------------------------------
-# Job 5 — Terraform validate + OPA compliance gate
+# Job 7 — Terraform validate + OPA compliance gate
 # ---------------------------------------------------------------------------
   terraform:
     name: Terraform Validate & OPA Gate
@@ -297,12 +363,12 @@ jobs:
           retention-days: 7
 
 # ---------------------------------------------------------------------------
-# Job 6 — Documentation build
+# Job 8 — Documentation build (infrastructure + application layer)
 # ---------------------------------------------------------------------------
   docs-build:
     name: Build Documentation Site
     runs-on: ubuntu-latest
-    needs: [terraform, dsc-tests]
+    needs: [terraform, dsc-tests, dotnet-test]
 
     steps:
       - name: Checkout repository
@@ -314,6 +380,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install terraform-docs
         run: |
@@ -370,6 +441,36 @@ jobs:
             example/ansible/playbook.yml \
             --connection=local 2>&1 | grep -v '^\[WARNING\]' || true
 
+      # --- .NET application layer (ADR-0013 DocFX, ADR-0015 OpenAPI, ADR-0017 C4Sharp) ---
+
+      - name: Build .NET solution + emit native OpenAPI document
+        working-directory: example/dotnet
+        run: |
+          # Remove the stale OpenAPI document so the build-time GetDocument
+          # target always re-emits it (MSBuild skips up-to-date targets).
+          rm -f ../docs/generated/openapi.json
+          dotnet build MyApp.slnx -c Release
+
+      - name: Restore pinned local tools (DocFX) and verify the version
+        working-directory: example/dotnet
+        run: |
+          dotnet tool restore
+          dotnet docfx --version | tee /dev/stderr | grep -q "${DOCFX_VERSION}" \
+            || { echo "ERROR: DocFX version mismatch — expected ${DOCFX_VERSION}"; exit 1; }
+
+      - name: Generate DocFX API reference (Markdown export)
+        working-directory: example/dotnet
+        run: dotnet docfx metadata docs/docfx.json
+
+      - name: Generate C4 diagrams (C4Sharp)
+        working-directory: example/dotnet
+        run: dotnet run --project tools/MyApp.Architecture.Diagrams -c Release --no-build
+
+      - name: Render OpenAPI reference + C4 diagram pages
+        run: |
+          python3 example/scripts/generate-openapi-docs.py
+          python3 example/scripts/generate-c4-diagram-docs.py
+
       - name: Generate CHANGELOG (git-cliff)
         run: |
           cd example
@@ -392,7 +493,7 @@ jobs:
           path: example/site/
 
 # ---------------------------------------------------------------------------
-# Job 7 — Publish to GitHub Pages (main branch only)
+# Job 9 — Publish to GitHub Pages (main branch only)
 # ---------------------------------------------------------------------------
   docs-publish:
     name: Publish to GitHub Pages
@@ -410,7 +511,7 @@ jobs:
         uses: actions/deploy-pages@v4
 
 # ---------------------------------------------------------------------------
-# Job 8 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
+# Job 10 — Semantic release: tag + CHANGELOG (main branch, version.txt changed)
 # ---------------------------------------------------------------------------
   release:
     name: Semantic Release

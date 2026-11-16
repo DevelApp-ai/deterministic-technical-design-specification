@@ -178,11 +178,10 @@ example/
 ├── README.md                            # This file
 ├── catalog-info.yaml                    # Backstage entity descriptor
 ├── mkdocs.yml                           # MkDocs site configuration
-├── .github/
-│   └── workflows/
-│       └── docs-pipeline.yml            # GitHub Actions pipeline
 ├── backstage/
 │   └── app-config.yaml                  # Backstage application configuration
+│                                         # (CI workflow: .github/workflows/docs-pipeline.yml at the repo root —
+│                                         # GitHub Actions only reads workflows from <repo-root>/.github/workflows/)
 ├── dotnet/                              # .NET application workload (ADR-0013 – ADR-0017)
 │   ├── MyApp.slnx                       # Solution (.NET 10 solution file format)
 │   ├── global.json                      # Pinned .NET SDK version (10.0.404)
