@@ -9,7 +9,8 @@
 #   2. terraform plan (JSON output) — used by OPA
 #   3. OPA policy evaluation — gate: non-zero violations abort the pipeline
 #   4. terraform-docs — update docs/generated/terraform-readme.md
-#   5. .NET build + DocFX — API reference markdown → docs/generated/dotnet-api/
+#   5. .NET build + DocFX + OpenAPI + C4 diagrams — API reference markdown,
+#      OpenAPI reference page, and C4 architecture diagrams
 #   6. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
 #   7. Ansible playbook — gather host facts, render Jinja2 host report
 #   8. mkdocs build — assemble the full static site into site/
@@ -45,7 +46,7 @@ error()   { echo -e "${RED}[ERROR]${NC} $*" >&2; }
 # ---------------------------------------------------------------------------
 # Step 1 — Terraform init & validate
 # ---------------------------------------------------------------------------
-info "Step 1/7 — Terraform init & validate"
+info "Step 1/8 — Terraform init & validate"
 
 pushd "${TERRAFORM_DIR}" > /dev/null
 
@@ -62,7 +63,7 @@ success "Terraform validation passed."
 # ---------------------------------------------------------------------------
 # Step 2 — terraform plan → JSON
 # ---------------------------------------------------------------------------
-info "Step 2/7 — terraform plan (JSON output for OPA)"
+info "Step 2/8 — terraform plan (JSON output for OPA)"
 
 mkdir -p "${DOCS_GENERATED_DIR}"
 terraform plan \
@@ -79,7 +80,7 @@ popd > /dev/null
 # ---------------------------------------------------------------------------
 # Step 3 — OPA policy evaluation (gate)
 # ---------------------------------------------------------------------------
-info "Step 3/7 — OPA policy evaluation"
+info "Step 3/8 — OPA policy evaluation"
 
 OPA_VIOLATIONS=0
 for package in "terraform.finops" "terraform.security"; do
@@ -110,7 +111,7 @@ fi
 # ---------------------------------------------------------------------------
 # Step 4 — terraform-docs
 # ---------------------------------------------------------------------------
-info "Step 4/7 — terraform-docs"
+info "Step 4/8 — terraform-docs"
 
 terraform-docs markdown table \
   --output-file "${DOCS_GENERATED_DIR}/terraform-readme.md" \
@@ -122,7 +123,7 @@ success "terraform-docs written to docs/generated/terraform-readme.md"
 # ---------------------------------------------------------------------------
 # Step 5 — .NET build gate + DocFX API reference + OpenAPI rendering
 # ---------------------------------------------------------------------------
-info "Step 5/8 — .NET build gate + DocFX API reference + OpenAPI rendering"
+info "Step 5/8 — .NET build gate + DocFX + OpenAPI + C4 diagrams"
 
 DOTNET_DIR="${REPO_ROOT}/dotnet"
 
@@ -156,6 +157,21 @@ if command -v dotnet &> /dev/null; then
   # MkDocs-consumable markdown.
   dotnet docfx metadata docs/docfx.json
   success "DocFX API reference written to docs/generated/dotnet-api/"
+
+  # C4 architecture diagrams (C4Sharp, pinned in
+  # tools/MyApp.Architecture.Diagrams). The generator writes Mermaid
+  # sources (+ PlantUML) to docs/generated/architecture/; the assembler
+  # embeds them into the MkDocs page
+  # docs/application/architecture-diagrams.md.
+  dotnet run --project tools/MyApp.Architecture.Diagrams -c Release --no-build
+  success "C4 diagram sources written to docs/generated/architecture/"
+
+  if command -v python3 &> /dev/null; then
+    python3 "${REPO_ROOT}/scripts/generate-c4-diagram-docs.py"
+    success "C4 diagrams embedded in docs/application/architecture-diagrams.md"
+  else
+    warn "python3 not found — skipping C4 diagram page assembly."
+  fi
 
   popd > /dev/null
 else

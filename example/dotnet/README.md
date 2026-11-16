@@ -17,6 +17,8 @@ dotnet/
 ├── tests/
 │   ├── MyApp.ArchitectureTests/ # NetArchTest architecture policies
 │   └── MyApp.UnitTests/        # xUnit unit tests
+├── tools/
+│   └── MyApp.Architecture.Diagrams/ # C4Sharp C4 diagram generator
 ├── docs/                       # DocFX configuration (API reference generation)
 ├── dotnet-tools.json           # Pinned local tools (DocFX)
 ├── MyApp.slnx                   # Solution entry point for build/test
@@ -111,6 +113,22 @@ regenerated on every build (git-ignored). `scripts/generate-openapi-docs.py`
 renders it into the human-readable `docs/application/api-reference.md` page
 (endpoints, parameters, request/response schemas, and the XML-comment
 summaries).
+
+## Architecture diagrams (C4Sharp)
+
+`tools/MyApp.Architecture.Diagrams` declares the application's C4 model
+(System Context, Container, and Component diagrams) as code using
+**C4Sharp** (pinned 8.1.204) and renders it to Mermaid sources in
+`example/docs/generated/architecture/` (git-ignored, regenerated on every
+pipeline run). `scripts/generate-c4-diagram-docs.py` embeds the generated
+Mermaid into the `docs/application/architecture-diagrams.md` MkDocs page,
+rendered client-side by Mermaid's native C4 syntax.
+
+```bash
+cd example/dotnet
+dotnet run --project tools/MyApp.Architecture.Diagrams -c Release
+cd .. && python3 scripts/generate-c4-diagram-docs.py
+```
 
 ## Endpoints
 

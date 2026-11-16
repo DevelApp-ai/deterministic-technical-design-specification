@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <Description>Generates the C4 architecture diagrams (Context, Container, Component) of the example .NET application as Mermaid sources for the documentation pipeline.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      C4Sharp renders the C4 model to PlantUML and Mermaid. The .mmd sources
+      are generated artefacts (docs/generated/architecture/), wrapped into
+      the MkDocs page docs/application/architecture-diagrams.md by
+      scripts/generate-c4-diagram-docs.py. Pinned for deterministic output.
+    -->
+    <PackageReference Include="C4Sharp" Version="8.1.204" />
+  </ItemGroup>
+
+</Project>
