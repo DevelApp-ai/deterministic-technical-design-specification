@@ -482,7 +482,19 @@ jobs:
           git cliff --config cliff.toml --output docs/versioning/CHANGELOG.md || true
 
       - name: Build MkDocs site
-        run: mkdocs build --config-file example/mkdocs.yml --strict
+        # mkdocs resolves config paths (docs_dir, site_dir) against the working
+        # directory, not the config file's location — run from example/.
+        working-directory: example
+        run: |
+          set +e
+          mkdocs build --config-file mkdocs.yml --strict 2> /tmp/mkdocs.err
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            msg=$(grep -m 3 -E 'ERROR|WARNING|Error|error' /tmp/mkdocs.err | tr '\n' ' ' | head -c 600)
+            echo "::error title=mkdocs build failed (exit $code)::$msg"
+            cat /tmp/mkdocs.err >&2
+            exit "$code"
+          fi
 
       - name: Upload site artefact
         uses: actions/upload-artifact@v4
