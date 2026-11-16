@@ -14,6 +14,8 @@
 #   PowerShell Core 7.4   — DSC resource class execution + DscResource.DocGenerator
 #   Pester 5              — DSC resource unit tests
 #   DscResource.DocGenerator — auto-generate Markdown from DSC class comment-based help
+#   .NET SDK 10 (10.0.404) — application layer build, tests, native OpenAPI + C4Sharp
+#   DocFX 2.81.0          — .NET API reference (Markdown export), pinned to match dotnet/dotnet-tools.json
 #
 # Build:  docker build -t dtds-example .
 # Run:    docker run --rm -v "$(pwd)":/workspace dtds-example \
@@ -27,6 +29,7 @@ FROM debian:12-slim AS downloader
 ARG TERRAFORM_VERSION=1.9.8
 ARG TERRAFORM_DOCS_VERSION=0.19.0
 ARG OPA_VERSION=0.69.0
+ARG DOTNET_VERSION=10.0.404
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
@@ -56,17 +59,32 @@ RUN curl -fsSL \
     -o /usr/local/bin/opa \
     && chmod +x /usr/local/bin/opa
 
+# --- .NET SDK ---
+# The dot.net installer script is used instead of the Debian package feed:
+# the microsoft-prod apt repository carries a moving SDK version and has had
+# signing issues on newer Debian releases. The version here is pinned to the
+# same SDK as dotnet/global.json so the container builds exactly what CI and
+# the local developer environment build.
+RUN curl -fsSL "https://dot.net/v1/dotnet-install.sh" -o /tmp/dotnet-install.sh \
+    && chmod +x /tmp/dotnet-install.sh \
+    && /tmp/dotnet-install.sh --channel 10.0 --version "${DOTNET_VERSION}" --install-dir /usr/share/dotnet \
+    && rm /tmp/dotnet-install.sh \
+    && /usr/share/dotnet/dotnet --version
+
 # ---------------------------------------------------------------------------
 # Stage 2 — final runtime image
 # ---------------------------------------------------------------------------
 FROM python:3.12-slim
 
+ARG DOTNET_VERSION=10.0.404
+
 # Copy binaries from downloader stage
 COPY --from=downloader /usr/local/bin/terraform      /usr/local/bin/terraform
 COPY --from=downloader /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 COPY --from=downloader /usr/local/bin/opa            /usr/local/bin/opa
+COPY --from=downloader /usr/share/dotnet              /usr/share/dotnet
 
-# System dependencies — Ansible, MkDocs, and PowerShell Core
+# System dependencies — Ansible, MkDocs, PowerShell Core, and the .NET runtime
 RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
         openssh-client \
@@ -76,6 +94,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         wget \
         apt-transport-https \
         ca-certificates \
+        libicu72 \
     # PowerShell Core (Microsoft package repository)
     && wget -qO /tmp/packages-microsoft-prod.deb \
         "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" \
@@ -98,6 +117,24 @@ RUN pwsh -NonInteractive -Command "\
     Install-Module -Name PlatyPS              -RequiredVersion 2.0.6  -Force; \
     Install-Module -Name DscResource.DocGenerator -RequiredVersion 0.12.2 -Force"
 
+# .NET SDK — expose the SDK copied from the downloader stage.
+# DOTNET_ROOT lets the SDK locate its runtime and shared assemblies; PATH
+# includes both the SDK and the global-tools directory (`~/.dotnet/tools`),
+# where the DocFX shim below is installed.
+RUN ln -s /usr/share/dotnet/dotnet /usr/local/bin/dotnet
+ENV DOTNET_ROOT=/usr/share/dotnet
+ENV PATH="${PATH}:/usr/share/dotnet:/root/.dotnet/tools"
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
+    DOTNET_NOLOGO=1 \
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
+# DocFX as a pinned .NET global tool (2.81.0, matching dotnet/dotnet-tools.json)
+# so `docfx --version` works out of the box; generate-docs.sh additionally
+# restores the same version from the local tool manifest before running it.
+RUN dotnet --version \
+    && dotnet tool install --global docfx --version 2.81.0 \
+    && docfx --version
+
 WORKDIR /workspace
 
 # Default command: show tool versions for quick verification
@@ -109,4 +146,6 @@ CMD ["/bin/bash", "-c", \
       ansible --version | head -1 && \
       mkdocs --version && \
       pwsh --version && \
-      pwsh -NonInteractive -Command \"(Get-Module Pester -ListAvailable)[0].Version | ForEach-Object { \\\"Pester \$_\\\" }\""]
+      pwsh -NonInteractive -Command \"(Get-Module Pester -ListAvailable)[0].Version | ForEach-Object { \\\"Pester \$_\\\" }\" && \
+      dotnet --version && \
+      docfx --version"]

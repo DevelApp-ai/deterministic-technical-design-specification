@@ -114,9 +114,9 @@ dotnet test MyApp.slnx --no-build     # unit tests + NetArchTest architecture po
 ```
 
 `scripts/generate-docs.sh` runs these steps automatically (Step 5) when
-`dotnet` is on the PATH and skips them with a warning otherwise — until the
-Docker toolchain image gains the .NET SDK (tracked in issue #18), run the
-application steps natively or via Option C.
+`dotnet` is on the PATH and skips them with a warning otherwise. The Docker
+toolchain image ships the pinned .NET SDK and DocFX, so the same steps run
+inside the container with no host dependencies.
 
 ---
 

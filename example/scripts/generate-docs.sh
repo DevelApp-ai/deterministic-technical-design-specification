@@ -151,10 +151,15 @@ if command -v dotnet &> /dev/null; then
     warn "python3 not found — skipping OpenAPI reference rendering."
   fi
 
-  # DocFX is pinned via the local tool manifest
-  # (dotnet/dotnet-tools.json, currently docfx 2.81.0). docfx metadata
-  # with outputFormat "markdown" renders the API reference straight to
-  # MkDocs-consumable markdown.
+  # Restore the pinned local tools from the tool manifest
+  # (dotnet/dotnet-tools.json, currently docfx 2.81.0) before invoking them:
+  # a local tool manifest takes precedence over any globally installed docfx,
+  # so the manifest is the single source of truth for the pinned version.
+  dotnet tool restore
+  success "Local .NET tools restored from dotnet/dotnet-tools.json"
+
+  # docfx metadata with outputFormat "markdown" renders the API reference
+  # straight to MkDocs-consumable markdown.
   dotnet docfx metadata docs/docfx.json
   success "DocFX API reference written to docs/generated/dotnet-api/"
 
