@@ -57,6 +57,7 @@
 ### Section: Application
 - Source: docs/application/*.md
 - Source: docs/generated/dotnet-api/*.md (generated)
+- Source: docs/generated/tds/dotnet-api/*.md (generated)
 - Source: docs/generated/openapi.json (generated)
 - Rule: detail public api
 - Rule: exclude test projects

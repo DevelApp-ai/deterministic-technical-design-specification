@@ -92,6 +92,20 @@ blob-bound sources ([ADR-0013](../adrs/0013-docfx-dotnet-api-reference.md),
 - **Standalone export** — the composition report itself is the
   machine-readable standalone export under `docs/generated/tds/`.
 
+## Filtered .NET API export
+
+[ADR-0022](../adrs/0022-xml-doc-filtered-api-export.md) implements the
+manifest's `detail public api` / `exclude test projects` rules for the
+application layer: `scripts/generate-dotnet-doc-export.py` renders the
+public API surface of each application assembly from the build-time XML
+doc comments into
+`docs/generated/tds/dotnet-api/` (CI-generated, declared
+`(generated)` in the manifest), plus the machine-readable
+code→spec mapping `docs/generated/tds/dotnet-spec-mapping.json`.
+Members declare their requirement traces with `<spec>` tags —
+every id is verified against this metadata contract, so application
+code and specification cannot drift apart silently.
+
 ## Regenerating
 
 ```bash

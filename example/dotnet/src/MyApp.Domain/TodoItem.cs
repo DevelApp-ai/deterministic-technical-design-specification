@@ -3,6 +3,7 @@ namespace MyApp.Domain;
 /// <summary>
 /// A single todo item in the example application.
 /// </summary>
+/// <spec>moscow:M-001</spec>
 /// <param name="Id">The stable identifier of the item.</param>
 /// <param name="Title">The human-readable title of the item.</param>
 /// <param name="IsCompleted">A value indicating whether the item is done.</param>

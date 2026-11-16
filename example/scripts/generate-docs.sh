@@ -214,6 +214,18 @@ if command -v dotnet &> /dev/null; then
   dotnet docfx metadata docs/docfx.json
   success "DocFX API reference written to docs/generated/dotnet-api/"
 
+  # Filtered .NET API export (ADR-0022): render the public API surface
+  # from the build-time XML doc files for TDS composition
+  # (docs/generated/tds/dotnet-api/), with <spec> traceability tags
+  # verified against the ADR-0019 metadata contract.
+  if command -v python3 &> /dev/null; then
+    python3 "${REPO_ROOT}/scripts/generate-dotnet-doc-export.py" --selftest
+    python3 "${REPO_ROOT}/scripts/generate-dotnet-doc-export.py" --all
+    success "Filtered API export written to docs/generated/tds/dotnet-api/"
+  else
+    warn "python3 not found — skipping the filtered API export."
+  fi
+
   # C4 architecture diagrams (C4Sharp, pinned in
   # tools/MyApp.Architecture.Diagrams). The generator writes Mermaid
   # sources (+ PlantUML) to docs/generated/architecture/; the assembler

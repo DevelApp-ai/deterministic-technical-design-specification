@@ -562,6 +562,35 @@
         "docs/traceability/tds-composition.md"
       ],
       "file": "docs/adrs/0021-tds-composition-manifest-grammar.md"
+    },
+    {
+      "id": "ADR-0022",
+      "title": "Filtered .NET API Export from Build-Time XML Doc Comments",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "xml-doc-comments",
+        "api-export",
+        "traceability",
+        "spectree",
+        "determinism",
+        "tds"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-001",
+        "M-001",
+        "M-002",
+        "S-002"
+      ],
+      "governs": [
+        "scripts/generate-dotnet-doc-export.py",
+        "docs/generated/tds/dotnet-api/",
+        "docs/generated/tds/dotnet-spec-mapping.json"
+      ],
+      "file": "docs/adrs/0022-xml-doc-filtered-api-export.md"
     }
   ],
   "policies": [
@@ -1054,7 +1083,7 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 21,
+    "adr_count": 22,
     "policy_count": 18,
     "requirement_count": 71
   }
