@@ -25,6 +25,26 @@
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <RunAnalyzers>true</RunAnalyzers>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
+  <!--
+    Static-analysis gate (Roslyn analyzers):
+
+      - Microsoft.CodeAnalysis.NetAnalyzers — the platform baseline quality
+        and security rules (supersedes FxCop analyzers).
+      - Roslynator.Analyzers — additional code-quality and style rules.
+      - SonarAnalyzer.CSharp — security and code-smell detection.
+
+    Severities are configured in .editorconfig: security-critical rules are
+    escalated to `error`, style rules stay at `warning`/`suggestion`. With
+    TreatWarningsAsErrors any warning-severity finding fails the build.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100" PrivateAssets="all" />
+    <PackageReference Include="Roslynator.Analyzers" Version="5.0.1" PrivateAssets="all" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.36.0.15337" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>

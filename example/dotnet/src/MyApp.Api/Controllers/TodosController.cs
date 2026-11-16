@@ -57,6 +57,7 @@ public sealed class TodosController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create([FromBody] CreateTodoRequest request)
     {
+        ArgumentNullException.ThrowIfNull(request);
         if (string.IsNullOrWhiteSpace(request.Title))
         {
             return BadRequest(new { error = "A todo item must have a non-empty title." });

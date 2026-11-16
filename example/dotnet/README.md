@@ -52,6 +52,16 @@ dotnet test MyApp.slnx -c Release --no-build
 
 Both must pass with **zero warnings** (warnings are errors).
 
+## Static-analysis gate
+
+Three analyzer packages are referenced from `Directory.Build.props`:
+`Microsoft.CodeAnalysis.NetAnalyzers` (platform baseline), `Roslynator.Analyzers`
+(code quality/style) and `SonarAnalyzer.CSharp` (security and code smells).
+Severities are configured in `.editorconfig`: security-critical rules are
+`error`, code-quality rules are `warning` (fail the build via
+`TreatWarningsAsErrors`), style preferences are `suggestion`. The enforced
+rule catalogue is documented in `docs/application/code-quality.md`.
+
 ## Endpoints
 
 | Method | Route | Description |
