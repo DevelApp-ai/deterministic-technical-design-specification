@@ -406,6 +406,11 @@
       "type": "references"
     },
     {
+      "from": "adr:ADR-0024",
+      "to": "moscow:OPS-004",
+      "type": "references"
+    },
+    {
       "from": "policy:ARCH-001",
       "to": "adr:ADR-0012",
       "type": "implements"
@@ -797,14 +802,14 @@
     }
   ],
   "generated": {
-    "edgeCount": 159,
+    "edgeCount": 160,
     "namespaces": {
-      "adr": 23,
-      "moscow": 71,
+      "adr": 24,
+      "moscow": 72,
       "policy": 18,
       "spec": 18
     },
-    "nodeCount": 130,
+    "nodeCount": 132,
     "normalizer": "normalize-traceability-metadata.py",
     "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
   },
@@ -1290,6 +1295,22 @@
       "status": "Accepted",
       "supersedes": [],
       "title": "SpecTree Ingestion as First-Class TDS Sources",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "scripts/generate-drift-report.py"
+      ],
+      "id": "adr:ADR-0024",
+      "relatedRequirements": [
+        "moscow:OPS-004"
+      ],
+      "source": "docs/adrs/0024-infrastructure-drift-detection.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Infrastructure Drift Detection",
       "type": "adr"
     },
     {
@@ -1919,6 +1940,17 @@
       "moscow": "should",
       "source": "docs/requirements/moscow.md",
       "title": "Network topology auto-generated as Markdown during `terraform plan`",
+      "type": "requirement"
+    },
+    {
+      "category": "Should Have — DevOps Operational",
+      "evidence": [
+        "`scripts/generate-drift-report.py`, `drift-check` job in `.github/workflows/docs-pipeline.yml`"
+      ],
+      "id": "moscow:OPS-004",
+      "moscow": "should",
+      "source": "docs/requirements/moscow.md",
+      "title": "Infrastructure drift detection: scheduled `terraform plan -detailed-exitcode` comparison between deployed state and code, failing the pipeline with a human-readable diff",
       "type": "requirement"
     },
     {

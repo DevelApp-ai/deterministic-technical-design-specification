@@ -59,6 +59,7 @@ flowchart TD
     IDENTIFY -->|opa-tests| OPA_FAIL[OPA unit test failure]
     IDENTIFY -->|dsc-tests| DSC_FAIL[Pester test failure]
     IDENTIFY -->|terraform| TF_FAIL[Terraform or OPA gate failure]
+    IDENTIFY -->|drift-check| DRIFT_FAIL[Infrastructure drift detected]
     IDENTIFY -->|docs-build| DOCS_FAIL[Documentation build failure]
     IDENTIFY -->|docs-publish| PUB_FAIL[GitHub Pages deploy failure]
 
@@ -78,6 +79,8 @@ flowchart TD
 
     PUB_FAIL --> PUB_STEPS["1. Check GitHub Pages is enabled\n   (repo Settings → Pages → Source: GitHub Actions)\n2. Check GITHUB_TOKEN permissions\n   (repo Settings → Actions → Workflow permissions: Read and write)\n3. Re-run the docs-publish job only"]
 
+    DRIFT_FAIL --> DRIFT_STEPS["See: Responding to Infrastructure Drift (ADR-0024) below"]
+
     OPA_STEPS --> RESOLVED([✅ Resolved])
     DSC_STEPS --> RESOLVED
     TF_SYNTAX --> RESOLVED
@@ -87,6 +90,7 @@ flowchart TD
     TFDOCS_ERR --> RESOLVED
     ANSIBLE_ERR --> RESOLVED
     PUB_STEPS --> RESOLVED
+    DRIFT_STEPS --> RESOLVED
 ```
 
 ---
@@ -130,6 +134,29 @@ All tool versions are pinned in the `Dockerfile`.  To upgrade:
    - `id`, `title`, `status`, `date`, `related_requirements`
 2. Update `mkdocs.yml` nav — Architecture Decisions section
 3. Update `docs/traceability/index.md` — add the ADR to the matrix tables
+
+### Responding to Infrastructure Drift (ADR-0024)
+
+The nightly `drift-check` job compares the deployed state (remote
+backend) with the configuration using `terraform plan
+-detailed-exitcode`.  A drift failure means the world and the repository
+have diverged:
+
+1. Open the failed workflow run — the human-readable drift report is in
+   the run summary and attached as the `drift-report` artefact (30-day
+   retention); it is never committed to the repository
+2. Classify each change: intended (someone changed infrastructure
+   outside the pipeline) or unintended (unauthorised modification)
+3. Reconcile **through the code**, never by hand:
+   - intended change → port it into `terraform/` and open a PR
+   - unintended change → revert the infrastructure to the
+     configuration-declared state
+4. Re-run the pipeline via a manual `workflow_dispatch` and confirm the
+   `drift-check` job reports "No infrastructure drift"
+5. If the job skipped with *"No TERRAFORM_BACKEND_CONFIG secret"*, the
+   remote state backend is not configured yet (see
+   [ADR-0024](../adrs/0024-infrastructure-drift-detection.md)) — the
+   check becomes active once the secret exists
 
 ---
 
