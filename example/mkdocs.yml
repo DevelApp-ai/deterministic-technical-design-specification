@@ -97,6 +97,11 @@ nav:
       - ADR-0010 NIS2 Compliance: adrs/0010-nis2-compliance.md
       - ADR-0011 DORA Compliance: adrs/0011-dora-compliance.md
       - ADR-0012 ADR Traceability Kit: adrs/0012-machine-readable-adr-traceability.md
+      - ADR-0013 DocFX for .NET API Reference: adrs/0013-docfx-dotnet-api-reference.md
+      - ADR-0014 NetArchTest Architecture Policies: adrs/0014-netarchtest-architecture-policies.md
+      - ADR-0015 Native .NET OpenAPI Generation: adrs/0015-native-dotnet-openapi.md
+      - ADR-0016 Roslyn Code-Quality Gate: adrs/0016-roslyn-code-quality-gate.md
+      - ADR-0017 C4Sharp Architecture Diagrams: adrs/0017-c4sharp-architecture-diagrams.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
       - Architecture Catalog (JSON): generated/architecture-catalog.json
