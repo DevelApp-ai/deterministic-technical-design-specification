@@ -351,6 +351,16 @@
       "type": "references"
     },
     {
+      "from": "adr:ADR-0020",
+      "to": "moscow:M-005",
+      "type": "references"
+    },
+    {
+      "from": "adr:ADR-0020",
+      "to": "moscow:S-006",
+      "type": "references"
+    },
+    {
       "from": "policy:ARCH-001",
       "to": "adr:ADR-0012",
       "type": "implements"
@@ -696,6 +706,21 @@
       "type": "satisfies"
     },
     {
+      "from": "policy:SPEC-001",
+      "to": "adr:ADR-0020",
+      "type": "implements"
+    },
+    {
+      "from": "policy:SPEC-001",
+      "to": "moscow:M-005",
+      "type": "satisfies"
+    },
+    {
+      "from": "policy:SPEC-001",
+      "to": "moscow:S-006",
+      "type": "satisfies"
+    },
+    {
       "from": "spec:TodoApi",
       "to": "adr:ADR-0015",
       "type": "implements"
@@ -727,14 +752,14 @@
     }
   ],
   "generated": {
-    "edgeCount": 145,
+    "edgeCount": 150,
     "namespaces": {
-      "adr": 19,
+      "adr": 20,
       "moscow": 71,
-      "policy": 17,
+      "policy": 18,
       "spec": 18
     },
-    "nodeCount": 125,
+    "nodeCount": 127,
     "normalizer": "normalize-traceability-metadata.py",
     "status": "normalized metadata scan (front-matter, metadoc and spec grammar literals; namespace-qualified ids)"
   },
@@ -1142,6 +1167,24 @@
       "status": "Accepted",
       "supersedes": [],
       "title": "Use a Shared Traceability Metadata Contract for All Spec Sources",
+      "type": "adr"
+    },
+    {
+      "author": "platform-team",
+      "date": "2026-11-16",
+      "evidence": [
+        "policies/spectree/",
+        "scripts/spectree-gate.sh"
+      ],
+      "id": "adr:ADR-0020",
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "source": "docs/adrs/0020-spectree-validation-gate.md",
+      "status": "Accepted",
+      "supersedes": [],
+      "title": "Use an OPA Validation Gate over the SpecTree Metadata Contract",
       "type": "adr"
     },
     {
@@ -2572,6 +2615,22 @@
       "severity": "HIGH",
       "source": "policies/terraform/deny_deprecated_tls.rego",
       "title": "Prohibit Deprecated TLS Versions (TLS 1.0 / 1.1)",
+      "type": "policy"
+    },
+    {
+      "compliesWith": [],
+      "id": "policy:SPEC-001",
+      "package": "spectree.validate",
+      "relatedAdr": [
+        "adr:ADR-0020"
+      ],
+      "relatedRequirements": [
+        "moscow:S-006",
+        "moscow:M-005"
+      ],
+      "severity": "HIGH",
+      "source": "policies/spectree/validate.rego",
+      "title": "SpecTree Validation Gate",
       "type": "policy"
     },
     {

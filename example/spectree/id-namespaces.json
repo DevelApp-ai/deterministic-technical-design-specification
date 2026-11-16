@@ -69,7 +69,7 @@
       "namespace": "policy",
       "nodeType": "policy",
       "source": "policies/**/*.rego (__rego__metadoc__)",
-      "idPattern": "^(?:ARCH|FINOPS|K8S|SC|SEC)-[0-9]{3}$ | ^(?:DORA-ICT|NIS2-CRYPTO)-[0-9]{3}$",
+      "idPattern": "^(?:(?:ARCH|FINOPS|K8S|SC|SEC|SPEC)|(?:DORA-ICT|NIS2-CRYPTO))-[0-9]{3}$",
       "allocatedPrefixes": [
         "ARCH-",
         "DORA-ICT-",
@@ -77,10 +77,11 @@
         "K8S-",
         "NIS2-CRYPTO-",
         "SC-",
-        "SEC-"
+        "SEC-",
+        "SPEC-"
       ],
       "referenceResolution": "Policies reference moscow requirements (related_requirements) and adr decisions (related_adr).",
-      "notes": "OPA gate policies. The .NET architecture policy family (APP-ARCH-/APP-SEC-) is a future extension point documented in the metadata contract page."
+      "notes": "OPA gate policies. The .NET architecture policy family (APP-ARCH-/APP-SEC-) is a future extension point documented in the metadata contract page. SPEC- is the SpecTree validation gate (ADR-0020)."
     }
   ]
 }

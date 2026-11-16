@@ -105,6 +105,7 @@ nav:
       - ADR-0017 C4Sharp Architecture Diagrams: adrs/0017-c4sharp-architecture-diagrams.md
       - ADR-0018 SpecTree Specification-First Ingestion: adrs/0018-spectree-specification-first-ingestion.md
       - ADR-0019 Shared Traceability Metadata Contract: adrs/0019-shared-traceability-metadata-contract.md
+      - ADR-0020 SpecTree Validation Gate: adrs/0020-spectree-validation-gate.md
   - Traceability:
       - Requirements → ADRs → Policies: traceability/index.md
       - Metadata Contract: traceability/metadata-contract.md
