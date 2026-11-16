@@ -1,0 +1,25 @@
+# SRS: MyApp
+## Version: 1.0.0
+## Stakeholders: platform_team, product_owner
+## Scope: Todo item management for the example deterministic documentation pipeline
+
+### Must Have
+- M-001: Store todo items with a title and a completion flag accept: a todo item can be created, read, updated and deleted => dotnet/src/MyApp.Application/TodoService.cs, dotnet/src/MyApp.Domain/TodoItem.cs
+- M-002: Expose todo items over a REST API accept: GET, POST, PUT and DELETE requests on /api/todos are served => dotnet/src/MyApp.Api/Controllers/TodosController.cs
+- M-003: Enforce layering so that controllers never depend on repository implementations accept: the NetArchTest gate APP-ARCH-001 passes => dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs
+- M-004: Keep the domain layer free of infrastructure dependencies accept: the NetArchTest gate APP-ARCH-002 passes => dotnet/tests/MyApp.ArchitectureTests/ArchitecturePoliciesTests.cs
+
+### Should Have
+- S-001: Publish an OpenAPI document at build time accept: docs/generated/openapi.json is emitted by dotnet build => dotnet/src/MyApp.Api/MyApp.Api.csproj
+- S-002: Guard public APIs against null arguments accept: the Roslyn gate fails on ArgumentNullException violations => dotnet/src/MyApp.Application/TodoService.cs
+
+### Could Have
+- C-001: Render API reference documentation from compiled assemblies accept: DocFX markdown export lands under docs/generated/dotnet-api => docs/application/code-quality.md
+
+### Won't Have
+- W-001: Multi-tenant user accounts are out of scope for the example pipeline
+
+### Traceability
+- M-001 -> dotnet/src/MyApp.Application/TodoService.cs
+- M-002 -> dotnet/src/MyApp.Api/Controllers/TodosController.cs
+- S-001 -> dotnet/src/MyApp.Api/MyApp.Api.csproj

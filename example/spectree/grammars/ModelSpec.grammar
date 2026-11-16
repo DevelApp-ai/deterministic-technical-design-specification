@@ -1,0 +1,43 @@
+Grammar: ModelSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# ModelSpec - grammar for .model data model specification files
+# (SpecTree). Declares entities, relationships, invariants and
+# persistence hints for .NET/EF-compatible generation.
+
+<model-document> ::= <model-header> <section>+ => { buildModelSpec($1, $2); }
+
+<model-header> ::= <hash1> "Model:" <model-name> => { setModelName($3); }
+
+<section> ::= <entities-section> | <relationships-section> | <invariants-section>
+
+<entities-section> ::= <hash3> "Entities" <entity>+ => { collectEntities($3); }
+<entity> ::= "-" ("entity" | "value-object" | "enum") <identifier> <inheritance>? <field>* => { declareEntity($2, $3, $4, $5); }
+<inheritance> ::= "extends" <identifier>
+<field> ::= <indent> "-" <identifier> ":" <type-name> <field-modifier>* => { declareField($3, $5, $6); }
+<field-modifier> ::= "key" | "required" | "unique" | "indexed" | "immutable"
+                   | "default=" <literal>
+
+<relationships-section> ::= <hash3> "Relationships" <relationship>+ => { collectRelationships($3); }
+<relationship> ::= "-" <identifier> <cardinality> <identifier> (":" <free-text>)? => { addRelationship($2, $3, $4); }
+<cardinality> ::= "1-1" | "1-*" | "*-1" | "*-*"
+
+<invariants-section> ::= <hash3> "Invariants" <invariant>+ => { collectInvariants($3); }
+<invariant> ::= "-" <invariant-id> ":" <free-text> => { addInvariant($2, $4); }
+<invariant-id> ::= "INV-" /[0-9]+/
+
+<model-name> ::= <identifier>
+<type-name> ::= "Array<" <type-name> ">"
+              | <primitive> "?"
+              | <primitive>
+              | <identifier> "?"
+              | <identifier>
+<primitive> ::= "string" | "int" | "long" | "decimal" | "bool"
+              | "DateTime" | "DateTimeOffset" | "Guid" | "UUID" | "byte[]"
+<literal> ::= /[0-9]+/ | /"[^"]*"/ | "true" | "false"
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<indent> ::= /[ \t]+/
+<hash1> ::= "#"
+<hash3> ::= "###"

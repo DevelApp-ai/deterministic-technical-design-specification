@@ -1,0 +1,18 @@
+# NFR: MyApp
+## AppliesTo: solution
+
+### Performance
+- PERF-1 (latency): <= 200 ms (p95 read latency for GET /api/todos)
+- PERF-2 (memory): <= 512 MB (steady-state working set)
+
+### Scalability
+- SCAL-1 (rps): >= 100 rps (minimum sustained request rate)
+- SCAL-2 (uptime): >= 99.9 % (example documentation site availability)
+
+### Security
+- SEC-1: classification: internal
+- SEC-2: authz: TodoOwner
+
+### Compliance
+- NIS2: the example pipeline links ADRs, requirements and artefacts as evidence
+- GDPR: the example stores no personal data

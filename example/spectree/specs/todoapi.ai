@@ -1,0 +1,26 @@
+# Component: TodoApi
+## Description: REST controller component exposing todo item CRUD over HTTP
+## Dependencies: TodoService
+## Namespace: MyApp.Api.Controllers
+## Version: 1.0.0
+
+### Requirements
+- REQ-1: Route HTTP requests to the todo service without exposing domain entities
+- Must respond with ProblemDetails on invalid input
+- Should validate routes before delegating to the service
+
+### API Endpoints
+- GET /api/todos: list all todo items
+- POST /api/todos: create a new todo item
+- PUT /api/todos/{id}: update an existing todo item
+- DELETE /api/todos/{id}: delete a todo item
+
+### Data Model
+- TodoDto
+  - Id: Guid
+  - Title: string
+  - IsCompleted: bool
+
+### Compliance
+- complies-with ADR-0015
+- satisfies M-002

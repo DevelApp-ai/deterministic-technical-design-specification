@@ -1,0 +1,17 @@
+# Test: TodoService
+## Target: MyApp.Application.TodoService.cs
+## Coverage: 100% scenario-coverage, 100% requirement-coverage, must-level
+
+### Test Scenarios
+- Given an empty repository When Create is called with a valid request Then the item is stored and returned
+- Should throw ArgumentNullException when the request is null
+
+### Edge Cases
+- Given a completed todo item When Create is called with the same title Then both items coexist
+
+### Performance Tests
+- Should create a todo item under 50 ms
+
+### RequirementCoverage
+- Covers M-001
+- Covers REQ-2

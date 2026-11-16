@@ -1,0 +1,53 @@
+Grammar: TestSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# TestSpec - grammar for .test test specification files (SpecTree).
+# A .test file binds to a target component and declares scenario-based
+# tests, edge cases, coverage rules and performance thresholds.
+
+<test-document> ::= <test-header> <metadata-block>* <section>+ => { buildTestSpec($1, $2, $3); }
+
+<test-header> ::= <hash1> "Test:" <component-name> => { setTargetComponent($3); }
+
+<metadata-block> ::= <target-line> | <coverage-line>
+<target-line> ::= <hash2> "Target:" <file-ref> => { setTargetFile($3); }
+<coverage-line> ::= <hash2> "Coverage:" <coverage-rule> ("," <coverage-rule>)* => { setCoverageRules($3); }
+
+<section> ::= <scenario-section>
+           | <edge-case-section>
+           | <performance-section>
+           | <requirement-map-section>
+
+<scenario-section> ::= <hash3> "Test" "Scenarios" <scenario>+ => { collectScenarios($3); }
+<edge-case-section> ::= <hash3> "Edge" "Cases" <scenario>+
+
+<scenario> ::= "-" "Given" <free-text> "When" <free-text> "Then" <free-text> => { addGwtScenario($3, $5, $7); }
+             | "-" "Should" <free-text> => { addScenario($3); }
+
+<performance-section> ::= <hash3> "Performance" "Tests" <performance-entry>+ => { collectPerformanceTests($3); }
+<performance-entry> ::= "-" "Should" <free-text> <threshold> => { addPerformanceTest($3, $4); }
+<threshold> ::= "under" <number> <time-unit>
+              | "within" <number> <time-unit>
+              | "at" "least" <number> <rate-unit>
+              | "with" "at" "most" <number> "%" "errors"
+
+<requirement-map-section> ::= <hash3> "RequirementCoverage" <requirement-ref>+
+<requirement-ref> ::= "-" "Covers" <requirement-id> => { linkRequirement($3); }
+
+<coverage-rule> ::= <number> "%" "scenario-coverage"
+                  | <number> "%" "requirement-coverage"
+                  | "must-level"
+
+<component-name> ::= <identifier>
+<file-ref> ::= <qualified-name> "." ("cs" | "fs" | "ts")
+<qualified-name> ::= <identifier> ("." <identifier>)*
+<requirement-id> ::= ("REQ" | "M" | "S" | "C" | "W") "-" /[0-9]+/
+<number> ::= /[0-9]+(\.[0-9]+)?/
+<time-unit> ::= "ms" | "s" | "min"
+<rate-unit> ::= "rps" | "ops"
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<hash1> ::= "#"
+<hash2> ::= "##"
+<hash3> ::= "###"

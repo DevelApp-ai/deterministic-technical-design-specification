@@ -1,0 +1,19 @@
+# Interface: TodoApi
+## Version: 1.0.0
+## Authentication: none
+## BaseRoute: /api
+
+### Endpoints
+- GET /todos: list all todo items => 200: TodoDtoList
+- POST /todos: create a new todo item => 201: TodoDto
+- GET /todos/{id}: fetch one todo item => 200: TodoDto
+- PUT /todos/{id}: update an existing todo item => 200: TodoDto
+- DELETE /todos/{id}: delete a todo item => 204: Empty
+
+### Schemas
+- TodoDto: Id: Guid required; Title: string required; IsCompleted: bool
+- CreateTodoRequest: Title: string required max=200
+
+### ErrorContracts
+- 400: invalid request payload code=TODO_VALIDATION_ERROR
+- 404: no todo item with the given id code=TODO_NOT_FOUND

@@ -1,0 +1,17 @@
+# Component: TodoService
+## Description: Application service implementing the todo item use cases
+## Dependencies: TodoRepository
+## Namespace: MyApp.Application
+## Version: 1.0.0
+
+### Requirements
+- REQ-2: Create, read, update and delete todo items through the repository abstraction
+- Must guard against null requests
+
+### Data Model
+- TodoItem
+- TodoDto
+
+### Compliance
+- complies-with ADR-0014
+- satisfies M-001

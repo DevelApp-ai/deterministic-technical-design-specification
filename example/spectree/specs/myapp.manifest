@@ -1,0 +1,20 @@
+Solution: MyApp
+Project: MyApp.Domain -> dotnet/src/MyApp.Domain/MyApp.Domain.csproj tfm: net10.0
+Project: MyApp.Application -> dotnet/src/MyApp.Application/MyApp.Application.csproj tfm: net10.0
+Project: MyApp.Api -> dotnet/src/MyApp.Api/MyApp.Api.csproj tfm: net10.0
+Spec: spectree/specs/myapp.srs -> MyApp
+Spec: spectree/specs/todoapi.ai -> MyApp.Api
+Spec: spectree/specs/todoservice.ai -> MyApp.Application
+Spec: spectree/specs/todoapi.api -> MyApp.Api
+Spec: spectree/specs/todo.model -> MyApp.Domain
+Spec: spectree/specs/todoservice.test -> MyApp.Application
+Spec: spectree/specs/myapp.ns -> MyApp
+Spec: spectree/specs/spectree-ingestion.adr -> MyApp
+Generate: spectree_parse for srs -> docs/generated/spectree
+Generate: spectree_parse for ai -> docs/generated/spectree
+Generate: spectree_parse for api -> docs/generated/spectree
+Generate: spectree_parse for model -> docs/generated/spectree
+Generate: spectree_parse for test -> docs/generated/spectree
+Generate: spectree_parse for ns -> docs/generated/spectree
+Generate: spectree_parse for adr -> docs/generated/spectree
+Exclude: dotnet/src/MyApp.Api/Program.cs reason: composition root with hand-written host bootstrap

@@ -1,0 +1,44 @@
+---
+id: ADR-0018
+title: SpecTree specification-first ingestion
+status: accepted
+date: 2026-11-16
+author: larsbuch
+related_requirements: [M-003, S-001]
+---
+
+# ADR-0018 SpecTree specification-first ingestion
+
+## Status
+accepted
+
+## Context
+The application layer of the deterministic documentation pipeline is documented
+after the fact: markdown pages, ADRs and policy IDs exist, but no machine-readable
+specification tree links them to the compiled solution.
+The Minotaur-Grammars repository defines eight line-based specification formats
+(SrsSpec, AiSpec, TestSpec, ApiSpec, ModelSpec, NsSpec, AdrSpec, SolutionManifest)
+for specification-first development.
+
+## Decision
+Adopt the SpecTree formats as first-class pipeline sources.
+Specifications live in the same repository under example/spectree/, the grammar
+files are vendored as pinned copies, and a deterministic Python 3 stdlib-only
+parser (scripts/spectree-parse.py) emits versioned JSON ASTs under
+docs/generated/spectree/ on every pipeline run.
+The AST JSON schema (spectree/schemas/spectree-ast-v1.schema.json) is versioned
+independently of the grammars so downstream gates can pin it.
+
+## Consequences
+- **Positive:** requirement, component and NFR data become queryable pipeline inputs
+- **Positive:** the vendored grammars pin the exact syntax the parsers accept
+- **Negative:** grammar changes in Minotaur-Grammars require a deliberate re-vendor bump
+- **Neutral:** ASTs are git-ignored like all other generated artefacts
+
+## Alternatives
+- ANTLR-generated parsers from the grammar suite
+- A .NET CLI tool distributed as a NuGet package
+
+## Compliance
+- component: spectree_parse must conform
+- component: generate_docs must conform

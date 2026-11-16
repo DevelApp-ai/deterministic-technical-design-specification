@@ -451,6 +451,32 @@
         "docs/application/architecture-diagrams.md"
       ],
       "file": "docs/adrs/0017-c4sharp-architecture-diagrams.md"
+    },
+    {
+      "id": "ADR-0018",
+      "title": "Use SpecTree Specification-First Ingestion for the Documentation Pipeline",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "spectree",
+        "specification-first",
+        "parsers",
+        "documentation-as-code",
+        "determinism",
+        "traceability"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "governs": [
+        "spectree/",
+        "scripts/spectree-parse.py",
+        "docs/generated/spectree/"
+      ],
+      "file": "docs/adrs/0018-spectree-specification-first-ingestion.md"
     }
   ],
   "policies": [
@@ -929,7 +955,7 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 17,
+    "adr_count": 18,
     "policy_count": 17,
     "requirement_count": 71
   }

@@ -1,0 +1,18 @@
+# Model: Todo
+### Entities
+- entity TodoItem
+  - Id: Guid key required immutable
+  - Title: string required
+  - IsCompleted: bool default=false
+- value-object TodoDto
+  - Id: Guid required
+  - Title: string required
+  - IsCompleted: bool
+- enum TodoStatus
+
+### Relationships
+- TodoItem 1-1 TodoDto: projection of the persisted entity
+
+### Invariants
+- INV-1: A todo item title is never empty
+- INV-2: A todo item identity is immutable once assigned

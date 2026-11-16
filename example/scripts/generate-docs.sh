@@ -9,11 +9,12 @@
 #   2. terraform plan (JSON output) — used by OPA
 #   3. OPA policy evaluation — gate: non-zero violations abort the pipeline
 #   4. terraform-docs — update docs/generated/terraform-readme.md
-#   5. .NET build + DocFX + OpenAPI + C4 diagrams — API reference markdown,
+#   5. SpecTree AST generation — spectree-parse.py → docs/generated/spectree/
+#   6. .NET build + DocFX + OpenAPI + C4 diagrams — API reference markdown,
 #      OpenAPI reference page, and C4 architecture diagrams
-#   6. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
-#   7. Ansible playbook — gather host facts, render Jinja2 host report
-#   8. mkdocs build — assemble the full static site into site/
+#   7. DSC resource documentation — pwsh dsc/build.ps1 → docs/generated/dsc-resources/
+#   8. Ansible playbook — gather host facts, render Jinja2 host report
+#   9. mkdocs build — assemble the full static site into site/
 #
 # Usage (from repo root):
 #   bash example/scripts/generate-docs.sh
@@ -121,9 +122,30 @@ terraform-docs markdown table \
 success "terraform-docs written to docs/generated/terraform-readme.md"
 
 # ---------------------------------------------------------------------------
-# Step 5 — .NET build gate + DocFX API reference + OpenAPI rendering
 # ---------------------------------------------------------------------------
-info "Step 5/8 — .NET build gate + DocFX + OpenAPI + C4 diagrams"
+# Step 5 — SpecTree AST generation
+# ---------------------------------------------------------------------------
+info "Step 5/9 — SpecTree AST generation"
+
+if command -v python3 &> /dev/null; then
+  # Parse every specification under spectree/specs/ into versioned JSON
+  # ASTs, validated against spectree/schemas/spectree-ast-v1.schema.json.
+  # The selftest runs first: parser regressions abort the pipeline before
+  # any artefacts are written (see ADR-0018).
+  python3 "${REPO_ROOT}/scripts/spectree-parse.py" --selftest
+  python3 "${REPO_ROOT}/scripts/spectree-parse.py" --all
+  success "SpecTree ASTs written to docs/generated/spectree/"
+else
+  warn "python3 not found — skipping SpecTree AST generation."
+  warn "Install Python 3 to enable this step."
+  # Ensure the output directory exists so MkDocs can still build
+  mkdir -p "${DOCS_GENERATED_DIR}/spectree"
+fi
+
+
+# Step 6 — .NET build gate + DocFX API reference + OpenAPI rendering
+# ---------------------------------------------------------------------------
+info "Step 6/9 — .NET build gate + DocFX + OpenAPI + C4 diagrams"
 
 DOTNET_DIR="${REPO_ROOT}/dotnet"
 
@@ -188,9 +210,9 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 6 — DSC resource documentation
+# Step 7 — DSC resource documentation
 # ---------------------------------------------------------------------------
-info "Step 6/8 — DSC resource documentation (DscResource.DocGenerator)"
+info "Step 7/9 — DSC resource documentation (DscResource.DocGenerator)"
 
 if command -v pwsh &> /dev/null; then
   pwsh -NonInteractive -File "${DSC_DIR}/build.ps1" \
@@ -204,9 +226,9 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# Step 7 — Ansible fact-gather
+# Step 8 — Ansible fact-gather
 # ---------------------------------------------------------------------------
-info "Step 7/8 — Ansible host fact-gathering"
+info "Step 8/9 — Ansible host fact-gathering"
 
 ansible-playbook \
   -i "${REPO_ROOT}/ansible/inventory.yml" \
@@ -217,9 +239,9 @@ ansible-playbook \
 success "Ansible host report written to docs/generated/"
 
 # ---------------------------------------------------------------------------
-# Step 8 — MkDocs build
+# Step 9 — MkDocs build
 # ---------------------------------------------------------------------------
-info "Step 8/8 — MkDocs build"
+info "Step 9/9 — MkDocs build"
 
 mkdocs build --config-file "${MKDOCS_CFG}" --strict
 
@@ -227,3 +249,4 @@ success "MkDocs site built in ${REPO_ROOT}/site/"
 echo ""
 echo -e "${GREEN}✔ Documentation pipeline completed successfully.${NC}"
 echo "  Preview: open ${REPO_ROOT}/site/index.html"
+

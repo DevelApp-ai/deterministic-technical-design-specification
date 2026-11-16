@@ -1,0 +1,53 @@
+Grammar: ApiSpec
+FormatType: EBNF
+TokenSplitter: Space
+
+# ApiSpec - grammar for .api interface specification files (SpecTree).
+# Declares versioned REST contracts: endpoints, schemas, validation
+# constraints and error contracts.
+
+<api-document> ::= <interface-header> <metadata-block>* <section>+ => { buildInterfaceSpec($1, $2, $3); }
+
+<interface-header> ::= <hash1> "Interface:" <interface-name> => { setInterfaceName($3); }
+
+<metadata-block> ::= <version-line> | <auth-line> | <base-route-line> | <deprecated-line>
+<version-line> ::= <hash2> "Version:" <version-number> => { setVersion($3); }
+<auth-line> ::= <hash2> "Authentication:" <auth-scheme> => { setAuthScheme($3); }
+<base-route-line> ::= <hash2> "BaseRoute:" <route-path> => { setBaseRoute($3); }
+<deprecated-line> ::= <hash2> "Status:" "deprecated" "since" <version-number> => { markDeprecated($5); }
+
+<section> ::= <endpoints-section> | <schemas-section> | <errors-section>
+
+<endpoints-section> ::= <hash3> "Endpoints" <endpoint>+ => { collectEndpoints($3); }
+<endpoint> ::= "-" <http-method> <route-path> ":" <free-text> "=>" <response-spec> => { addEndpoint($2, $3, $5, $7); }
+             | "-" <http-method> <route-path> ":" <free-text> => { addEndpoint($2, $3, $5); }
+<response-spec> ::= <status-code> ":" <schema-ref>
+
+<schemas-section> ::= <hash3> "Schemas" <schema-entry>+ => { collectSchemas($3); }
+<schema-entry> ::= "-" <identifier> ":" <field-list> => { declareSchema($2, $4); }
+<field-list> ::= <field> (";" <field>)*
+<field> ::= <identifier> ":" <type-name> <constraint>*
+<constraint> ::= "required" | "nullable" | "readOnly"
+               | "min=" <number> | "max=" <number>
+               | "pattern=" <regex-literal>
+
+<errors-section> ::= <hash3> "ErrorContracts" <error-entry>+ => { collectErrorContracts($3); }
+<error-entry> ::= "-" <status-code> ":" <free-text> "code=" <error-code> => { addErrorContract($2, $4, $6); }
+
+<interface-name> ::= <identifier>
+<auth-scheme> ::= "none" | "bearer" | "apikey" | "oauth2" | "mtls"
+<http-method> ::= "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "HEAD" | "OPTIONS"
+<route-path> ::= "/" <path-segment> ("/" <path-segment>)*
+<path-segment> ::= <identifier> | "{" <identifier> "}"
+<status-code> ::= /[1-5][0-9][0-9]/
+<error-code> ::= /[A-Z][A-Z0-9_]+/
+<schema-ref> ::= <identifier>
+<type-name> ::= <identifier> "?" | <identifier> "[]" | <identifier>
+<version-number> ::= /[0-9]+(\.[0-9]+)*/
+<number> ::= /[0-9]+(\.[0-9]+)?/
+<regex-literal> ::= /"[^"\\]|\\."*/
+<identifier> ::= /[a-zA-Z_][a-zA-Z0-9_]*/
+<free-text> ::= /[^\n]+/
+<hash1> ::= "#"
+<hash2> ::= "##"
+<hash3> ::= "###"
