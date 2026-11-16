@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Domain layer of the example .NET application: entities and repository contracts.</Description>
+  </PropertyGroup>
+
+</Project>

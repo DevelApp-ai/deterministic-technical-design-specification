@@ -1,0 +1,30 @@
+<Project>
+
+  <!--
+    Common build properties for every project in the example .NET solution.
+
+    These properties implement the deterministic-build requirements that the
+    TDS pipeline enforces (see docs/requirements/moscow.md, APP-004):
+
+      - GenerateDocumentationFile  → the compiler emits /// XML doc files and
+        raises CS1591 on any public member without documentation.
+      - TreatWarningsAsErrors       → analyzer violations fail the build.
+      - Deterministic               → byte-reproducible outputs.
+      - ContinuousIntegrationBuild  → normalises embedded file paths so CI
+        artefacts are comparable regardless of checkout location.
+  -->
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true' or '$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+  </PropertyGroup>
+
+</Project>

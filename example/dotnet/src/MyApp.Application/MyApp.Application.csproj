@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Application layer of the example .NET application: use cases and DTOs.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyApp.Domain\MyApp.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
