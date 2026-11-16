@@ -417,14 +417,19 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module -Name PlatyPS                 -RequiredVersion 2.0.6  -Force
+          # PlatyPS: 0.14.2 is the newest stable gallery version. The 2.x
+          # line only exists as 2.0.0-preview1; pinning "2.0.6" fails to
+          # resolve and aborts this job.
+          Install-Module -Name PlatyPS                 -RequiredVersion 0.14.2 -Force
           Install-Module -Name DscResource.DocGenerator -RequiredVersion 0.12.2 -Force
 
       - name: Run terraform-docs
         run: |
           mkdir -p example/docs/generated
+          # terraform-docs v0.19 resolves --output-file relative to the module
+          # root (example/terraform/), not the working directory.
           terraform-docs markdown table \
-            --output-file example/docs/generated/terraform-readme.md \
+            --output-file ../docs/generated/terraform-readme.md \
             --output-mode replace \
             example/terraform/
 
