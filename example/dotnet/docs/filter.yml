@@ -1,0 +1,9 @@
+### DocFX API filter (https://dotnet.github.io/docfx/reference/filter-config-file.html)
+###
+### Excludes compiler-generated entry points from the generated API reference
+### so the published surface is the real public API only.
+
+apiRules:
+- exclude:
+    uidRegex: ^Program$
+    type: Type
