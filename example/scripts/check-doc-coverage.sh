@@ -14,6 +14,7 @@
 # 4. ansible/      → at least one file under docs/configuration/
 # 5. kubernetes/   → at least one file under docs/kubernetes/
 # 6. helm/         → at least one file under docs/kubernetes/
+# 7. dotnet/       → at least one file under docs/application/
 #
 # Usage
 # -----
@@ -113,6 +114,11 @@ check_rule "DOC-HELM" \
   "example/helm/" \
   "example/docs/kubernetes/" \
   "Helm chart changes must be accompanied by docs/kubernetes/ updates"
+
+check_rule "DOC-DOTNET" \
+  "example/dotnet/.*\.(cs|csproj)$" \
+  "example/docs/application/" \
+  "dotnet source changes must be accompanied by docs/application/ updates"
 
 echo "─────────────────────────────────────────────────────────────────────────"
 

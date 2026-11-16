@@ -27,7 +27,7 @@ flowchart TD
 ```
 
 The script `scripts/check-doc-coverage.sh` compares the set of files changed in
-the PR against six rules:
+the PR against seven rules:
 
 | Rule | Trigger | Required doc path |
 |------|---------|------------------|
@@ -37,6 +37,7 @@ the PR against six rules:
 | **DOC-ANS** | `ansible/` changed | `docs/configuration/` |
 | **DOC-K8S** | `kubernetes/` changed | `docs/kubernetes/` |
 | **DOC-HELM** | `helm/` changed | `docs/kubernetes/` |
+| **DOC-DOTNET** | `dotnet/**/*.cs` or `*.csproj` changed | `docs/application/` |
 
 ---
 
@@ -56,6 +57,7 @@ the PR against six rules:
 ⏭️  DOC-ANS: Ansible changes — no code changes (skipped)
 ⏭️  DOC-K8S: Kubernetes manifest changes — no code changes (skipped)
 ⏭️  DOC-HELM: Helm chart changes — no code changes (skipped)
+⏭️  DOC-DOTNET: dotnet source changes — no code changes (skipped)
 ─────────────────────────────────────────────────────────────────────────
 ❌ Documentation coverage gate FAILED — 1 rule(s) violated.
    Update the relevant docs/ page(s) alongside your code changes.
