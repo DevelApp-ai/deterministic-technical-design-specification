@@ -83,6 +83,26 @@ Both stdlib-only and deterministic: the same tree produces a byte-identical
 file (sorted nodes and edges, no timestamps).  CI runs the same two commands
 and compares against the committed file.
 
+## Validation gate
+
+Since [ADR-0020](../adrs/0020-spectree-validation-gate.md), the contract is
+also the **input to an OPA validation gate** (`policies/spectree/validate.rego`,
+policy id `SPEC-001`, wrapper `scripts/spectree-gate.sh`) that enforces the
+Minotaur-Grammars #94–#101 rules in CI:
+
+- **ERROR — merge-blocking**: duplicate node ids, manifest specs that do not
+  exist, orphan manifest projects, component dependency cycles, references
+  to missing / non-Accepted / Superseded ADRs, non-measurable `.ns` bounds.
+- **WARNING — surfaced as annotations**: Must requirements without `.test`
+  coverage, test suites covering undeclared requirements, components
+  satisfying only Won't requirements, dependencies without component specs,
+  requirements without components (and vice versa), `.ns` constraints
+  without an ADR trace.
+
+Findings cite the spec file, the node id, the rule name, and a JSON path;
+the rules are unit-tested in `policies/spectree/validate_test.rego`
+(19 tests) with the same `opa test` convention as the architecture kit.
+
 ## Decision record
 
 The three contract decisions (normalize legacy sources indefinitely, ID

@@ -506,6 +506,32 @@
         "docs/traceability/metadata-contract.md"
       ],
       "file": "docs/adrs/0019-shared-traceability-metadata-contract.md"
+    },
+    {
+      "id": "ADR-0020",
+      "title": "Use an OPA Validation Gate over the SpecTree Metadata Contract",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "spectree",
+        "opa",
+        "rego",
+        "validation-gate",
+        "severity-model",
+        "traceability",
+        "ci"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "governs": [
+        "policies/spectree/",
+        "scripts/spectree-gate.sh"
+      ],
+      "file": "docs/adrs/0020-spectree-validation-gate.md"
     }
   ],
   "policies": [
@@ -764,6 +790,20 @@
         "CYB-002"
       ],
       "file": "policies/terraform/deny_deprecated_tls.rego"
+    },
+    {
+      "id": "SPEC-001",
+      "title": "SpecTree Validation Gate",
+      "severity": "HIGH",
+      "package": "spectree.validate",
+      "related_adr": [
+        "ADR-0020"
+      ],
+      "related_requirements": [
+        "S-006",
+        "M-005"
+      ],
+      "file": "policies/spectree/validate.rego"
     }
   ],
   "requirements": [
@@ -984,8 +1024,8 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 19,
-    "policy_count": 17,
+    "adr_count": 20,
+    "policy_count": 18,
     "requirement_count": 71
   }
 }

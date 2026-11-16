@@ -111,8 +111,14 @@ jobs:
 
       - name: Normalize shared traceability metadata (ADR-0019)
         run: |
+          python3 example/scripts/spectree-parse.py --selftest
+          python3 example/scripts/spectree-parse.py --all
           python3 example/scripts/normalize-traceability-metadata.py --selftest
           python3 example/scripts/normalize-traceability-metadata.py --all
+
+      - name: SpecTree validation gate (ADR-0020)
+        run: |
+          OPA=opa bash example/scripts/spectree-gate.sh
 
       - name: Generated architecture artefacts are committed and current
         run: |

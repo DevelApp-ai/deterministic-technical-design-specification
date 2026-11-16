@@ -580,7 +580,7 @@ def run_selftest(root):
     check("doc/counts-sum",
           moscow_count + spec_count + adr_count + policy_count ==
           len(document["nodes"]))
-    check("doc/policy-count", policy_count == 17, repr(policy_count))
+    check("doc/policy-count", policy_count == 18, repr(policy_count))
     check("doc/no-duplicates", document["integrity"]["duplicateIds"] == [])
     check("doc/deterministic",
           document_to_json(document) == document_to_json(build_document(root)))

@@ -145,6 +145,16 @@ if command -v python3 &> /dev/null; then
   python3 "${REPO_ROOT}/scripts/normalize-traceability-metadata.py" --selftest
   python3 "${REPO_ROOT}/scripts/normalize-traceability-metadata.py" --all
   success "Normalized metadata written to docs/generated/traceability/metadata-v1.json"
+
+  # SpecTree validation gate (ADR-0020): ERROR findings abort the pipeline;
+  # WARNING findings are printed for visibility.
+  if command -v opa &> /dev/null; then
+    OPA="$(command -v opa)" bash "${REPO_ROOT}/scripts/spectree-gate.sh"
+    success "SpecTree validation gate passed (0 error findings)"
+  else
+    warn "opa not found — skipping the SpecTree validation gate."
+    warn "Install OPA to enable this step."
+  fi
 else
   warn "python3 not found — skipping SpecTree AST generation."
   warn "Install Python 3 to enable this step."
