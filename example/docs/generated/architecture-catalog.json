@@ -323,6 +323,134 @@
         "docs/adrs/0012-machine-readable-adr-traceability.md"
       ],
       "file": "docs/adrs/0012-machine-readable-adr-traceability.md"
+    },
+    {
+      "id": "ADR-0013",
+      "title": "Use DocFX for .NET API Reference Generation",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "docfx",
+        "api-reference",
+        "documentation-as-code"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-001",
+        "M-004"
+      ],
+      "governs": [
+        "dotnet/docs/",
+        "dotnet/dotnet-tools.json",
+        "docs/generated/dotnet-api/"
+      ],
+      "file": "docs/adrs/0013-docfx-dotnet-api-reference.md"
+    },
+    {
+      "id": "ADR-0014",
+      "title": "Use NetArchTest for .NET Architecture Policy Enforcement",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "netarchtest",
+        "policy-as-code",
+        "architecture",
+        "testing"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-002",
+        "APP-007",
+        "M-003"
+      ],
+      "governs": [
+        "dotnet/tests/MyApp.ArchitectureTests/",
+        "scripts/generate-dotnet-policy-docs.py",
+        "docs/application/architecture-policies.md"
+      ],
+      "file": "docs/adrs/0014-netarchtest-architecture-policies.md"
+    },
+    {
+      "id": "ADR-0015",
+      "title": "Use Native .NET OpenAPI Generation for the API Contract",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "openapi",
+        "aspnetcore",
+        "api-contract",
+        "documentation-as-code"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-005",
+        "APP-008"
+      ],
+      "governs": [
+        "dotnet/src/MyApp.Api/MyApp.Api.csproj",
+        "scripts/generate-openapi-docs.py",
+        "docs/generated/openapi.json",
+        "docs/application/api-reference.md"
+      ],
+      "file": "docs/adrs/0015-native-dotnet-openapi.md"
+    },
+    {
+      "id": "ADR-0016",
+      "title": "Use Roslyn Analyzers as the .NET Code-Quality Gate",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "roslyn",
+        "analyzers",
+        "code-quality",
+        "static-analysis"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-003",
+        "APP-004"
+      ],
+      "governs": [
+        "dotnet/Directory.Build.props",
+        "dotnet/.editorconfig"
+      ],
+      "file": "docs/adrs/0016-roslyn-code-quality-gate.md"
+    },
+    {
+      "id": "ADR-0017",
+      "title": "Use C4Sharp for C4 Architecture Diagrams from .NET Code",
+      "status": "Accepted",
+      "date": "2026-11-16",
+      "author": "platform-team",
+      "tags": [
+        "dotnet",
+        "c4",
+        "c4sharp",
+        "mermaid",
+        "architecture",
+        "diagrams",
+        "documentation-as-code"
+      ],
+      "supersedes": [],
+      "related_requirements": [
+        "APP-006",
+        "M-005"
+      ],
+      "governs": [
+        "dotnet/tools/MyApp.Architecture.Diagrams/",
+        "scripts/generate-c4-diagram-docs.py",
+        "docs/generated/architecture/",
+        "docs/application/architecture-diagrams.md"
+      ],
+      "file": "docs/adrs/0017-c4sharp-architecture-diagrams.md"
     }
   ],
   "policies": [
@@ -606,6 +734,30 @@
       "id": "AI-003"
     },
     {
+      "id": "APP-001"
+    },
+    {
+      "id": "APP-002"
+    },
+    {
+      "id": "APP-003"
+    },
+    {
+      "id": "APP-004"
+    },
+    {
+      "id": "APP-005"
+    },
+    {
+      "id": "APP-006"
+    },
+    {
+      "id": "APP-007"
+    },
+    {
+      "id": "APP-008"
+    },
+    {
       "id": "C-001"
     },
     {
@@ -777,8 +929,8 @@
   "scan": {
     "scanner": "scan-architecture.py",
     "status": "metadata-scan (front-matter and metadoc literals only, no semantic analysis)",
-    "adr_count": 12,
+    "adr_count": 17,
     "policy_count": 17,
-    "requirement_count": 63
+    "requirement_count": 71
   }
 }
